@@ -1,14 +1,13 @@
-/*
-Class: DIT/FT/1B/03
-Name: Tan Yong Rui
-Admission Number: P2004147
-*/
+//How Zu Kang Adam DIT/FT/1B/03 p2026677
+console.log("---------------------------------");
+console.log("ADES > CA1 > Readdit > config.js");
+console.log("---------------------------------");
 
-var secret='OPCI_2504_ivy'; //your own secret key
+var secret='s12xyz00'; //your own secret key
+module.exports.key = secret;
 
-module.exports.key=secret;
-// The line above is equal to:
 // var my_secret = {
-//     "key":'OPCI_2504_ivy'
+//    key: 's12xyz00'
 // };
-// module.exports = my_secret;
+
+// module.exports = secret;

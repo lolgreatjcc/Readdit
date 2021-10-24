@@ -1,17 +1,23 @@
-/*
-Class: DIT/FT/1B/03
-Name: Tan Yong Rui
-Admission Number: P2004147
-*/
-
+//How Zu Kang Adam DIT/FT/2B/03 p2026677
 console.log("---------------------------------");
-console.log("testing > server.js");
+console.log(" ADES > CA1 > Readdit > Week 1 > server.js");
 console.log("---------------------------------");
 
-const { json } = require('express');
-var app=require('./controller/app.js');
-var port=process.env.PORT;
+//-----------------------------------
+// imports
+//-----------------------------------
 
+const app = require('./controller/app');
+
+
+//-----------------------------------
+// configurations
+//-----------------------------------
+const port = process.env.PORT;
+
+//-----------------------------------
+// main
+//-----------------------------------
 app.listen(port, () => {
-    console.log(`Server started and accessible at port ${port}!`);
+    console.log(`Server started and accessible via ${port}`);
 });

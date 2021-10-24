@@ -1,18 +1,21 @@
-/*
-Class: DIT/FT/1B/03
-Name: Tan Yong Rui
-Admission Number: P2004147
-*/
-
+//How Zu Kang Adam DIT/FT/1B/03 p2026677
 console.log("---------------------------------");
-console.log("P2004147_CA2 > Back End > model > user.js");
+console.log(" ADES > CA1 > Readdit > model > user.js");
 console.log("---------------------------------");
 
-var db = require('../controller/databaseConfig');
-var config = require('../config.js');
-var jwt = require('jsonwebtoken');
-var User = {
-    loginUser: function (email, password, callback) {
+//-----------------------------------
+// imports
+//-----------------------------------
+var db = require('./databaseConfig.js');
+var config=require('../config.js'); 
+var jwt=require('jsonwebtoken');
+
+//-----------------------------------
+// objects / functions
+//-----------------------------------
+var user = {
+
+    login: function (email, password, callback) {
 
         var conn = db.getConnection();
         conn.connect(function (err) {
@@ -23,60 +26,65 @@ var User = {
             else {
                 console.log("Connected!");
 
-                var sql = 'select userid,username,email,type from user where email=? and password=?';
+                var sql = `SELECT 
+                                userid, username, role
+                            FROM 
+                                users
+                            WHERE
+                                email = ? AND password = ?`;
 
                 conn.query(sql, [email, password], function (err, result) {
                     conn.end();
 
                     if (err) {
                         console.log(err);
-                        return callback(err,null, null);
+                        return callback(err, null, null);
 
                     } else {
-                        // if no results at all
+                        // no results at all
                         if (result.length == 0) {
                             return callback(null,null,null);
                         }
+                        // it must be that we have ONE result here,
+                        // since the email is Unique
                         else {
-                            userData = result;
-                            // it must be that we have ONE result here
+                            // it must be that we have ONE result here,
                             // since the email is unique
+                            
+                            //confirm if we have the key
                             console.log("Secret Key: " + config.key);
                             console.log(result[0]);
+                            //generate the token
 
-                            // generating the token
                             var token = jwt.sign(
                                 // (1) Payload
-                                { 
-                                    userid: result[0].userid, 
-                                    type: result[0].type 
-                                }, 
+                            {
+                                userid : result[0].userid,
+                                type : result[0].type
+                            },
                                 // (2) Secret Key
-                                config.key, 
-                                {
-                                // (3) Lifetime of token
+                                config.key,
+                                // (3) Lifretime of token
+                            {
                                 //expires in 24 hrs
                                 expiresIn: 86400
-                                }
+                            }
                             );
-
-                            return callback(null, token, userData);
-
-
+                            return callback(null, token, result);
                         }
                     }
+
                 });
 
             }
 
         });
     },
-    findAll: function (callback) {
+
+    getUser: function (userid, callback) {
         // get a connection to the database
         var conn = db.getConnection();
-        $("#Login").click(function () {
-            
-        });
+
         conn.connect(function (err) {
             if (err) {
                 console.log(err);
@@ -85,7 +93,39 @@ var User = {
             else {
                 console.log("Connected!");
 
-                var sql = `SELECT * FROM user`;
+                var sql = `SELECT 
+                                username,email,role
+                            FROM 
+                                users
+                            WHERE
+                                userid = ?`;
+
+                conn.query(sql, [userid], function (err, result) {
+                    conn.end();
+                    if (err) {
+                        console.log(err);
+                        return callback(err, null);
+                    } else {
+                        return callback(null, result);
+                    }
+                });
+            }
+        });
+    },
+
+    getAll: function (callback) {
+        // get a connection to the database
+        var conn = db.getConnection();
+
+        conn.connect(function (err) {
+            if (err) {
+                console.log(err);
+                return callback(err, null);
+            }
+            else {
+                console.log("Connected!");
+
+                var sql = 'SELECT username,email,role FROM users';
 
                 conn.query(sql, [], function (err, result) {
                     conn.end();
@@ -99,7 +139,8 @@ var User = {
             }
         });
     },
-    findByID: function (id, callback) {
+
+    addUser: function (username, password, email, role, callback) {
         // get a connection to the database
         var conn = db.getConnection();
 
@@ -112,116 +153,13 @@ var User = {
                 console.log("Connected!");
 
                 var sql = `
-                SELECT 
-                    * 
-                FROM 
-                    user 
-                WHERE 
-                    userid = ?
-                `;
-
-                conn.query(sql, [id], function (err, result) {
-                    conn.end();
-                    if (err) {
-                        console.log(err);
-                        return callback(err, null);
-                    } else {
-                        if (result.length == 0){
-                            return callback(null,null)
-                        }
-                        else{
-                            return callback(null, result[0]);
-                        }
-                    }
-                });
-            }
-        });
-    },
-    addUser: function (username, email, type, profile, callback) {
-        console.log("Type: "+ type);
-        console.log("profile: "+ profile);
-
-        // get a connection to the database
-        var conn = db.getConnection();
-
-        conn.connect(function (err) {
-            if (err) {
-                console.log(err);
-                return callback(err, null);
-            }
-            else {
-                console.log("Connected!");
-
-                var sql = `
-                    INSERT INTO
-                        user(
-                            username,
-                            email,
-                            type,
-                            profile_pic_url)
+                    INSERT IGNORE INTO
+                        users(username, password, email, role)
                     VALUES
-                        (
-                            ?,
-                            ?,
-                            ?,
-                            ?
-                        );
+                        (?,?,?,?);
                     `;
 
-                conn.query(sql, [username,email,type,profile], function (err, result) {
-                    if (err) {
-                        console.log(err);
-                        return callback(err, null);
-                    } else {
-                        var sql = `
-                    SELECT
-                        user.userid
-                    FROM
-                        user
-                    WHERE
-                        username LIKE concat("",?)
-                        
-                    `;
-                    conn.query(sql, [username], function (err, result) {
-                        conn.end();
-                        if (err) {
-                            console.log(err);
-                            return callback(err, null);
-                        }
-                        else{
-                            return callback(null, result);  
-                        }
-                    });
-                
-                }
-                });
-            }
-        });
-    },
-    updateUser: function (userid, username, email, type, callback) {
-        // get a connection to the database
-        var conn = db.getConnection();
-
-        conn.connect(function (err) {
-            if (err) {
-                console.log(err);
-                return callback(err, null);
-            }
-            else {
-                console.log("Connected!");
-
-                var sql = `
-                UPDATE
-                    user
-                SET 
-                    username = ? ,
-                    email = ? ,
-                    type = ?
-                WHERE
-                    userid = ?;
-                    `;
-
-                conn.query(sql, [username, email, type, userid], function (err, result) {
+                conn.query(sql, [username, password, email, role], function (err, result) {
                     conn.end();
                     if (err) {
                         console.log(err);
@@ -232,10 +170,82 @@ var User = {
                 });
             }
         });
-    }
+    },
+
+    edit: function (userid, user, callback) {
+        var username = user.username;
+        var password = user.password;
+        var email = user.email;
+        var role = user.role;
+
+        // get a connection to the database
+        var conn = db.getConnection();
+
+        conn.connect(function (err) {
+            if (err) {
+                console.log(err);
+                return callback(err, null);
+            }
+            else {
+                console.log("Connected!");
+
+                var sql = `
+                        UPDATE
+                            users
+                        SET
+                            username = ?,
+                            password = ?,
+                            email = ?,
+                            role = ?
+                        WHERE
+                            userid = ?;
+                    `;
+
+                conn.query(sql, [username, password, email, role, userid], function (err, result) {
+                    conn.end();
+                    if (err) {
+                        console.log(err);
+                        return callback(err, null);
+                    } else {
+                        return callback(null, result);
+                    }
+                });
+            }
+        });
+    },
+
+    delete: function (userid, callback) {
+        // get a connection to the database
+        var conn = db.getConnection();
+
+        conn.connect(function (err) {
+            if (err) {
+                console.log(err);
+                return callback(err, null);
+            }
+            else {
+                console.log("Connected!");
+
+                var sql = `DELETE FROM 
+                                users
+                            WHERE
+                                userid = ?`;
+
+                conn.query(sql, [userid], function (err, result) {
+                    conn.end();
+                    if (err) {
+                        console.log(err);
+                        return callback(err, null);
+                    } else {
+                        return callback(null, result);
+                    }
+                });
+            }
+        });
+    },
 }
 
 //-----------------------------------
 // exports
 //-----------------------------------
-module.exports = User;
+module.exports = user;
