@@ -1,39 +1,31 @@
-// Class: DIT/FT/1B/03
-// Name: Tan Yong Rui
-// Admission Number: P2004147
+//How Zu Kang Adam DIT/FT/1B/03 p2026677
+const express=require('express');
+const serveStatic=require('serve-static');
 
-console.log("---------------------------------");
-console.log("testingFront > server.js");
-console.log("---------------------------------");
+var port = process.env.PORT;
 
+var app=express();
 
-const express = require('express');
-const serveStatic = require('serve-static');
-
-
-
-var app = express();
-
-app.use(function (req, res, next) {
+app.use(function(req,res,next){
     console.log(req.url);
     console.log(req.method);
     console.log(req.path);
     console.log(req.query.id);
 
-    if (req.method != "GET") {
+    if(req.method!="GET"){
         res.type('.html');
-        var msg = "<html><body>This server only serves web pages with GET!</body></html>";
+        var msg="<html><body>This server only serves web pages with GET!</body></html>";
         res.end(msg);
-    } else {
+    }else{
         next();
     }
 });
 
 
-app.use(serveStatic(__dirname + "/public"));
+app.use(serveStatic(__dirname+"/public"));
 
 
-app.listen(process.env.PORT, function () {
+app.listen(port,function(){
 
-    console.log(`Front End server started successfully.`);
+    console.log(`Server hosted!`);
 });
