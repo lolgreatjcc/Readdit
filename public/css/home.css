@@ -1,0 +1,17 @@
+/* Class: DIT/FT/1B/03
+Name: Tan Yong Rui
+Admission Number: P2004147 */
+
+@charset "utf-8";
+.games {
+
+    max-width: 40%;
+    margin: 50px
+    /* background-color: transparent; */
+}
+.customBtn {
+    margin:20px;
+}
+/* .games::after{
+    background-color: white;
+} */

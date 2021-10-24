@@ -1,0 +1,36 @@
+/* Class: DIT/FT/1B/03
+Name: Tan Yong Rui
+Admission Number: P2004147 */
+
+@charset "utf-8";
+html {
+    background: url('../assets/congruent_pentagon.png');
+    width: auto;
+    height: auto;
+
+}
+
+html > body {
+    max-width:1200px;
+    margin: auto;
+    background-color: bisque;
+}
+
+.Logout {
+    background-color: transparent;
+    box-shadow: 0px 0px 0px transparent;
+    border: 0px solid transparent;
+    text-shadow: 0px 0px 0px transparent;
+}
+
+.darkbrown {
+	background-color: #280000;
+}
+
+.add{
+    margin:10px;
+}
+
+.header{
+    padding:20px;
+}

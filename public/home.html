@@ -1,0 +1,244 @@
+<!--
+Class: DIT/FT/1B/03
+Name: Tan Yong Rui
+Admission Number: P2004147
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/home.css">
+    <link rel="stylesheet" href="./css/general.css">
+    <script>
+        var pagenum = 1;
+        var gameLength = -1;
+        tmpToken = localStorage.getItem('token');
+        function createCard(cardInfo) {
+            var card = `
+            <div class="card games col-5" style="margin-top: 2rem;">
+                <div style="margin:auto;padding:10px">
+                    <img src=`+ cardInfo.image + ` alt="cytus" style="width:380px;height:520px; object-fit: cover;">
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Title: ${cardInfo.title}</p>
+                </div>
+                    <div class="card-footer text-muted">
+                    Price: $${cardInfo.price}
+                    </div>
+
+                `
+            card += `<div class="card-footer text-muted">
+                    <a href=viewGames.html?gameid=${cardInfo.gameid} class="btn btn-primary" class="View">View</a>
+                </div>
+            </div>`
+            /*
+             href="viewUsers.html
+             href="/viewUsers.html
+
+             href          |   Current Location                    | Target Location
+             ---------------------------------------------------------------------
+             a.html        |  http://abc.com/page1.html            | http://abc.com/a.html
+             /a.html       |  http://abc.com/page1.html            | http://abc.com/a.html
+             a.html        |  http://abc.com/sub/page1.html        | http://abc.com/sub/a.html
+             /a.html       |  http://abc.com/sub/page1.html        | http://abc.com/a.html
+
+             login.html    |  http://abc.com/catalog/products.html | http://abc.com/catalog/login.html
+             /login.html   |  http://abc.com/catalog/products.html | http://abc.com/login.html
+
+             http://abc.com/games.html?id=132
+             http://abc.com/game?id=132
+            */
+            return card;
+        }
+        function getUserInfo() {
+            var userData;
+            $.ajax({
+                headers: { 'authorization': 'Bearer ' + tmpToken },
+                async: false,
+                url: `https://testapibackend.herokuapp.com/payload`,
+                type: 'GET',
+                //data: data2,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (data, textStatus, xhr) {
+                    // if (data != null && data.success) {
+                    //     //$('#msg').html('Record updated successfully!');
+                    // } else {
+                    //     console.log("Error");
+                    userData = data;
+                    //     console.log(textStatus)
+                    //     console.log(xhr)
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                    console.log(xhr);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+
+                    if (xhr.status == 403) {
+                        $('#msg').html('F̵̤̈ò̵̬r̶͙̃b̴͖͛i̶̲͒d̸̞̓d̵̮́e̷̬̐n̵̻̄');
+                    }
+                }
+            });
+            return userData;
+        }
+        function loggedIn() {
+            var stuff = ``;
+            if (localStorage.getItem('token') != null) {
+                if (getUserInfo().type == "Admin") {
+                    stuff += `
+                    <li class="nav-item">
+                        <a class="nav-link" href="./addCat.html">Add Category</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./addGame.html">Add Game</a>
+                    </li>`
+                }
+                stuff += `
+                <li class="nav-item">
+                        <a class="nav-link" href="./profile.html">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <button type="button" class="nav-link Logout">Logout</button>
+                </li>`
+                $('.navbar-nav').append(stuff);
+            }
+            else {
+                stuff = `<li class="nav-item">
+                <a class="nav-link" href="./login.html">Login</a>
+            </li>`
+                $('.navbar-nav').append(stuff);
+            }
+        }
+        function loadallgames() {
+
+            // call the web service endpoint
+            $.ajax({
+                //headers: { 'authorization': 'Bearer ' + tmpToken },
+                url: `https://testapibackend.herokuapp.com/games/${pagenum}/all/`,
+                type: 'GET',
+                //data: data2,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (data, textStatus, xhr) {
+                    $('#games').html("");
+                    // if (data != null && data.success) {
+                    //     //$('#msg').html('Record updated successfully!');
+                    // } else {
+                    //     console.log("Error");
+                    console.log("data: " + data)
+                    for (i = 0; i < data.length; i++) {
+                        var game = data[i];
+                        // compile the data that the card needs for it's creation
+                        var cardInfo = {
+                            "gameid": game.gameid,
+                            "title": game.title,
+                            "price": game.price,
+                            "image": game.imagePath
+                        }
+                        $('#games').append(createCard(cardInfo));
+                        console.log("------------Card Info Data Pack------------");
+                        console.log(cardInfo);
+                        if (i == 3){
+                            console.log("should break")
+                            break;
+                        };
+                    };
+                    console.log(gameLength)
+                    //     console.log(textStatus)
+                    //     console.log(xhr)
+
+                    // }
+                    // },
+                    // error: function (xhr, textStatus, errorThrown) {
+                    //     console.log('Error in Operation');
+                    //     console.log(xhr);
+                    //     console.log(textStatus);
+                    //     console.log(errorThrown);
+
+                    // if (xhr.status == 403) {
+                    //     $('#msg').html('F̵̤̈ò̵̬r̶͙̃b̴͖͛i̶̲͒d̸̞̓d̵̮́e̷̬̐n̵̻̄');
+                    // }
+                }
+            });
+
+        };
+        
+        $(document).ready(function () {
+            loadallgames();
+            loggedIn();
+            $(".Logout").click(function () {
+                window.localStorage.clear();
+                window.location.assign("https://tyrgames.herokuapp.com/login.html");
+            });
+        })
+
+    </script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
+        <!-- Brand/logo -->
+        <a class="navbar-brand" href="#">SP Games+</a>
+        <!-- Links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./games.html">Games</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="./about.html">About Us</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container">
+    </div>
+    <h1 class="bg-info header">Home</h1>
+    <div class="container">
+        <div style="margin-top: 2rem;">
+            
+            <div class="msg"></div>
+            <div class="jumbotron">
+                <h2>Games of the day:</h2><br>
+                <div id="games" class="row">
+                
+                </div>
+            </div>
+            
+
+            <div id="page">
+            </div>
+        </div>
+    </div>
+
+<!-- Background image reference -->
+<section class="p-2 bg-secondary text-light">
+    Background pattern obtained from <a href="https://www.toptal.com/designers/subtlepatterns/congruent-pentagon/"
+        target="_blank">here</a>.
+</section>
+
+<!-- Footer -->
+<footer class="darkbrown p-2 text-center text-light"><em>SP Games+</em> &#9702; Dover Link 74 &#9702; Singapore 735462</footer>
+
+</body>
+
+</html>
