@@ -57,7 +57,7 @@ const User = sequelize.define('user', {
     },
     createdAt : {
         type: 'TIMESTAMP',
-        allowNull: false
+        allowNull: true
     }
 })
 
