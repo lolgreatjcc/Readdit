@@ -1,0 +1,27 @@
+
+
+/* Header Colors */
+#header {
+    background-color: #734f96;
+    color: white;
+}
+
+#loginButton {
+    background-color: white;
+    color: #734f96;
+    font-weight: 600;
+}
+
+#signUpButton {
+    background-color: #6a5acd;
+    color: white;
+    font-weight: 700;
+}
+
+#headerSearchBtn {
+    background-color: #6a5acd !important;
+}
+
+.fa-user {
+    line-height: inherit;
+}
