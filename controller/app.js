@@ -1,4 +1,4 @@
-//How Zu Kang Adam DIT/FT/2B/03 p2026677
+//ADES CA1 Play2Win
 console.log("---------------------------------");
 console.log(" ADES > CA1 > Readdit > controller > app.js");
 console.log("---------------------------------");
@@ -93,9 +93,10 @@ app.post('/users',printDebugInfo, function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
     var email = req.body.email;
-    var role = req.body.role;
+    var profile_pic = req.body.profile_pic;
+    var fk_user_type_id = req.body.fk_user_type_id;
 
-    user.addUser(username, password, email, role, function (err, result) {
+    user.addUser(username, password, email, profile_pic, fk_user_type_id, function (err, result) {
         if (!err) {
             if (result.affectedRows == 0) {
                 res.status(422).send({ "Result:": "Unprocessable Entity" });
@@ -125,7 +126,8 @@ app.put('/users/:userid', printDebugInfo, function (req, res) {
         username: req.body.username,
         password: req.body.password,
         email: req.body.email,
-        role: req.body.role
+        profile_pic: req.body.profile_pic,
+        fk_user_type_id: req.body.fk_user_type_id
     };
 
     user.edit(userid, data, function (err, result) {
