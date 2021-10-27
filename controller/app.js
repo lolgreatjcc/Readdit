@@ -88,7 +88,6 @@ app.get('/users/:userid',printDebugInfo, function (req, res) {
 });
 
 //adduser
-
 app.post('/users',printDebugInfo, function (req, res) { 
     var username = req.body.username;
     var password = req.body.password;
@@ -113,7 +112,6 @@ app.post('/users',printDebugInfo, function (req, res) {
 });
 
 //edit user
-
 app.put('/users/:userid', printDebugInfo, function (req, res) {
     var userid = req.params.userid;
 
@@ -160,7 +158,6 @@ app.delete('/users/:userid', printDebugInfo, function (req, res) {
 });
 
 //login
-
 app.post('/api/login', function (req, res) {
 
     var email = req.body.email;
