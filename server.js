@@ -2,9 +2,10 @@
 const express=require('express');
 const serveStatic=require('serve-static');
 
-// var port = process.env.PORT;
-var hostname="localhost";
-var port=3001;
+var port = process.env.PORT;
+//var hostname="localhost";
+//var port=3001;
+
 
 var app=express();
 
@@ -27,11 +28,10 @@ app.use(function(req,res,next){
 app.use(serveStatic(__dirname+"/public"));
 
 
-// app.listen(port,function(){
-//     console.log(`Server hosted!`);
-// });
-
-app.listen(port,hostname,function(){
-
-    console.log(`Server hosted at http://${hostname}:${port}`);
+app.listen(port,function(){
+    console.log(`Server hosted!`);
 });
+
+// app.listen(port,hostname,function(){
+//     console.log(`Server hosted at http://${hostname}:${port}`);
+// });
