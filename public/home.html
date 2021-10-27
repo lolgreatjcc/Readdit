@@ -23,21 +23,21 @@
 
         $(document).ready(function () {
             var userData = localStorage.getItem('userInfo');
+            userData = userData.slice(1,-1);
+            
             var userJsonData = JSON.parse(userData);
-            var userid = userJsonData[0].userid;
+            var userid = userJsonData.user_id;
             
             $.ajax({
                 //headers: { 'authorization': 'Bearer ' + tmpToken },
-                url: 'https://readdit-backend.herokuapp.com/users/' + userid,
+                // url: 'https://readdit-backend.herokuapp.com/users/' + userid,
+                url: 'http://localhost:3000/users/' + userid,
                 type: 'GET',
                 //contentType: "application/json; charset=utf-8",
                 dataType: 'json',
                 success: function (data, textStatus, xhr) {
-                
-                console.log(data);
-                console.log(data.Result[0].username);
-                $(`#msg`).append(`<h1> Welcome to readdit, ${data.Result[0].username}! </h1>
-                                  <h2> Your role: ${data.Result[0].role} </h2>`);
+
+                $(`#msg`).append(`<h1> Welcome to readdit, ${data.Result.username}! </h1>`);
 
                 },
                 error: function (xhr, textStatus, errorThrown) {
@@ -51,31 +51,6 @@
                     //}
                 }
             });
-
-            // check if we have a valid search query param
-            var queryParams = new URLSearchParams(window.location.search);
-            console.log("---------Query Parameters---------");
-            console.log("Query Param (source): " + window.location.search);
-            console.log("Query Param (extracted): " + queryParams);
-
-            // if yes, load just that user
-            if (queryParams.has("search_title")) {
-                var title = queryParams.get("search_title");
-                var price = queryParams.get("search_price");
-                var platform = queryParams.get("search_platform");
-
-                console.log("Search Title: " + title);
-                console.log("Search Price: " + price);
-                console.log("Search Platform: " + platform);
-
-                loadGame(title,price,platform);
-            }
-            // else, load all users
-            else {
-                loadAllGames();
-            }
-
-
         });
 
     </script>
