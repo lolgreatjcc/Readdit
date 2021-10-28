@@ -20,7 +20,7 @@ const {User,User_Type} = sequelize.models;
 var user = {
 
     login: function (email, password, callback) {
-        User.findAll({attributes: ['user_id', 'username'],
+        User.findAll({attributes: ['user_id', 'username', 'fk_user_type_id'],
             where: {
               [Op.and]: [
                 { email: email },
@@ -37,14 +37,15 @@ var user = {
             else {              
             //confirm if we have the key
             console.log("Secret Key: " + config.key);
-            console.log(result[0]);
+            console.log("Result[0] userid: " + result[0].user_id);
+            console.log("Result: " + result)
             //generate the token
     
             var token = jwt.sign(
                 // (1) Payload
                 {
-                    userid : result[0].userid,
-                    type : result[0].type
+                    userid : result[0].user_id,
+                    type : result[0].fk_user_type_id
                 },
                     // (2) Secret Key
                     config.key,

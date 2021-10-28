@@ -1,7 +1,21 @@
 //ADES CA1 Play2Win
 const { Sequelize, Model, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('readdit', 'root', 'password', {
-    host:'localhost',
+
+//local credentials, comment as neccessary
+// const database = "readdit";
+// const user = "root";
+// const password = "Electronicman123"
+// const host = 'localhost'
+
+// heroku credentials, comment as neccessary. ensure database has data
+const database = "heroku_1c89f72eef4896a";
+const user = " b7a6c1ee0950ab";
+const password = "3ee893d6"
+const host = 'us-cdbr-east-04.cleardb.com'
+
+
+const sequelize = new Sequelize(database, user, password, {
+    host: host,
     dialect: 'mysql',
     
     pool: {
