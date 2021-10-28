@@ -16,11 +16,20 @@ var mysql = require('mysql');
 
 var dbconnect = {
     getConnection: function () {
+        //local db
+        // var conn = mysql.createConnection({
+        //     host: "localhost",
+        //     user: "root",
+        //     password: "password",
+        //     database: "readdit"
+        // });   
+        
+        //heroku clear db
         var conn = mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "password",
-            database: "readdit"
+            host: "us-cdbr-east-04.cleardb.com",
+            user: " b7a6c1ee0950ab",
+            password: "3ee893d6",
+            database: "heroku_1c89f72eef4896a"
         });     
 
 

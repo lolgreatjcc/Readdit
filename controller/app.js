@@ -12,7 +12,8 @@ const app = express();
 const bodyParser = require('body-parser');
 
 var user = require('../model/user.js');
-
+var verifyModule = require('./verify');
+var verify = verifyModule.verify;
 //-----------------------------------
 // Middleware functions
 //-----------------------------------
@@ -74,8 +75,8 @@ app.get('/users',printDebugInfo, function (req, res) {
 });
 
 //getoneuser
-app.get('/users/:userid',printDebugInfo, function (req, res) {
-    var userid = req.params.userid;
+app.get('/users/:user_id',printDebugInfo, verify, function (req, res) {
+    var userid = req.params.user_id;
     
     user.getUser(userid, function (err, result) {
         if (!err) {
