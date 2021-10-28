@@ -1,5 +1,6 @@
+//ADES CA1 Play2Win
 const { Sequelize, Model, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('readdit', 'root', 'FrozenLava123', {
+const sequelize = new Sequelize('readdit', 'root', 'password', {
     host:'localhost',
     dialect: 'mysql',
     
@@ -25,10 +26,10 @@ const sequelize = new Sequelize('readdit', 'root', 'FrozenLava123', {
     console.error("Unable to connect to the database", error);
 }})();
 
-const User = sequelize.define('user', {
+const User = sequelize.define('User', {
     user_id : {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         primaryKey: true
     },
     username : {
@@ -43,11 +44,11 @@ const User = sequelize.define('user', {
         type: DataTypes.STRING(100),
         allowNull: false
     },
-    profilePic : {
+    profile_pic : {
         type: DataTypes.STRING,
         allowNull: true
     },
-    twoFA : {
+    two_fa : {
         type: DataTypes.BOOLEAN,
         allowNull: true
     },
@@ -55,13 +56,13 @@ const User = sequelize.define('user', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    createdAt : {
+    created_at : {
         type: 'TIMESTAMP',
         allowNull: true
     }
 })
 
-const User_Type = sequelize.define('user_type', {
+const User_Type = sequelize.define('User_Type', {
     user_type_id: { 
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -79,7 +80,5 @@ async function syncing() {
 }
 syncing();
 
-async function testing() {
-    const admin = await User_Type.create({user_type : "User"});
-}
+module.exports = sequelize;
 

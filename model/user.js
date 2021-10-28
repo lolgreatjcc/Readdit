@@ -1,4 +1,4 @@
-//How Zu Kang Adam DIT/FT/1B/03 p2026677
+//ADES CA1 Play2Win
 console.log("---------------------------------");
 console.log(" ADES > CA1 > Readdit > model > user.js");
 console.log("---------------------------------");
@@ -9,6 +9,10 @@ console.log("---------------------------------");
 var db = require('./databaseConfig.js');
 var config=require('../config.js'); 
 var jwt=require('jsonwebtoken');
+const { Op } = require("sequelize");
+
+var sequelize = require('./sequelize/databaseModel.js');
+const {User,User_Type} = sequelize.models;
 
 //-----------------------------------
 // objects / functions
@@ -16,233 +20,97 @@ var jwt=require('jsonwebtoken');
 var user = {
 
     login: function (email, password, callback) {
-
-        var conn = db.getConnection();
-        conn.connect(function (err) {
-            if (err) {
-                console.log(err);
-                return callback(err, null, null);
+        User.findAll({attributes: ['user_id', 'username'],
+            where: {
+              [Op.and]: [
+                { email: email },
+                { password: password }
+              ]
             }
-            else {
-                console.log("Connected!");
-
-                var sql = `SELECT 
-                                userid, username, role
-                            FROM 
-                                users
-                            WHERE
-                                email = ? AND password = ?`;
-
-                conn.query(sql, [email, password], function (err, result) {
-                    conn.end();
-
-                    if (err) {
-                        console.log(err);
-                        return callback(err, null, null);
-
-                    } else {
-                        // no results at all
-                        if (result.length == 0) {
-                            return callback(null,null,null);
-                        }
-                        // it must be that we have ONE result here,
-                        // since the email is Unique
-                        else {
-                            // it must be that we have ONE result here,
-                            // since the email is unique
-                            
-                            //confirm if we have the key
-                            console.log("Secret Key: " + config.key);
-                            console.log(result[0]);
-                            //generate the token
-
-                            var token = jwt.sign(
-                                // (1) Payload
-                            {
-                                userid : result[0].userid,
-                                type : result[0].type
-                            },
-                                // (2) Secret Key
-                                config.key,
-                                // (3) Lifretime of token
-                            {
-                                //expires in 24 hrs
-                                expiresIn: 86400
-                            }
-                            );
-                            return callback(null, token, result);
-                        }
-                    }
-
-                });
-
+          })
+        .then(function(result) {
+            if (result.length == 0) {
+                return callback(null,null,null);
             }
-
-        });
+            // it must be that we have ONE result here,
+            // since the email is Unique
+            else {              
+            //confirm if we have the key
+            console.log("Secret Key: " + config.key);
+            console.log(result[0]);
+            //generate the token
+    
+            var token = jwt.sign(
+                // (1) Payload
+                {
+                    userid : result[0].userid,
+                    type : result[0].type
+                },
+                    // (2) Secret Key
+                    config.key,
+                    // (3) Lifretime of token
+                {
+                    //expires in 24 hrs
+                    expiresIn: 86400
+                }
+            );
+            return callback(null, token, result);
+            }
+        })
     },
 
     getUser: function (userid, callback) {
-        // get a connection to the database
-        var conn = db.getConnection();
-
-        conn.connect(function (err) {
-            if (err) {
-                console.log(err);
-                return callback(err, null);
-            }
-            else {
-                console.log("Connected!");
-
-                var sql = `SELECT 
-                                username,email,role
-                            FROM 
-                                users
-                            WHERE
-                                userid = ?`;
-
-                conn.query(sql, [userid], function (err, result) {
-                    conn.end();
-                    if (err) {
-                        console.log(err);
-                        return callback(err, null);
-                    } else {
-                        return callback(null, result);
-                    }
-                });
-            }
-        });
+        User.findByPk(userid, {raw: true, attributes: ['user_id', 'username','email','profile_pic','two_fa','fk_user_type_id']}).then(function(result) {
+            return callback(null, result);
+        })
     },
 
     getAll: function (callback) {
-        // get a connection to the database
-        var conn = db.getConnection();
-
-        conn.connect(function (err) {
-            if (err) {
-                console.log(err);
-                return callback(err, null);
-            }
-            else {
-                console.log("Connected!");
-
-                var sql = 'SELECT username,email,role FROM users';
-
-                conn.query(sql, [], function (err, result) {
-                    conn.end();
-                    if (err) {
-                        console.log(err);
-                        return callback(err, null);
-                    } else {
-                        return callback(null, result);
-                    }
-                });
-            }
-        });
+        // find multiple entries
+        User.findAll({raw: true, attributes: ['user_id', 'username','email','profile_pic','two_fa','fk_user_type_id']}).then(function(result) {
+            return callback(null, result);
+        })
     },
 
-    addUser: function (username, password, email, role, callback) {
-        // get a connection to the database
-        var conn = db.getConnection();
-
-        conn.connect(function (err) {
-            if (err) {
-                console.log(err);
-                return callback(err, null);
-            }
-            else {
-                console.log("Connected!");
-
-                var sql = `
-                    INSERT IGNORE INTO
-                        users(username, password, email, role)
-                    VALUES
-                        (?,?,?,?);
-                    `;
-
-                conn.query(sql, [username, password, email, role], function (err, result) {
-                    conn.end();
-                    if (err) {
-                        console.log(err);
-                        return callback(err, null);
-                    } else {
-                        return callback(null, result);
-                    }
-                });
-            }
-        });
+    addUser: function (username, password, email, profile_pic, fk_user_type_id, callback) {
+        User.create({
+            username: username,
+            password: password,
+            email: email,
+            profile_pic: profile_pic,
+            fk_user_type_id: fk_user_type_id
+          }).then(function(result) {
+            return callback(null, result);
+        })
     },
 
     edit: function (userid, user, callback) {
         var username = user.username;
         var password = user.password;
         var email = user.email;
-        var role = user.role;
+        var profile_pic = user.profile_pic;
+        var fk_user_type_id = user.fk_user_type_id;
 
-        // get a connection to the database
-        var conn = db.getConnection();
-
-        conn.connect(function (err) {
-            if (err) {
-                console.log(err);
-                return callback(err, null);
-            }
-            else {
-                console.log("Connected!");
-
-                var sql = `
-                        UPDATE
-                            users
-                        SET
-                            username = ?,
-                            password = ?,
-                            email = ?,
-                            role = ?
-                        WHERE
-                            userid = ?;
-                    `;
-
-                conn.query(sql, [username, password, email, role, userid], function (err, result) {
-                    conn.end();
-                    if (err) {
-                        console.log(err);
-                        return callback(err, null);
-                    } else {
-                        return callback(null, result);
-                    }
-                });
-            }
-        });
+        User.update(
+            {   username: username,
+                password: password,
+                email: email,
+                profile_pic: profile_pic,
+                fk_user_type_id: fk_user_type_id },
+            {   where: { user_id: userid } }
+          )
+            .then(function(result) {
+                return callback(null,result);
+            })
     },
 
     delete: function (userid, callback) {
-        // get a connection to the database
-        var conn = db.getConnection();
-
-        conn.connect(function (err) {
-            if (err) {
-                console.log(err);
-                return callback(err, null);
-            }
-            else {
-                console.log("Connected!");
-
-                var sql = `DELETE FROM 
-                                users
-                            WHERE
-                                userid = ?`;
-
-                conn.query(sql, [userid], function (err, result) {
-                    conn.end();
-                    if (err) {
-                        console.log(err);
-                        return callback(err, null);
-                    } else {
-                        return callback(null, result);
-                    }
-                });
-            }
-        });
-    },
+        User.destroy({
+            where: { user_id: userid }
+        }).then(function(result){
+            return callback(null,result);
+        })
+    }
 }
 
 //-----------------------------------
