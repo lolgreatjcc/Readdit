@@ -1,4 +1,4 @@
-<!--How Zu Kang Adam DIT/FT/1B/03 p2026677-->
+<!-- ADES CA1 Play2Win -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +18,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
-
+    <script src="./includeHTMLs/head.js"></script>
+    <script src="./includeHTMLs/header.js"></script>
     <script>
 
         $(document).ready(function () {
@@ -28,10 +29,12 @@
             var userJsonData = JSON.parse(userData);
             var userid = userJsonData.user_id;
             
+            var tmpToken = localStorage.getItem('token');
+            
             $.ajax({
-                //headers: { 'authorization': 'Bearer ' + tmpToken },
-                // url: 'https://readdit-backend.herokuapp.com/users/' + userid,
-                url: 'http://localhost:3000/users/' + userid,
+                headers: { 'authorization': 'Bearer ' + tmpToken },
+                url: 'https://readdit-backend.herokuapp.com/users/' + userid,
+                //url: 'http://localhost:3000/users/' + userid,
                 type: 'GET',
                 //contentType: "application/json; charset=utf-8",
                 dataType: 'json',
