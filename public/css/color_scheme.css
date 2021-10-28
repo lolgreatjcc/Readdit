@@ -6,6 +6,10 @@
     color: white;
 }
 
+body {
+    background-color: #f6f8fa;
+}
+
 #loginButton {
     background-color: white;
     color: #734f96;
@@ -24,4 +28,46 @@
 
 .fa-user {
     line-height: inherit;
+}
+
+.fa-file-image {
+    line-height: inherit;
+    font-size: 1.4em;
+}
+
+.fa-paperclip {
+    font-size: 1.4em;
+}
+.lh-inherit {
+    line-height: inherit;
+}
+
+.body-borders {
+    border: 1px solid #6a5acd35;
+}
+
+.icon-hover:hover {
+    background-color: #6a5acd35;
+}
+
+.post {
+    border: 1px solid #6a5acd35;
+    /*padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;*/
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+    background-color: #f8f9fa;
+}
+
+#post1-upvote:hover {
+    background-color: #6a5acd35;
+}
+
+#post1-downvote:hover {
+    background-color: #6a5acd35;
+}
+
+.clickable-link:hover {
+    text-decoration: underline;
 }
