@@ -1,5 +1,5 @@
 // Add this js file to ant html file to include jQyuery, Bootstrap, Bootstrap.js and font-awesome icons.
-// Requires head.js
+// Requires head.js and jQuery
 // Note: the href link uses a relative path.  
 
 $('head').append('<link href="../public/css/color_scheme.css" rel="stylesheet">');
