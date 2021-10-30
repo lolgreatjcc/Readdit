@@ -27,7 +27,7 @@ var dbconnect = {
         //heroku clear db
         var conn = mysql.createConnection({
             host: "us-cdbr-east-04.cleardb.com",
-            user: " b7a6c1ee0950ab",
+            user: "b7a6c1ee0950ab",
             password: "3ee893d6",
             database: "heroku_1c89f72eef4896a"
         });     

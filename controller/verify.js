@@ -8,8 +8,8 @@ module.exports.verify = (req, res, next) => {
     //If the token is valid, the logic extracts the user id and the role information.
     //If the role is not user, then response 403 UnAuthorized
     //The user id information is inserted into the request.body.user_id or req.params.user_id
-    var userId = req.body.user_id || req.params.user_id;
-    console.log("userId: " + userId);
+    var user_id = req.body.user_id || req.params.user_id;
+    console.log("user_id: " + user_id);
 
     if (typeof req.headers.authorization !== "undefined") {
       // Retrieve the authorization header and parse out the
@@ -25,7 +25,7 @@ module.exports.verify = (req, res, next) => {
           console.log(err);
           return res.status(403).send({ message: "Unauthorized access", errCode: 1 });
         } else {
-          if (data.userid != userId){
+          if (data.user_id != user_id){
               return res.status(403).send({ message: "Unauthorized access", errCode: 2 });
           }
           else{

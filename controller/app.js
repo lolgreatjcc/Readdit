@@ -94,11 +94,12 @@ app.post('/users',printDebugInfo, function (req, res) {
     var password = req.body.password;
     var email = req.body.email;
     var profile_pic = req.body.profile_pic;
+    var two_fa = req.body.two_fa;
     var fk_user_type_id = req.body.fk_user_type_id;
 
-    user.addUser(username, password, email, profile_pic, fk_user_type_id, function (err, result) {
+    user.addUser(username, password, email, profile_pic, two_fa, fk_user_type_id, function (err, result) {
         if (!err) {
-            if (result.affectedRows == 0) {
+            if (result == "duplicate") {
                 res.status(422).send({ "Result:": "Unprocessable Entity" });
             }
             else {
@@ -126,6 +127,7 @@ app.put('/users/:userid', printDebugInfo, function (req, res) {
         password: req.body.password,
         email: req.body.email,
         profile_pic: req.body.profile_pic,
+        two_fa: req.body.two_fa,
         fk_user_type_id: req.body.fk_user_type_id
     };
 
@@ -159,7 +161,7 @@ app.delete('/users/:userid', printDebugInfo, function (req, res) {
 });
 
 //login
-app.post('/api/login', function (req, res) {
+app.post('/api/login', printDebugInfo, function (req, res) {
 
     var email = req.body.email;
     var password = req.body.password;
