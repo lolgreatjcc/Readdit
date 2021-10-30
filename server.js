@@ -7,8 +7,6 @@ var port = process.env.PORT;
 // var hostname="localhost";
 // var port=3001;
 
-
-
 var app=express();
 
 app.use(function(req,res,next){
