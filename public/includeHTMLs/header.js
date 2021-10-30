@@ -1,14 +1,14 @@
-// Add this js file to ant html file to include jQyuery, Bootstrap, Bootstrap.js and font-awesome icons.
+// Add this js file to ant html file to include Bootstrap, Bootstrap.js and font-awesome icons.
 // Requires head.js and jQuery
 // Note: the href link uses a relative path.  
 
-$('head').append('<link href="../public/css/color_scheme.css" rel="stylesheet">');
+$('head').append('<link href="/frontend/public/css/color_scheme.css" rel="stylesheet">');
 $(document).ready(() => {
     $('body').prepend(`
     <nav class="navbar navbar-dark navbar-expand-lg" id="header">
     <div class=" container-fluid">
         <a class="navbar-brand" href="#">
-            <img src="./assets/reddit.png" alt="" width="30" height="30" class="d-inline-block align-text-top me-1">
+            <img src="/frontend/public/assets/reddit.png" alt="" width="30" height="30" class="d-inline-block align-text-top me-1">
             Readdit
         </a>
         <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
