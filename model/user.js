@@ -24,7 +24,7 @@ var user = {
         User.findAll({
             attributes: ['user_id', 'username', 'fk_user_type_id'],
             where: {
-
+              
                 [Op.and]: [
                     { email: email },
                     { password: password }
