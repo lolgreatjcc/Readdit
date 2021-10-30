@@ -161,7 +161,7 @@ app.delete('/users/:userid', printDebugInfo, function (req, res) {
 });
 
 //login
-app.post('/api/login', function (req, res) {
+app.post('/api/login', printDebugInfo, function (req, res) {
 
     var email = req.body.email;
     var password = req.body.password;
