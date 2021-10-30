@@ -1,0 +1,94 @@
+<!--Tan Yong Rui DIT/FT/2B/03 P2004147-->
+<!DOCTYPE html>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="css/login.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+
+    function loadaUserInfo() {
+    var {user_id} = JSON.parse(localStorage.getItem("userInfo"))
+    var token = localStorage.getItem("token")
+// call the web service endpoint
+    $.ajax({
+        //headers: { 'authorization': 'Bearer ' + tmpToken },
+        url: `http://localhost:3000/users/` + user_id,
+        type: 'GET',
+        //data: data2,
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json',
+        headers: {
+            "authorization" : `Bearer ${token}`        },
+        success: function (data, textStatus, xhr) {
+            $('#users').html("");
+            // if (data != null && data.success) {
+            //     //$('#msg').html('Record updated successfully!');
+            // } else {
+            //     console.log("Error");
+            data = data.Result;
+            console.log("data: " + data)
+            for (i = 0; i < data.length; i++) {
+                var user = data[i];
+                // compile the data that the card needs for it's creation
+                var cardInfo = {
+                    "username": user.name,
+                    "email": user.email,
+                }
+                console.log("------------Card Info Data Pack------------");
+                console.log(cardInfo);
+            };
+            $('#loadingText').html("");
+            //     console.log(textStatus)
+            //     console.log(xhr)
+
+            // }
+        },
+
+            
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error in Operation');
+                console.log(xhr);
+                console.log(textStatus);
+                console.log(errorThrown);
+                $('#loadingText').html("<h6 class='text-danger'>ERROR LOADING!</h6>");
+            if (xhr.status == 403) {
+                $('#msg').html('F̵̤̈ò̵̬r̶͙̃b̴͖͛i̶̲͒d̸̞̓d̵̮́e̷̬̐n̵̻̄');
+            }
+        }
+    });
+};
+
+        $(document).ready(function () {
+            loadaUserInfo();
+        })
+    </script>
+</head>
+
+<body>
+
+    <div class="login-form">
+        <h1 class="text-center">Readdit</h1>
+        <form id="login-form" action="">
+
+            <label for="email">Email:</label><br>
+            <input type="text" id="email" name="email" placeholder="Email" required="required"><br>
+            <label for="lname">Password:</label><br>
+            <input type="password" id="pwd" name="pwd" placeholder="Password" required="required"><br><br>
+            <button type="submit" class="btn" id="Login">Log in</button>
+            <div id="messages"></div>
+            <a href="#" class="pull-right">Forgot Password?</a>
+            <a href="/addUser.html">Sign up</a>
+        </form>
+
+    </div>
+</body>
+
+</html>
