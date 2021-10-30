@@ -114,24 +114,26 @@ app.post('/users',printDebugInfo, function (req, res) {
 });
 
 //edit user
-app.put('/users/:userid', printDebugInfo, function (req, res) {
-    var userid = req.params.userid;
+app.put('/users/:user_id', printDebugInfo, verify, function (req, res) {
+    var user_id = req.params.user_id;
 
-    if (isNaN(userid)) {
+    if (isNaN(user_id)) {
         res.status(400).send("Blank ID");
         return;
     }
+    
 
     var data = {
         username: req.body.username,
-        password: req.body.password,
+        old_password: req.body.oldpwd,
+        new_password: req.body.newpwd,
         email: req.body.email,
-        profile_pic: req.body.profile_pic,
-        two_fa: req.body.two_fa,
+        // profile_pic: req.body.profile_pic,
+        // two_fa: req.body.two_fa,
         fk_user_type_id: req.body.fk_user_type_id
     };
 
-    user.edit(userid, data, function (err, result) {
+    user.edit(user_id, data, function (err, result) {
         if (!err) {
             var output = {
                 "success": true,
