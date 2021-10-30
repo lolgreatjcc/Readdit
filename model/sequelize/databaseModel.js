@@ -9,7 +9,7 @@ const { Sequelize, Model, DataTypes } = require('sequelize');
 
 // heroku credentials, comment as neccessary. ensure database has data
 const database = "heroku_1c89f72eef4896a";
-const user = " b7a6c1ee0950ab";
+const user = "b7a6c1ee0950ab";
 const password = "3ee893d6"
 const host = 'us-cdbr-east-04.cleardb.com'
 
