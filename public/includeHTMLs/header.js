@@ -2,7 +2,7 @@
 // Requires head.js and jQuery
 // Note: the href link uses a relative path.  
 
-$('head').append('<link href="../public/css/color_scheme.css" rel="stylesheet">');
+$('head').append('<link href="/css/color_scheme.css" rel="stylesheet">');
 $(document).ready(() => {
     $('body').prepend(`
     <nav class="navbar navbar-dark navbar-expand-lg" id="header">
