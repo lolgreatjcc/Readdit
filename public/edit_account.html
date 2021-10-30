@@ -4,13 +4,20 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link href="css/login.css" rel="stylesheet" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href = "css/edit_form.css">
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="./includeHTMLs/head.js"></script>
+    <script src="./includeHTMLs/header.js"></script>
 
     <script>
 
@@ -19,14 +26,13 @@
     var token = localStorage.getItem("token")
 // call the web service endpoint
     $.ajax({
-        //headers: { 'authorization': 'Bearer ' + tmpToken },
         url: `http://localhost:3000/users/` + user_id,
         type: 'GET',
         //data: data2,
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
         headers: {
-            "authorization" : `Bearer ${token}`        },
+            "authorization" : `Bearer ${token}`},
         success: function (data, textStatus, xhr) {
             $('#users').html("");
             // if (data != null && data.success) {
@@ -35,16 +41,11 @@
             //     console.log("Error");
             data = data.Result;
             console.log("data: " + data)
-            for (i = 0; i < data.length; i++) {
-                var user = data[i];
+                var user = data;
                 // compile the data that the card needs for it's creation
-                var cardInfo = {
-                    "username": user.name,
-                    "email": user.email,
-                }
-                console.log("------------Card Info Data Pack------------");
-                console.log(cardInfo);
-            };
+               
+            document.getElementById("username").value = user.username;
+            document.getElementById("email").value = user.email;
             $('#loadingText').html("");
             //     console.log(textStatus)
             //     console.log(xhr)
@@ -68,24 +69,72 @@
 
         $(document).ready(function () {
             loadaUserInfo();
+            $("#Submit").click(function () {
+                // data extraction
+                var email = $('#email').val();
+                var oldpwd = $('#oldpwd').val();
+                var newpwd = $('#newpwd').val();
+                var username = $('#username').val();
+                var {user_id} = JSON.parse(localStorage.getItem("userInfo"));
+                var token = localStorage.getItem("token");    
+
+                // data compilation
+                var data = {username:username,email:email,oldpwd:oldpwd,newpwd:newpwd}
+                //  call web service endpoint
+                $.ajax({
+                    // url: 'https://readdit-backend.herokuapp.com/api/login',
+                    url: `http://localhost:3000/users/` + user_id,
+                    type: 'PUT',
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    headers: {"authorization" : `Bearer ${token}`},
+                    success: function (data, textStatus, xhr) {
+                        console.log("Running ajax")
+                        if (data != null) {
+                            console.log(data)
+                            $(`#messages`).html("Change successful");
+                        } else {
+                            console.log("Error");
+                          }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.log("Xhr: " + xhr);
+                        console.log("textStatus: " + textStatus);
+                        console.log("errorThrown: " + errorThrown);
+                        console.log('Error in Operation');
+                        
+                        $(`#messages`).html("Change unsuccessful");
+                    }
+                });
+                return false;
+            });
         })
     </script>
 </head>
 
 <body>
-
-    <div class="login-form">
-        <h1 class="text-center">Readdit</h1>
-        <form id="login-form" action="">
-
-            <label for="email">Email:</label><br>
-            <input type="text" id="email" name="email" placeholder="Email" required="required"><br>
-            <label for="lname">Password:</label><br>
-            <input type="password" id="pwd" name="pwd" placeholder="Password" required="required"><br><br>
-            <button type="submit" class="btn" id="Login">Log in</button>
+    <div id="edit_form_container" class="login-form">
+        <h1 class="text-center">Edit Account</h1>
+        <form id="edit_form" class="justify-content-center" action="">
+            <div class="form-group">
+                <label for="username">Username:</label><br>
+                <input type="text" id="username" class="form-control" name="username" placeholder="Username" required="required"><br>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label><br>
+                <input type="text" id="email" class="form-control" name="email" placeholder="Email" required="required"><br>
+            </div>
+            <div class="form-group">
+                <label for="newpwd">New Password (Optional):</label><br>
+                <input type="password" id="newpwd" class="form-control" name="newpwd" placeholder="New Password (Optional)"><br>
+            </div>       
+            <div class="form-group">
+                <label for="oldpwd">Enter Old Password To Save Changes:</label><br>
+                <input type="password" id="oldpwd" class="form-control" name="oldpwd" placeholder="Old Password" required="required"><br><br>
+            </div>     
+            <button type="button" class="btn btn-primary btn-block" id="Submit">Submit</button>
             <div id="messages"></div>
-            <a href="#" class="pull-right">Forgot Password?</a>
-            <a href="/addUser.html">Sign up</a>
         </form>
 
     </div>
