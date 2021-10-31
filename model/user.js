@@ -98,18 +98,40 @@ var user = {
         })
     },
 
-    edit: function (userid, user, callback) {
-        var username = user.username;
-        var {old_password,new_password} = user;
-        var email = user.email;
-        // var profile_pic = user.profile_pic;
-        // var two_fa = user.two_fa;
-        var fk_user_type_id = user.fk_user_type_id;
+    checkPassword: function (userid, password, callback) {
+
         User.findOne({ where: {
 
             [Op.and]: [
                 { user_id: userid },
-                sequelize.where(sequelize.fn('BINARY', sequelize.col('password')), old_password)
+                sequelize.where(sequelize.fn('BINARY', sequelize.col('password')), password)
+            ]
+        } })
+        .then(function (result) {
+            console.log("Result: " + result)
+            if (typeof result === "undefined" || result == null) {
+                var result = "Wrong Password";
+                return callback(true, null); 
+            }
+            else {
+                return callback(null,true);
+            }
+        })
+
+        
+    },
+
+    edit: function (userid, user, callback) {
+        var username = user.username;
+        var {old_password,new_password} = user;
+        var email = user.email;
+        var profile_pic = user.profile_pic;
+        var two_fa = user.two_fa;
+        var fk_user_type_id = user.fk_user_type_id;
+        User.findOne({ where: {
+
+            [Op.and]: [
+                { user_id: userid }
             ]
         } })
         .then(function (result) {
@@ -127,8 +149,8 @@ var user = {
                         username: username,
                         password: old_password,
                         email: email,
-                        // profile_pic: profile_pic,
-                        // two_fa: two_fa,
+                        profile_pic: profile_pic,
+                        two_fa: two_fa,
                         fk_user_type_id: fk_user_type_id
                     },
                     { where: { user_id: userid } }
