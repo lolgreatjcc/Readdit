@@ -21,7 +21,7 @@
 
     <script>
 
-    function loadaUserInfo() {
+    function loadUserInfo() {
     var {user_id} = JSON.parse(localStorage.getItem("userInfo"))
     var token = localStorage.getItem("token")
 // call the web service endpoint
@@ -40,12 +40,35 @@
             // } else {
             //     console.log("Error");
             data = data.Result;
-            console.log("data: " + data)
+            console.log("data: " + data.profile_pic)
                 var user = data;
                 // compile the data that the card needs for it's creation
                
             document.getElementById("username").value = user.username;
             document.getElementById("email").value = user.email;
+            document.getElementById("pfpImg").value = user.profile_pic;
+            if (data.two_fa === "undefined" || data.two_fa == null || data.two_fa == 0){
+                document.getElementById("two_fa").checked = false;
+            }
+            else{
+                document.getElementById("two_fa").checked = true;
+            }
+            
+            try{
+                if (user.profile_pic === "undefined" || user.profile_pic == null || user.profile_pic.trim().length == 0){
+                $('#pfpImg').html('<img src="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png" alt="profile image" id="pfp" class="pb-2"></img><br>')
+            }
+            else{
+                var pfpTempString = user.profile_pic.split("upload");
+                user.profile_pic = pfpTempString[0] + "upload" + "/ar_1.0,c_fill/r_max" + pfpTempString[1]
+                $('#pfpImg').html('<img src="' + user.profile_pic + '" alt="profile image" id="pfp" class="pb-2"></img><br>')
+            }
+            }
+            catch(error){
+                $('#pfpImg').html('<img src="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png" alt="profile image" id="pfp" class="pb-2"></img><br>')
+                console.log(error)
+            }
+            
             $('#loadingText').html("");
             //     console.log(textStatus)
             //     console.log(xhr)
@@ -67,74 +90,123 @@
     });
 };
 
-        $(document).ready(function () {
-            loadaUserInfo();
-            $("#Submit").click(function () {
-                // data extraction
-                var email = $('#email').val();
-                var oldpwd = $('#oldpwd').val();
-                var newpwd = $('#newpwd').val();
-                var username = $('#username').val();
-                var {user_id} = JSON.parse(localStorage.getItem("userInfo"));
-                var token = localStorage.getItem("token");    
+function editUser(){
+    $(`#messages`).html("<p class='text-center text-primary pt-2'>Submitting...</p>");
+    var email = $('#email').val();
+    var oldpwd = $('#oldpwd').val();
+    var newpwd = $('#newpwd').val();
+    var username = $('#username').val();
+    var pfpImg = $('#pfpImg').val();
+    var two_fa =  $('#two_fa').is(":checked");
 
-                // data compilation
-                var data = {username:username,email:email,oldpwd:oldpwd,newpwd:newpwd}
-                //  call web service endpoint
-                $.ajax({
-                    // url: 'https://readdit-backend.herokuapp.com/api/login',
-                    url: `http://localhost:3000/users/` + user_id,
-                    type: 'PUT',
-                    data: JSON.stringify(data),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    headers: {"authorization" : `Bearer ${token}`},
-                    success: function (data, textStatus, xhr) {
-                        console.log("Running ajax")
-                        if (data != null) {
-                            console.log(data)
-                            $(`#messages`).html("Change successful");
-                        } else {
-                            console.log("Error");
-                          }
-                    },
-                    error: function (xhr, textStatus, errorThrown) {
-                        console.log("Xhr: " + xhr);
-                        console.log("textStatus: " + textStatus);
-                        console.log("errorThrown: " + errorThrown);
-                        console.log('Error in Operation');
-                        
-                        $(`#messages`).html("Change unsuccessful");
-                    }
-                });
-                return false;
-            });
+    try{
+        if (two_fa == true){
+            two_fa = 1;
+        }
+        else{
+            two_fa = 0;
+        }
+    }
+    catch(error){
+        console.log("Error in two_fa conversion. Error: " + error)
+    }
+
+    var {user_id} = JSON.parse(localStorage.getItem("userInfo"));
+    var token = localStorage.getItem("token");   
+    let webFormData = new FormData();
+    webFormData.append('email', email);
+    webFormData.append('oldpwd', oldpwd);
+    webFormData.append('newpwd', newpwd);
+    webFormData.append('username', username);
+    webFormData.append('profile_pic',pfpImg);
+    webFormData.append('two_fa',two_fa);
+    // HTML file input, chosen by user
+    webFormData.append("image", document.getElementById('image').files[0]);
+   console.log(...webFormData);
+    //  call web service endpoint
+    $.ajax({
+        // url: 'https://readdit-backend.herokuapp.com/api/login',
+        url: `http://localhost:3000/users/` + user_id,
+        method: 'PUT',
+        data: webFormData,
+        processData: false,
+        contentType: false,
+        cache: false,
+        enctype: 'multipart/form-data',
+        headers: {authorization: 'Bearer ' + token},
+        success: function (data, textStatus, xhr) {
+            console.log("Running ajax")
+            if (data != null) {
+                console.log(data)
+                $(`#messages`).html("<p class='text-center text-success pt-2'>Changes Saved.</p>");
+            } else {
+                console.log("Error");
+                }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.log("Xhr: " + xhr);
+            console.log("textStatus: " + textStatus);
+            console.log("errorThrown: " + errorThrown);
+            console.log('Error in Operation');
+            
+            $(`#messages`).html("<p class='text-center text-danger pt-2'>Failed To Save Changes</p>");
+        }
+    });
+    return false;
+}
+
+        $(document).ready(function () {
+            loadUserInfo();
+            document.getElementById('two_fa').addEventListener('change', (e) => {
+            this.checkboxValue = e.target.checked ? 'on' : 'off';
+            console.log(this.checkboxValue)
+            })
         })
+
     </script>
 </head>
 
 <body>
     <div id="edit_form_container" class="login-form">
         <h1 class="text-center">Edit Account</h1>
-        <form id="edit_form" class="justify-content-center" action="">
+        <form id="edit_form"  enctype="multipart/form-data" onsubmit="editUser()" action="javascript:void(0)">
+            <div class="form-group text-center" id="pfpImg"> 
+            </div>
+
             <div class="form-group">
                 <label for="username">Username:</label><br>
-                <input type="text" id="username" class="form-control" name="username" placeholder="Username" required="required"><br>
+                <input type="text" id="username" class="form-control" name="username" placeholder="Username" required="required" /><br>
             </div>
             <div class="form-group">
                 <label for="email">Email:</label><br>
-                <input type="text" id="email" class="form-control" name="email" placeholder="Email" required="required"><br>
+                <input type="text" id="email" class="form-control" name="email" placeholder="Email" required="required" /><br>
+            </div>
+            <div class="form-group">
+                <label for="image">Select New Image for Profile Picture (Optional):</label><br>
+                <input type="file" id="image" name="image" /><br><br>
+            </div>    
+            <div class="form-group">
+                <input type="text" id="pfpImg" name="pfpImg" hidden/>
+            </div>  
+            <div class="form-group pb-4">
+                <p class="d-inline">2 Factor Authentication</p>
+                <label class="switch float-right">
+                    <input type="checkbox" id="two_fa">
+                    <span class="slider round "></span>
+                  </label>
             </div>
             <div class="form-group">
                 <label for="newpwd">New Password (Optional):</label><br>
-                <input type="password" id="newpwd" class="form-control" name="newpwd" placeholder="New Password (Optional)"><br>
+                <input type="password" id="newpwd" class="form-control" name="newpwd" placeholder="New Password (Optional)" /><br>
             </div>       
             <div class="form-group">
                 <label for="oldpwd">Enter Old Password To Save Changes:</label><br>
-                <input type="password" id="oldpwd" class="form-control" name="oldpwd" placeholder="Old Password" required="required"><br><br>
-            </div>     
-            <button type="button" class="btn btn-primary btn-block" id="Submit">Submit</button>
-            <div id="messages"></div>
+                <input type="password" id="oldpwd" class="form-control" name="oldpwd" placeholder="Old Password" required="required"/><br>
+            </div>   
+            
+            <button type="submit" class="btn btn-primary btn-block" id="Submit">Submit</button>
+            <div id="messages">
+            </div>
         </form>
 
     </div>
