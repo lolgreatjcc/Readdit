@@ -34,8 +34,8 @@
             
             $.ajax({
                 headers: { 'authorization': 'Bearer ' + tmpToken },
-                url: 'https://readdit-backend.herokuapp.com/users/' + userid,
-                //url: 'http://localhost:3000/users/' + userid,
+                // url: 'https://readdit-backend.herokuapp.com/users/' + userid,
+                url: 'http://localhost:3000/users/' + userid,
                 type: 'GET',
                 //contentType: "application/json; charset=utf-8",
                 dataType: 'json',

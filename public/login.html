@@ -25,8 +25,8 @@
 
                 //  call web service endpoint
                 $.ajax({
-                    url: 'https://readdit-backend.herokuapp.com/api/login',
-                    // url: 'http://localhost:3000/api/login',
+                    // url: 'https://readdit-backend.herokuapp.com/api/login',
+                    url: 'http://localhost:3000/api/login',
                     type: 'POST',
                     data: data,
                     contentType: "application/json; charset=utf-8",
@@ -36,8 +36,8 @@
                         if (data != null) {
                             localStorage.setItem('token', data.token);
                             localStorage.setItem('userInfo', data.UserData);
-                            window.location.assign("https://readdit-sp.herokuapp.com/home.html");
-                            // window.location.assign("http://localhost:3001/home.html");
+                            // window.location.assign("https://readdit-sp.herokuapp.com/home.html");
+                            window.location.assign("http://localhost:3001/home.html");
                         } else {
                             console.log("Error");
                           }
@@ -63,7 +63,7 @@
     <div class="login-form">
         <h1 class="text-center">Readdit</h1>
         <form id="login-form" action="">
-
+            
             <label for="email">Email:</label><br>
             <input type="text" id="email" name="email" placeholder="Email" required="required"><br>
             <label for="lname">Password:</label><br>
