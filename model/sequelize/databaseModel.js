@@ -1,18 +1,18 @@
 //ADES CA1 Play2Win
 const { Sequelize, Model, DataTypes } = require('sequelize');
 
-// local credentials, comment as neccessary
-// const database = "readdit";
-// const user = "root";
-// const password = "Electronicman123"
-// const host = 'localhost'
+//local credentials, comment as neccessary
+const database = "readdit";
+const user = "root";
+const password = "FrozenLava123"
+const host = 'localhost'
 
 // heroku credentials, comment as neccessary. ensure database has data
 
-const database = "heroku_1c89f72eef4896a";
-const user = "b7a6c1ee0950ab";
-const password = "3ee893d6"
-const host = 'us-cdbr-east-04.cleardb.com'
+// const database = "heroku_1c89f72eef4896a";
+// const user = "b7a6c1ee0950ab";
+// const password = "3ee893d6"
+// const host = 'us-cdbr-east-04.cleardb.com'
 
 
 
@@ -91,11 +91,34 @@ const User_Type = sequelize.define('User_Type', {
     }
 })
 
+const Subreaddit = sequelize.define('Subreaddit', {
+    subreaddit_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true
+    },
+    subreaddit_name: {
+        type: DataTypes.STRING(45),
+        allowNull: false,
+    },
+    subreaddit_description: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+    },
+    fk_creator_user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    created_at : {
+        type: 'TIMESTAMP',
+        allowNull: true
+    }
+})
+
 async function syncing() { 
     await User.sync();
     console.log("All Models synchronized successfully.");
 }
 syncing();
-
 module.exports = sequelize;
 

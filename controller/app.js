@@ -21,6 +21,8 @@ const user = require('../model/user.js');
 const verifyModule = require('./verify');
 var cloudinary = require("../model/cloudinary")
 var verify = verifyModule.verify;
+
+const subreaddit = require('./subreaddit.js');
 //-----------------------------------
 // Middleware functions
 //-----------------------------------
@@ -252,6 +254,9 @@ app.post('/api/login', printDebugInfo, function (req, res) {
 
 
 });
+
+
+app.use('/r', subreaddit);
 //-----------------------------------
 // exports
 //-----------------------------------
