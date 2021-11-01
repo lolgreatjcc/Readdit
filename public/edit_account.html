@@ -126,7 +126,7 @@ function editUser(){
    console.log(...webFormData);
     //  call web service endpoint
     $.ajax({
-        url: 'https://readdit-backend.herokuapp.com/users' + user_id,
+        url: 'https://readdit-backend.herokuapp.com/users/' + user_id,
 //         url: `http://localhost:3000/users/` + user_id,
         method: 'PUT',
         data: webFormData,
