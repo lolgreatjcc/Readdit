@@ -47,7 +47,7 @@ var user = {
                     var token = jwt.sign(
                         // (1) Payload
                         {
-                            userid: result[0].user_id,
+                            user_id: result[0].user_id,
                             type: result[0].fk_user_type_id
                         },
                         // (2) Secret Key
@@ -58,7 +58,7 @@ var user = {
                             expiresIn: 86400
                         }
                     );
-                    return callback(null, token, result);
+                    return callback(null, token, result[0]);
                 }
             })
     },
@@ -98,28 +98,70 @@ var user = {
         })
     },
 
+    checkPassword: function (userid, password, callback) {
+
+        User.findOne({ where: {
+
+            [Op.and]: [
+                { user_id: userid },
+                sequelize.where(sequelize.fn('BINARY', sequelize.col('password')), password)
+            ]
+        } })
+        .then(function (result) {
+            console.log("Result: " + result)
+            if (typeof result === "undefined" || result == null) {
+                var result = "Wrong Password";
+                return callback(true, null); 
+            }
+            else {
+                return callback(null,true);
+            }
+        })
+
+        
+    },
+
     edit: function (userid, user, callback) {
         var username = user.username;
-        var password = user.password;
+        var {old_password,new_password} = user;
         var email = user.email;
         var profile_pic = user.profile_pic;
         var two_fa = user.two_fa;
         var fk_user_type_id = user.fk_user_type_id;
+        User.findOne({ where: {
 
-        User.update(
-            {
-                username: username,
-                password: password,
-                email: email,
-                profile_pic: profile_pic,
-                two_fa: two_fa,
-                fk_user_type_id: fk_user_type_id
-            },
-            { where: { user_id: userid } }
-        )
-            .then(function (result) {
-                return callback(null, result);
-            })
+            [Op.and]: [
+                { user_id: userid }
+            ]
+        } })
+        .then(function (result) {
+            console.log("Result: " + result)
+            if (typeof result === "undefined" || result == null) {
+                var result = "Wrong Password";
+                return callback(true, null); 
+            }
+            else {
+                if (new_password != null && new_password.trim().length != 0){
+                    old_password = new_password
+                }
+                User.update(
+                    {
+                        username: username,
+                        password: old_password,
+                        email: email,
+                        profile_pic: profile_pic,
+                        two_fa: two_fa,
+                        fk_user_type_id: fk_user_type_id
+                    },
+                    { where: { user_id: userid } }
+                )
+                    .then(function (result) {
+                        return callback(null, result);
+                    })
+            }
+        })
+
+        
     },
 
     delete: function (userid, callback) {
