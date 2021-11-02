@@ -12,7 +12,15 @@ var subreaddit = {
             subreaddit_description: description,
             fk_creator_user_id: creator_user_id
         }).then( function (result) {
-            console.log("result" + result)
+            return callback(null,result);
+        }).catch( function (err) {
+            return callback(err,null);
+        })
+    },
+    getSubreaddit: function (subreaddit_name, callback) {
+        Subreaddit.findOne({
+            where: {subreaddit_name: subreaddit_name}
+        }).then( function (result) {
             return callback(null,result);
         }).catch( function (err) {
             return callback(err,null);
