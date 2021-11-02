@@ -95,3 +95,20 @@ body {
     font-weight: bold;
     border: 0;
 }
+
+#about_community_header {
+    background-color: #734f96;
+}
+
+.fa-xl {
+    font-size: 1.5em;
+}
+
+.text-scheme {
+    color: #734f96;
+}
+
+.invert-scheme {
+    color: white;
+    background-color: #734f96;
+}
