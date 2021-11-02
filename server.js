@@ -23,8 +23,15 @@ app.use(function(req,res,next){
     }
 });
 
+app.get('/createSub', function (req,res) {
+    res.status(200).sendFile('create.html', {root: __dirname + '/public/r/'});
+})
 
-app.use(serveStatic(__dirname+"/public"));
+app.get('/r/:subreaddit', function (req,res) {
+    res.status(200).sendFile('subreaddit.html', { root: __dirname + "/public/r/" } );
+})
+
+app.use(serveStatic(__dirname + "/public"));
 
 
 app.listen(port,function(){
