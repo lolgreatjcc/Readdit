@@ -30,6 +30,27 @@ router.post('/create', (req,res) => {
     })
 })
 
+router.get('/:subreaddit', (req,res) => {
+    var requested_subreaddit = req.params.subreaddit;
+    
+    subreaddit.getSubreaddit(requested_subreaddit, function (err, result) {
+        if(!err) {
+            var result = result.dataValues;
+            var output = {
+                subreaddit_name: result.subreaddit_name,
+                subreaddit_description: result.subreaddit_description,
+                created_at: result.created_at
+            }
+            output = JSON.stringify(output)
+            res.status(200).send(output);
+        }else {
+            
+        }
+        
+    })
+
+})
+
 
 
 module.exports = router
