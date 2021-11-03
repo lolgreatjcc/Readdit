@@ -30,6 +30,19 @@ router.post('/create', (req,res) => {
     })
 })
 
+router.get('/allSubreaddits', (req,res) => {
+    subreaddit.getAllSubreaddits(function (err,result) {
+        console.log(err);
+        if(!err){
+            res.status(200).send(result);
+        }
+        else {
+            res.status(500).send(err);
+        }
+    })
+})
+
+
 router.get('/:subreaddit', (req,res) => {
     var requested_subreaddit = req.params.subreaddit;
     
@@ -44,12 +57,14 @@ router.get('/:subreaddit', (req,res) => {
             output = JSON.stringify(output)
             res.status(200).send(output);
         }else {
-            
+            // tbd
+            res.status(500).send(err);
         }
         
     })
-
 })
+
+
 
 
 

@@ -109,6 +109,42 @@ const Subreaddit = sequelize.define('Subreaddit', {
     }
 })
 
+const Post = sequelize.define('Post', {
+    post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true
+    },
+    fk_subreaddit_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    fk_user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    title: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    content: {
+        type: DataTypes.STRING(10000),
+        allowNull: false
+    },
+    fk_flair_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    pinned: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    created_at: {
+        type: 'TIMESTAMP',
+        allowNull: true
+    }
+})
+
 async function syncing() { 
     await User.sync();
     console.log("All Models synchronized successfully.");
