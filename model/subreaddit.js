@@ -25,6 +25,13 @@ var subreaddit = {
         }).catch( function (err) {
             return callback(err,null);
         })
+    },
+    getAllSubreaddits: function (callback) {
+        Subreaddit.findAll().then(function (result) { 
+            return callback(null,result);
+        }).catch(function (err) {
+            return callback(err,null)
+        })
     }
 }
 
