@@ -5,6 +5,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Readdit</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href = "css/edit_form.css">
@@ -26,8 +27,8 @@
     var token = localStorage.getItem("token")
 // call the web service endpoint
     $.ajax({
-//         url: `http://localhost:3000/users/` + user_id,
-        url: 'https://readdit-backend.herokuapp.com/users/'+ user_id,
+        url: `http://localhost:3000/users/` + user_id,
+        // url: 'https://readdit-backend.herokuapp.com/users/'+ user_id,
         type: 'GET',
         //data: data2,
         contentType: "application/json; charset=utf-8",
@@ -56,10 +57,11 @@
             }
             
             try{
-                if (user.profile_pic === "undefined" || user.profile_pic == null || user.profile_pic.trim().length == 0){
+                if (user.profile_pic === "undefined" || user.profile_pic == null || user.profile_pic.trim().length == 0 || user.profile_pic == "NULL"){
                 $('#pfpImg').html('<img src="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png" alt="profile image" id="pfp" class="pb-2"></img><br>')
             }
             else{
+                console.log("Pfp: " + user.profile_pic);
                 var pfpTempString = user.profile_pic.split("upload");
                 user.profile_pic = pfpTempString[0] + "upload" + "/ar_1.0,c_fill/r_max" + pfpTempString[1]
                 $('#pfpImg').html('<img src="' + user.profile_pic + '" alt="profile image" id="pfp" class="pb-2"></img><br>')
@@ -126,8 +128,8 @@ function editUser(){
    console.log(...webFormData);
     //  call web service endpoint
     $.ajax({
-        url: 'https://readdit-backend.herokuapp.com/users/' + user_id,
-//         url: `http://localhost:3000/users/` + user_id,
+        // url: 'https://readdit-backend.herokuapp.com/users/' + user_id,
+        url: `http://localhost:3000/users/` + user_id,
         method: 'PUT',
         data: webFormData,
         processData: false,

@@ -5,6 +5,12 @@
 $('head').append('<link href="/css/color_scheme.css" rel="stylesheet">');
 $(document).ready(() => {
     $('body').prepend(`
+    <script>
+        function runSearch(){
+            var query = $('#Search').val();
+            window.location.href = "/search.html?subreaddit=" + query;
+        }
+    </script>
     <nav class="navbar navbar-dark navbar-expand-lg" id="header">
     <div class=" container-fluid">
         <a class="navbar-brand" href="#">
@@ -28,8 +34,8 @@ $(document).ready(() => {
             <form class="flex-grow-1 me-5 ms-5">
                 <div class="input-group">
                     <input class="form-control bg-light h-100" type="text" placeholder="Search for Post / Subreadit"
-                        aria-label="Search">
-                    <button class="btn bg-white" type="button" id="headerSearchBtn">
+                        aria-label="Search" id="Search">
+                    <button class="btn bg-white" type="button" id="headerSearchBtn" onclick="runSearch()">
                         <i class="fas fa-search text-white"></i>
                     </button>
 
@@ -39,7 +45,7 @@ $(document).ready(() => {
 
             <ul class="navbar-nav ms-auto">
 
-                <a href="#" id="loginButton" class="btn me-2 px-4 rounded-pill">Login</a>
+                <a href="./login.html" id="loginButton" class="btn me-2 px-4 rounded-pill">Login</a>
                 <a href="#" id="signUpButton" class="btn me-3 px-4">Sign Up</a>
                 <div class="nav-item flex-row d-flex">
                     <i class="far fa-user fa-lg me-1 align-middle"></i>
