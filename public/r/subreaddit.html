@@ -134,6 +134,8 @@
                     var date = new Date(data.created_at);
                     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                     $('#community_create_month').html(months[date.getMonth() - 1]);
+                    $('#community_create_day').html(date.getDate());
+                    $('#community_create_year').html(date.getFullYear());
                 },
                 error: function (xhr, status, error) {
 
