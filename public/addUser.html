@@ -41,8 +41,8 @@
             };
 
             console.log(requestBody);
-            axios.post(`https://readdit-backend.herokuapp.com/users`,requestBody)
-            //axios.post(`http://localhost:3000/users`, requestBody)
+            //axios.post(`https://readdit-backend.herokuapp.com/users`,requestBody)
+            axios.post(`http://localhost:3000/users`, requestBody)
                 .then(response => {
                     $('#msg').html('User added successfully!');
                 })
@@ -87,8 +87,8 @@
             });
 
             $("#Return").click(function () {
-                //window.location.assign("http://localhost:3001/login.html");
-                window.location.assign("https://readdit-sp.herokuapp.com/login.html");
+                window.location.assign("http://localhost:3001/login.html");
+                //window.location.assign("https://readdit-sp.herokuapp.com/login.html");
             });
         });  
     </script>

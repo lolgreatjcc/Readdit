@@ -4,7 +4,8 @@ const serveStatic=require('serve-static');
 
 
 //var port = process.env.PORT;
- var port=3001;
+var hostname="localhost";
+var port=3001;
 
 var app=express();
 
@@ -27,12 +28,12 @@ app.use(function(req,res,next){
 app.use(serveStatic(__dirname+"/public"));
 
 
-app.listen(port,function(){
-    console.log(`Server hosted!`);
-    console.log("Localhost link:")
-    console.log("http://localhost:3001/template.html")
-});
-
-// app.listen(port,hostname,function(){
-//     console.log(`Server hosted at http://${hostname}:${port}`);
+// app.listen(port,function(){
+//     console.log(`Server hosted!`);
+//     console.log("Localhost link:")
+//     console.log("http://localhost:3001/template.html")
 // });
+
+app.listen(port,hostname,function(){
+    console.log(`Server hosted at http://${hostname}:${port}`);
+});
