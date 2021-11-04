@@ -23,6 +23,7 @@ var cloudinary = require("../model/cloudinary")
 var verify = verifyModule.verify;
 
 const subreaddit = require('./subreaddit.js');
+const post = require('./post.js');
 //-----------------------------------
 // Middleware functions
 //-----------------------------------
@@ -54,6 +55,7 @@ function printDebugInfo(req, res, next) {
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var jsonParser = bodyParser.json();
 var cors = require('cors');
+
 
 //-----------------------------------
 // MF configurations
@@ -264,6 +266,8 @@ app.post('/api/login', printDebugInfo, function (req, res) {
 //-----------------------------------
 
 app.use('/r', subreaddit);
+
+app.use('/post/', post);
 
 //-----------------------------------
 // exports

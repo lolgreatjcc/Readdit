@@ -12,7 +12,6 @@ var subreaddit = {
             subreaddit_description: description,
             fk_creator_user_id: creator_user_id
         }).then( function (result) {
-            console.log("result" + result)
             return callback(null,result);
         }).catch( function (err) {
             return callback(err,null);
@@ -25,7 +24,8 @@ var subreaddit = {
     //         return callback(null, result);
     //     })
     // },
-
+    
+    // Get all subreaddits
     getAll: function (callback) {
         // find multiple entries
         Subreaddit.belongsTo(User, { foreignKey: 'fk_creator_user_id' });
@@ -38,6 +38,23 @@ var subreaddit = {
             return callback(null, result);
         })
     },
+      
+    getSubreaddit: function (subreaddit_name, callback) {
+        Subreaddit.findOne({
+            where: {subreaddit_name: subreaddit_name}
+        }).then( function (result) {
+            return callback(null,result);
+        }).catch( function (err) {
+            return callback(err,null);
+        })
+    },
+//     getAllSubreaddits: function (callback) {
+//         Subreaddit.findAll().then(function (result) { 
+//             return callback(null,result);
+//         }).catch(function (err) {
+//             return callback(err,null)
+//         })
+//     }
 }
 
 

@@ -68,6 +68,40 @@ router.get('/subreaddits', printDebugInfo, (req,res) => {
 
 });
 
+// router.get('/allSubreaddits', (req,res) => {
+//     subreaddit.getAllSubreaddits(function (err,result) {
+//         console.log(err);
+//         if(!err){
+//             res.status(200).send(result);
+//         }
+//         else {
+//             res.status(500).send(err);
+//         }
+//     })
+// })
+
+// Get One Subreaddit
+router.get('/:subreaddit', (req,res) => {
+    var requested_subreaddit = req.params.subreaddit;
+    
+    subreaddit.getSubreaddit(requested_subreaddit, function (err, result) {
+        if(!err) {
+            var result = result.dataValues;
+            var output = {
+                subreaddit_name: result.subreaddit_name,
+                subreaddit_description: result.subreaddit_description,
+                created_at: result.created_at
+            }
+            output = JSON.stringify(output)
+            res.status(200).send(output);
+        }else {
+            // tbd
+            res.status(500).send(err);
+        }
+        
+    })
+})
+
 
 
 module.exports = router
