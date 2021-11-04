@@ -12,15 +12,15 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const multer = require('multer');
-const upload = multer({dest: '../imageUploadTemp'})
-const fs = require('fs')
-const { promisify } = require('util')
-const unlinkAsync = promisify(fs.unlink)
+const upload = multer({dest: '../mediaUploadTemp'})
+
 
 const user = require('../model/user.js');
 const verifyModule = require('./verify');
-var cloudinary = require("../model/cloudinary")
-var verify = verifyModule.verify;
+const subreadditModel = require('../model/subreaddit')
+const verify = verifyModule.verify;
+const mediaUpload = require("./mediaUpload");
+
 
 const subreaddit = require('./subreaddit.js');
 const post = require('./post.js');
@@ -150,7 +150,7 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify,  func
 
 
 
-    function submitEdit(){
+    function submitEdit(profile_pic){
         var data = {
             username: req.body.username,
             old_password: old_password,
@@ -182,18 +182,14 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify,  func
             var file = req.file;
             if (file != null){
                 console.log("Image Uploading...")
-                cloudinary.uploadFile(file, async function (error,result){
-                    try{
-                        console.log('check error variable in fileDataManager.upload code block\n', error);
-                        console.log('check result variable in fileDataManager.upload code block\n', result);                        
-                        profile_pic = result.imageURL;
-                        await unlinkAsync(req.file.path)
-                        submitEdit();
+
+                mediaUpload(file, function (err,result){
+                    if (result){
+                        var profile_pic = result.media_url;
+                        submitEdit(profile_pic)
                     }
-                    catch(error){
-                        let message = "File Submission Failed"
-                        // Generic Error Message
-                        res.status(500).json({message: message});
+                    else{
+                        res.status(500).json({message: err.message});
                     }
                 })
             }
@@ -264,6 +260,20 @@ app.post('/api/login', printDebugInfo, function (req, res) {
 //-----------------------------------
 // subreaddit endpoints
 //-----------------------------------
+
+//search for subreaddit
+app.get('/search',printDebugInfo, function (req, res) {
+    var query = req.query.subreaddit;
+    
+    subreadditModel.searchSubreaddit(query, function (err, result) {
+        if (!err) {
+            res.status(200).send({"Result" : result});
+        } else {
+            res.status(500).send({"Result:":"Internal Server Error"});
+        }
+    });
+
+});
 
 app.use('/r', subreaddit);
 
