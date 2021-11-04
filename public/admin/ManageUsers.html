@@ -1,0 +1,147 @@
+<!-- ADES CA1 Play2Win -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Readdit</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="../includeHTMLs/head.js"></script>
+    <script src="../includeHTMLs/header.js"></script>
+
+    <script>
+
+        function displayUsers() {
+            // call the web service endpoint
+            $.ajax({
+                //headers: { 'authorization': 'Bearer ' + tmpToken },
+                url: 'http://localhost:3000/users',
+                type: 'GET',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (data, textStatus, xhr) {
+                    var appendString = "";
+                    for (var i = 0; i < data.Result.length; i++) {
+                        var user = data.Result[i];
+                        if (user.two_fa == 1) {
+                            var twofa = "On"
+                        }
+                        else {
+                            var twofa = "Off"
+                        }
+
+                        if (user.fk_user_type_id == 1) {
+                            var type = "User"
+                        }
+                        else if (user.fk_user_type_id == 2) {
+                            var type = "Moderator"
+                        }
+                        else {
+                            var type = "Developer"
+                        }
+
+                        appendString += `<tr>
+                                                <th scope="row">${i + 1}</th>
+                                                <td>${user.username}</td>
+                                                <td>${user.email}</td>
+                                                <td>${user.profile_pic}</td>
+                                                <td>${twofa}</td>
+                                                <td>${type}</td>
+                                                <td> <button type="submit" id = "${users.user_id}" class="DeleteCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
+                                            </tr>`;
+                    }
+                    $("#load").html("");
+                    $("#users").append(appendString);
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                    console.log(xhr)
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    console.log(xhr.status);
+                    //if (xhr.status == 401) {
+                    //    $('$msg').html('Unauthorised User');
+                    //}
+                }
+            });
+
+        }
+
+        $(document).ready(function () {
+
+            var userData = localStorage.getItem('userInfo');
+            var token = localStorage.getItem("token")
+            // userData = userData.slice(1,-1);
+
+            var userJsonData = JSON.parse(userData);
+            var role = userJsonData.fk_user_type_id;
+
+            var tmpToken = localStorage.getItem('token');
+
+            if (role != 3) {
+                alert("Unauthorized User!");
+                window.location.assign("http://localhost:3001/home.html");
+            }
+
+            displayUsers();
+
+            $("#return").click(function () {
+                window.location.assign("http://localhost:3001/admin/admin_home.html");
+            });
+
+            $('body').on('click', '.DeleteCall', function () {
+                console.log(event.srcElement.id);
+            });
+        });
+
+    </script>
+
+</head>
+
+<body>
+    <div class="container">
+    </div>
+    <div class="container">
+        <h2>Manage Users</h2>
+        <div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Profile Pic URL</th>
+                        <th scope="col">Two FA</th>
+                        <th scope="col">User Type</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="users">
+                </tbody>
+            </table>
+            <div id="load">
+                <h5>LOADING USER TABLE...</h5>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-block"
+            style="background-color: #6a5acd; color : white; margin: 30px; width: 500px;" id="return">Return</button>
+    </div>
+
+
+
+</body>
+
+</html>
