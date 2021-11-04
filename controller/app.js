@@ -80,6 +80,10 @@ app.get('/', (req, res) => {
     res.end();
 });
 
+//-----------------------------------
+// user endpoints
+//-----------------------------------
+
 //getallusers
 app.get('/users',printDebugInfo, function (req, res) {
 
@@ -253,6 +257,10 @@ app.post('/api/login', printDebugInfo, function (req, res) {
 
 });
 
+//-----------------------------------
+// subreaddit endpoints
+//-----------------------------------
+
 //search for subreaddit
 app.get('/search',printDebugInfo, function (req, res) {
     var query = req.query.subreaddit;
@@ -267,9 +275,10 @@ app.get('/search',printDebugInfo, function (req, res) {
 
 });
 
-
 app.use('/r', subreaddit);
+
 app.use('/post/', post);
+
 //-----------------------------------
 // exports
 //-----------------------------------
