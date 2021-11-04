@@ -2,7 +2,7 @@ var sequelize = require('./sequelize/databaseModel.js');
 const { Media } = sequelize.models;
 
 var media = {
-    createMedia: function (media_url, content_type, fk_post_id,callback) {
+    createMedia: function (media_url, content_type, fk_post_id, callback) {
         Media.create({
             media_url: media_url,
             fk_content_type: content_type,

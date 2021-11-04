@@ -10,13 +10,13 @@ var path = require('path');
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, './imageUploadTemp/')
+      cb(null, './mediaUploadTemp/')
     },
     filename: function (req, file, cb) {
       cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
     }
   })
-const upload = multer({dest: './imageUploadTemp', storage:storage})
+const upload = multer({dest: './mediaUploadTemp', storage:storage})
 const mediaUpload = require("./mediaUpload");
 
 //uploading post images
@@ -29,26 +29,37 @@ router.post('/create', upload.array("media",8), (req,res) => {
     var fk_user_id = req.body.user_id;
     var file = req.files;
 
-    post.createPost(title, content, fk_subreaddit_id,fk_user_id, function (err,result) {
+    post.createPost(title, content, fk_subreaddit_id,fk_user_id, async function (err,result) {
         if(!err) {
             var fk_post_id = result.post_id
             //uploading media to cloudinary + saving record to media table
                 var success = true;
-                for (var i=0;i<file.length;i++){
+                var fileLength = file.length;
+                var progress = 0;
+                for (var i=0;i<fileLength;i++){
+                    progress++;
                     if (!success){
                         break;
                     }
                     //uploading media to cloudinary
-                    mediaUpload(file[i], function (err,result){
+                     await mediaUpload(file[i], async function (err,result){
                         try{
+                            var result = await result;
                         if (result){
-                            
                             //saving record to media table 
                             var {media_url,content_type} = result;
+                            console.log("Media Url: " + media_url);
                             media.createMedia(media_url, content_type, fk_post_id, function(err,result){
                                 if (err){
                                     throw "Error saving media_url to media table";
                                 }
+                                else if (result){
+                                    progress--;
+                                    if (progress == 0){
+                                        res.status(201).send({ "Result": "Post created successfully."});
+                                    }
+                                }
+                                
                             });
                         }
                         else{
@@ -67,10 +78,7 @@ router.post('/create', upload.array("media",8), (req,res) => {
                             
                         }
                     });
-                };   
-                if (success){
-                    res.status(201).send({ "Result": "Post created successfully."});
-                }         
+                };          
             
         } else {
             res.status(500).send({Error:err});

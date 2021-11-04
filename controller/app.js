@@ -12,7 +12,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 const multer = require('multer');
-const upload = multer({dest: '../imageUploadTemp'})
+const upload = multer({dest: '../mediaUploadTemp'})
 
 
 const user = require('../model/user.js');
