@@ -78,6 +78,10 @@ app.get('/', (req, res) => {
     res.end();
 });
 
+//-----------------------------------
+// user endpoints
+//-----------------------------------
+
 //getallusers
 app.get('/users',printDebugInfo, function (req, res) {
 
@@ -255,8 +259,12 @@ app.post('/api/login', printDebugInfo, function (req, res) {
 
 });
 
+//-----------------------------------
+// subreaddit endpoints
+//-----------------------------------
 
 app.use('/r', subreaddit);
+
 //-----------------------------------
 // exports
 //-----------------------------------

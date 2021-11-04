@@ -17,7 +17,27 @@ var subreaddit = {
         }).catch( function (err) {
             return callback(err,null);
         })
-    }
+    },
+
+    // getAll: function (callback) {
+    //     // find multiple entries
+    //     Subreaddit.findAll({ raw: true, attributes: ['subreaddit_id', 'subreaddit_name', 'subreaddit_description', 'fk_creator_user_id', 'created_at']}).then(function (result) {
+    //         return callback(null, result);
+    //     })
+    // },
+
+    getAll: function (callback) {
+        // find multiple entries
+        Subreaddit.belongsTo(User, { foreignKey: 'fk_creator_user_id' });
+
+        Subreaddit.findAll({ raw: true, include: [{
+            model: User,
+            required: true,
+            attributes: [['username','creator']],
+           }]}).then(function (result) {
+            return callback(null, result);
+        })
+    },
 }
 
 
