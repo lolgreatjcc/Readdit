@@ -4,6 +4,7 @@ console.log("---------------------------------");
 // Imports
 var sequelize = require('./sequelize/databaseModel.js');
 const { Subreaddit, User } = sequelize.models;
+const { Op } = require("sequelize");
 
 var subreaddit = {
     createSubreaddit: function (subreaddit_name, description, creator_user_id, callback) {
@@ -31,6 +32,15 @@ var subreaddit = {
             return callback(null,result);
         }).catch(function (err) {
             return callback(err,null)
+        })
+    },
+    searchSubreaddit: function (subreaddit_name, callback){
+        Subreaddit.findAll({
+            where: {subreaddit_name: {[Op.like]: subreaddit_name + "%"}}
+        }).then( function (result) {
+            return callback(null,result);
+        }).catch( function (err) {
+            return callback(err,null);
         })
     }
 }

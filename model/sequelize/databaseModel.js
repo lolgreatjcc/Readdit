@@ -4,7 +4,7 @@ const { Sequelize, Model, DataTypes } = require('sequelize');
 //local credentials, comment as neccessary
 const database = "readdit";
 const user = "root";
-const password = "FrozenLava123"
+const password = "Electronicman123"
 const host = 'localhost'
 
 // heroku credentials, comment as neccessary. ensure database has data
@@ -114,7 +114,8 @@ const Post = sequelize.define('Post', {
     post_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     fk_subreaddit_id: {
         type: DataTypes.INTEGER,
@@ -143,6 +144,26 @@ const Post = sequelize.define('Post', {
     created_at: {
         type: 'TIMESTAMP',
         allowNull: true
+    }
+})
+
+const Media = sequelize.define('Media', {
+    media_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true
+    },
+    media_url: {
+        type: DataTypes.STRING(255),
+        allowNull: false
+    },
+    fk_content_type: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    fk_post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 })
 

@@ -88,6 +88,7 @@ var user = {
                     two_fa: two_fa,
                     fk_user_type_id: fk_user_type_id
                 }).then(function (result) {
+                    console.log("Result: " + JSON.stringify(result));
                     return callback(null, result);
                 })
             }
