@@ -45,7 +45,7 @@ $(document).ready(() => {
 
             <ul class="navbar-nav ms-auto">
 
-                <a href="./login.html" id="loginButton" class="btn me-2 px-4 rounded-pill">Login</a>
+                <a href="/login.html" id="loginButton" class="btn me-2 px-4 rounded-pill">Login</a>
                 <a href="#" id="signUpButton" class="btn me-3 px-4">Sign Up</a>
                 <div class="nav-item flex-row d-flex">
                     <i class="far fa-user fa-lg me-1 align-middle"></i>
