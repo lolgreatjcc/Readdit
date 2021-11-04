@@ -103,7 +103,7 @@
                 media_form.append(`
                                     <div class="input-group mb-3">
                                         <label class="input-group-text" for="inputGroupFile01">Media ${media_form_count}</label>
-                                        <input type="file" class="form-control" id="inputGroupFile01">
+                                        <input type="file" class="form-control media" id="inputGroupFile01">
                                     </div>
                 
                 `)
@@ -117,20 +117,26 @@
 
                 // Temporary User id
                 var user_id = 2
-
-                var data = {
-                    title: title,
-                    content: content,
-                    subreaddit_id: subreaddit_id,
-                    user_id: user_id
-                }
+                let webFormData = new FormData();
+                webFormData.append('title',title);
+                webFormData.append('content',content);
+                webFormData.append('subreaddit_id',subreaddit_id);
+                webFormData.append('user_id',user_id);
+                var media = document.getElementsByClassName('media');
+                console.log("Media length: " + media.length);
+                for (var i=0;i<media.length;i++){
+                    console.log("Append Information: " + media[i].files[0])
+                    webFormData.append("media", media[i].files[0]);
+                };
 
                 $.ajax({
                     url:  `http://localhost:3000/post/create`,
                     method: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: 'json',
-                    data: JSON.stringify(data),
+                    data: webFormData,
+                    processData: false,
+                    contentType: false,
+                    cache: false,
+                    enctype: 'multipart/form-data',
                     success: function (data,status,xhr) {
                         alert(data.Result);
                     },
