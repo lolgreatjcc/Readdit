@@ -5,15 +5,15 @@ const { Sequelize, Model, DataTypes } = require('sequelize');
 
 const database = "readdit";
 const user = "root";
-const password = "Electronicman123"
+const password = "FrozenLava123"
 const host = 'localhost'
 
 // heroku credentials, comment as neccessary. ensure database has data
 
-const database = "heroku_1c89f72eef4896a";
-const user = "b7a6c1ee0950ab";
-const password = "3ee893d6"
-const host = 'us-cdbr-east-04.cleardb.com'
+// const database = "heroku_1c89f72eef4896a";
+// const user = "b7a6c1ee0950ab";
+// const password = "3ee893d6"
+// const host = 'us-cdbr-east-04.cleardb.com'
 
 
 
@@ -152,6 +152,19 @@ const Post = sequelize.define('Post', {
         allowNull: true
     }
 })
+
+Post.belongsTo(Subreaddit, {
+    foreignKey: 'fk_subreaddit_id'
+});
+
+Post.belongsTo(User, {
+    foreignKey: 'fk_user_id'
+})
+
+Subreaddit.hasMany(Post, {
+    foreignKey: 'fk_subreaddit_id'
+});
+
 
 const Media = sequelize.define('Media', {
     media_id: {
