@@ -81,18 +81,23 @@
 
         $(document).ready(function () {
 
-            var userData = localStorage.getItem('userInfo');
-            var token = localStorage.getItem("token")
-            // userData = userData.slice(1,-1);
+            try {
+                var userData = localStorage.getItem('userInfo');
+                var token = localStorage.getItem("token")
+                // userData = userData.slice(1,-1);
 
-            var userJsonData = JSON.parse(userData);
-            var role = userJsonData.fk_user_type_id;
+                var userJsonData = JSON.parse(userData);
+                var role = userJsonData.fk_user_type_id;
 
-            var tmpToken = localStorage.getItem('token');
+                var tmpToken = localStorage.getItem('token');
 
-            if (role != 3) {
-                alert("Unauthorized User!");
-                window.location.assign("http://localhost:3001/home.html");
+                if (role != 3) {
+                    alert("Unauthorized User!");
+                    window.location.assign("http://localhost:3001/home.html");
+                }
+            } catch (error) {
+                alert("Unauthenticated User!");
+                window.location.assign("http://localhost:3001/login.html");
             }
 
             displayUsers();
