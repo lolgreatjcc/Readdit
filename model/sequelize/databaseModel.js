@@ -74,10 +74,6 @@ const User = sequelize.define('User', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    created_at : {
-        type: 'TIMESTAMP',
-        allowNull: true
-    }
 })
 
 const User_Type = sequelize.define('User_Type', {
