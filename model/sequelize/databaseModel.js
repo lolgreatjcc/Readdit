@@ -3,10 +3,10 @@ const { Sequelize, Model, DataTypes } = require('sequelize');
 
 //local credentials, comment as neccessary
 
-const database = "readdit";
-const user = "root";
-const password = "Electronicman123"
-const host = 'localhost'
+// const database = "readdit";
+// const user = "root";
+// const password = "password"
+// const host = 'localhost'
 
 // heroku credentials, comment as neccessary. ensure database has data
 
@@ -74,10 +74,6 @@ const User = sequelize.define('User', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    created_at : {
-        type: 'TIMESTAMP',
-        allowNull: true
-    }
 })
 
 const User_Type = sequelize.define('User_Type', {
