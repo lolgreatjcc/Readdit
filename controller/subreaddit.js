@@ -102,6 +102,18 @@ router.get('/:subreaddit', (req,res) => {
     })
 })
 
+//delete subreaddit
+router.delete('/subreaddit/:subreadditid', printDebugInfo, function (req, res) {
+    var subreaddit_id= req.params.subreadditid;
 
+    subreaddit.delete(subreaddit_id, function (err, result) {
+        if (!err) {
+            res.status(204).send({"Result" : result});
+        } else {
+            res.status(500).send({ "Result:": "Internal Server Error" });
+        }
+    });
+
+});
 
 module.exports = router
