@@ -58,7 +58,7 @@
                                                 <td>${user.profile_pic}</td>
                                                 <td>${twofa}</td>
                                                 <td>${type}</td>
-                                                <td> <button type="submit" id = "${users.user_id}" class="DeleteCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
+                                                <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="DeleteCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
                                             </tr>`;
                     }
                     $("#load").html("");
@@ -101,8 +101,38 @@
                 window.location.assign("http://localhost:3001/admin/admin_home.html");
             });
 
+            $("#create").click(function () {
+                window.location.assign("http://localhost:3001/admin/createUser.html");
+            });
+
             $('body').on('click', '.DeleteCall', function () {
-                console.log(event.srcElement.id);
+                var user_id = event.srcElement.id;
+                var username = event.srcElement.name;
+                console.log(user_id);
+                var check = confirm("Delete " + username + "?");
+                if (check) {
+                    $.ajax({
+                        //headers: { 'authorization': 'Bearer ' + tmpToken },
+                        url: 'http://localhost:3000/users/' + user_id,
+                        type: 'DELETE',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        success: function (data, textStatus, xhr) {
+                            location.reload();
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            console.log('Error in Operation');
+                            console.log(xhr)
+                            console.log(textStatus);
+                            console.log(errorThrown);
+                            console.log(xhr.status);
+                            //if (xhr.status == 401) {
+                            //    $('$msg').html('Unauthorised User');
+                            //}
+                        }
+                    });
+
+                }
             });
         });
 
@@ -137,7 +167,11 @@
             </div>
         </div>
         <button type="submit" class="btn btn-block"
+            style="background-color: #6a5acd; color : white; margin: 30px; width: 500px;" id="create">Create New
+            User</button>
+        <button type="submit" class="btn btn-block"
             style="background-color: #6a5acd; color : white; margin: 30px; width: 500px;" id="return">Return</button>
+
     </div>
 
 

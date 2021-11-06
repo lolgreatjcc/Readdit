@@ -18,8 +18,8 @@
         crossorigin="anonymous"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="./includeHTMLs/head.js"></script>
-    <script src="./includeHTMLs/header.js"></script>
+    <script src="../includeHTMLs/head.js"></script>
+    <script src="../includeHTMLs/header.js"></script>
     <script>
 
         function addUser(username, email, profile_pic, password, two_fa) {
@@ -54,11 +54,13 @@
                     }
 
                 })
-            }
+
+        }
 
         $(document).ready(function () {
 
             $("#Add").click(function () {
+                $('#msg').html('Processing Request...');
                 // data extraction
                 var username = $('#username').val();
                 var email = $('#email').val();
@@ -87,8 +89,8 @@
             });
 
             $("#Return").click(function () {
-                window.location.assign("http://localhost:3001/login.html");
-                //window.location.assign("https://readdit-sp.herokuapp.com/login.html");
+                window.location.assign("http://localhost:3001/admin/ManageUsers.html");
+                //window.location.assign("https://readdit-sp.herokuapp.com/admin/ManageUsers.html");
             });
         });  
     </script>
@@ -101,7 +103,7 @@
     <div class="container">
 
         <div style="margin-top: 2rem;">
-            <h1>Sign Up</h1>
+            <h1>Create New User</h1>
 
             <div style="padding: 30px;" class="card">
                 <div id="img">
@@ -127,8 +129,8 @@
                 <label for="two_fa"> Enable 2FA?</label><br>
 
                 <p><span id="msg"></span></p>
-                <p><input type="button" id="Add" value="Sign up" /></p>
-                <p><input type="button" id="Return" value="Return to Login" /></p>
+                <p><input type="button" id="Add" value="Create" /></p>
+                <p><input type="button" id="Return" value="Return to Manage Users" /></p>
             </div>
         </div>
     </div>

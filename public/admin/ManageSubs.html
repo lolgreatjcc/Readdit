@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
@@ -22,7 +22,7 @@
 
     <script>
 
-function displaySubs() {
+        function displaySubs() {
             // call the web service endpoint
             $.ajax({
                 //headers: { 'authorization': 'Bearer ' + tmpToken },
@@ -32,15 +32,15 @@ function displaySubs() {
                 dataType: 'json',
                 success: function (data, textStatus, xhr) {
                     var appendString = "";
-                    for(var i = 0; i < data.Result.length; i++){
+                    for (var i = 0; i < data.Result.length; i++) {
                         var subreaddits = data.Result[i];
                         appendString += `<tr>
-                                                <th scope="row">${i+1}</th>
+                                                <th scope="row">${i + 1}</th>
                                                 <td>${subreaddits.subreaddit_name}</td>
                                                 <td>${subreaddits.subreaddit_description}</td>
                                                 <td>${subreaddits["User.creator"]}</td>
                                                 <td>${subreaddits.created_at}</td>
-                                                <td> <button type="submit" id = "${subreaddits.subreaddit_id}" class="DeleteCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
+                                                <td> <button type="submit" id = "${subreaddits.subreaddit_id}" name="${subreaddits.subreaddit_name}" class="DeleteCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
                                             </tr>`;
                     }
                     $("#load").html("");
@@ -65,12 +65,12 @@ function displaySubs() {
             var userData = localStorage.getItem('userInfo');
             var token = localStorage.getItem("token")
             // userData = userData.slice(1,-1);
-            
+
             var userJsonData = JSON.parse(userData);
             var role = userJsonData.fk_user_type_id;
-            
+
             var tmpToken = localStorage.getItem('token');
-            
+
             if (role != 3) {
                 alert("Unauthorized User!");
                 window.location.assign("http://localhost:3001/home.html");
@@ -83,7 +83,32 @@ function displaySubs() {
             });
 
             $('body').on('click', '.DeleteCall', function () {
-                console.log(event.srcElement.id);
+                var subreaddit_id = event.srcElement.id;
+                var subreaddit_name = event.srcElement.name;
+                console.log(subreaddit_id);
+                var check = confirm("Delete " + subreaddit_name + "?");
+                if (check) {
+                    $.ajax({
+                        //headers: { 'authorization': 'Bearer ' + tmpToken },
+                        url: 'http://localhost:3000/r/subreaddit/' + subreaddit_id,
+                        type: 'DELETE',
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        success: function (data, textStatus, xhr) {
+                            location.reload();
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            console.log('Error in Operation');
+                            console.log(xhr)
+                            console.log(textStatus);
+                            console.log(errorThrown);
+                            console.log(xhr.status);
+                            //if (xhr.status == 401) {
+                            //    $('$msg').html('Unauthorised User');
+                            //}
+                        }
+                    });
+                }
             });
         });
 
@@ -110,14 +135,15 @@ function displaySubs() {
                     </tr>
                 </thead>
                 <tbody id="subreaddits">
-                    
+
                 </tbody>
             </table>
             <div id="load">
                 <h5>LOADING SUBREADDITS TABLE...</h5>
             </div>
         </div>
-        <button type="submit" class="btn btn-block" style="background-color: #6a5acd; color : white; margin: 30px; width: 500px;" id="return">Return</button>
+        <button type="submit" class="btn btn-block"
+            style="background-color: #6a5acd; color : white; margin: 30px; width: 500px;" id="return">Return</button>
     </div>
 
 
