@@ -66,11 +66,11 @@ body {
     background-color: #f8f9fa;
 }
 
-#post1-upvote:hover {
+.post-upvote:hover {
     background-color: #6a5acd35;
 }
 
-#post1-downvote:hover {
+.post-downvote:hover {
     background-color: #6a5acd35;
 }
 
@@ -117,7 +117,4 @@ body {
 .invert-scheme {
     color: white;
     background-color: #734f96;
-}
-
-#add_media_form_button {
 }
