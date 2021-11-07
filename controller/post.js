@@ -86,4 +86,15 @@ router.post('/create', upload.array("media",8), (req,res) => {
     })
 })
 
+router.get('/get/r/:subreaddit', function (req,res) {
+    req_subreaddit = req.params.subreaddit;
+    post.getPostsInSubreaddit(req_subreaddit, function (result,err) {
+        if(!err) {
+            res.status(200).send(result);
+        } else {
+            res.status(500).send(err);
+        }
+    })
+})
+
 module.exports = router

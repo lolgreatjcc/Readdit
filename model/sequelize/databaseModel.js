@@ -5,7 +5,7 @@ const { Sequelize, Model, DataTypes } = require('sequelize');
 
 const database = "readdit";
 const user = "root";
-const password = "Electronicman123"
+const password = "FrozenLava123"
 const host = 'localhost'
 
 // heroku credentials, comment as neccessary. ensure database has data
@@ -73,10 +73,6 @@ const User = sequelize.define('User', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    created_at : {
-        type: 'TIMESTAMP',
-        allowNull: true
-    }
 })
 
 const User_Type = sequelize.define('User_Type', {
@@ -151,6 +147,19 @@ const Post = sequelize.define('Post', {
         allowNull: true
     }
 })
+
+Post.belongsTo(Subreaddit, {
+    foreignKey: 'fk_subreaddit_id'
+});
+
+Post.belongsTo(User, {
+    foreignKey: 'fk_user_id'
+})
+
+Subreaddit.hasMany(Post, {
+    foreignKey: 'fk_subreaddit_id'
+});
+
 
 const Media = sequelize.define('Media', {
     media_id: {

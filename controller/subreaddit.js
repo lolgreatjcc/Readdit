@@ -107,6 +107,7 @@ router.get('/:subreaddit', (req,res) => {
     })
 })
 
+
 //check if logged in user is subreaddit owner
 router.get('/checkOwner/:subreaddit', verify.extractUserId, (req,res) => {
     var requested_subreaddit = req.params.subreaddit;
@@ -129,5 +130,18 @@ router.get('/checkOwner/:subreaddit', verify.extractUserId, (req,res) => {
     })
 })
 
+//delete subreaddit
+router.delete('/subreaddit/:subreadditid', printDebugInfo, function (req, res) {
+    var subreaddit_id= req.params.subreadditid;
+
+    subreaddit.delete(subreaddit_id, function (err, result) {
+        if (!err) {
+            res.status(204).send({"Result" : result});
+        } else {
+            res.status(500).send({ "Result:": "Internal Server Error" });
+        }
+    });
+
+});
 
 module.exports = router
