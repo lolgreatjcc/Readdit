@@ -78,10 +78,11 @@
 
             // Retrieves subreaddits.
             $.ajax({
-                url: 'http://localhost:3000/r/allSubreaddits',
+                url: 'http://localhost:3000/r/subreaddits',
                 method: 'get',
                 contentType: "application/json; charset=utf-8",
                 success: function (data, status, xhr) {
+                    var data = data.Result
                     for (var i = 0; i < data.length; i++) {
                         $('#create_post_community').append(`
                             <option id='subreaddit_id_${data[i].subreaddit_id}' value='${data[i].subreaddit_id}'>${data[i].subreaddit_name}</option>

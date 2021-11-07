@@ -16,8 +16,14 @@ body {
     font-weight: 600;
 }
 
-#signUpButton {
+#signUpButton, #addModerator {
     background-color: #6a5acd;
+    color: white;
+    font-weight: 700;
+}
+
+#removeModerator {
+    background-color: #eb4040;
     color: white;
     font-weight: 700;
 }

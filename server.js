@@ -28,6 +28,10 @@ app.get('/createSub', function (req,res) {
     res.status(200).sendFile('create.html', {root: __dirname + '/public/r/'});
 })
 
+app.get('/moderator', function (req,res) {
+    res.status(200).sendFile('moderator.html', {root: __dirname + '/public/r/'});
+})
+
 app.get('/r/:subreaddit', function (req,res) {
     res.status(200).sendFile('subreaddit.html', { root: __dirname + "/public/r/" } );
 })

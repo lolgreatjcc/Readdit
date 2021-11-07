@@ -73,12 +73,11 @@
                 var description = $('#community_description').val();
 
                 // Temporary value till user_ids are implemented
-                var user_id = 2;
+                var token = localStorage.getItem("token");
 
                 var data = {
                     subreaddit_name: subreaddit_name,
                     description: description,
-                    user_id: user_id
                 }
 
                 $.ajax({
@@ -86,6 +85,9 @@
                     method: 'POST',
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify(data),
+                    headers:{
+                        authorization : "Bearer "  + token
+                    },
                     success: function (data, status, xhr) {
                         alert(data.Result)
                     },
