@@ -9,7 +9,6 @@ const password = "FrozenLava123"
 const host = 'localhost'
 
 // heroku credentials, comment as neccessary. ensure database has data
-
 // const database = "heroku_1c89f72eef4896a";
 // const user = "b7a6c1ee0950ab";
 // const password = "3ee893d6"
@@ -177,6 +176,22 @@ const Media = sequelize.define('Media', {
         allowNull: false
     },
     fk_post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
+})
+
+const Moderator = sequelize.define('Moderator', {
+    moderator_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true
+    },
+    fk_subreaddit_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    fk_user_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     }
