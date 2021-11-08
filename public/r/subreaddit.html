@@ -33,10 +33,6 @@
                 <div class=" bg-white body-borders px-3 py-2 mb-3 rounded shadow-sm">
                     <form>
                         <div class="d-flex">
-
-
-
-
                             <div class="input-group">
                                 <button class="btn btn-outline-secondary dropdown-toggle" type="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">r/all</button>
@@ -91,6 +87,9 @@
                         <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100">Join Community</a>
                     </div>
                 </div>
+                <div class="bg-white body-borders rounded shadow-sm mb-3" id="moderator">
+                    
+                </div>
                 <div class="bg-white body-borders rounded shadow-sm">
                     <div id="about_community_header" class="p-2 py-3 rounded-top">
                         <h6 class="fw-bold text-white mb-0 ms-2">About Community</h6>
@@ -129,6 +128,7 @@
                     data = JSON.parse(data);
                     $("#community_name").html(data.subreaddit_name);
                     $("#subreaddit_name").html(data.subreaddit_name);
+                    checkOwner(data.subreaddit_name);
                     $('#community_desc').html(data.subreaddit_description)
                     var date = new Date(data.created_at);
                     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -199,6 +199,29 @@
                 }
             })
         })
+
+        function checkOwner(subreadditName){
+            var token = localStorage.getItem("token");
+            $.ajax({
+                url: `http://localhost:3000/r/checkOwner/` + subreadditName,
+                method: 'GET',
+                contentType: "application/json; charset=utf-8",
+                headers: {authorization:"Bearer " + token},
+                success: function (data, status, xhr) { 
+                    $("#moderator").html(`
+                    <div id="about_community_header" class="p-2 py-3 rounded-top">
+                        <h6 class="fw-bold text-white mb-0 ms-2">Moderators</h6>
+                    </div>
+                    <div class="p-2" >
+                        <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100" href="/moderator?subreaddit=${subreadditName}">Edit Moderators</a>
+                    </div>
+                    `)
+                },
+                error: function (xhr, status, error) {
+                    console.log("")
+                }
+            });
+        }
     </script>
 </body>
 
