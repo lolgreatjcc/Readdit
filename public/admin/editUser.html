@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Readdit</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="../includeHTMLs/head.js"></script>
+    <script src="../includeHTMLs/header.js"></script>
+    <script>
+
+        function loadUserInfo(user) {
+            $('#load').html("Loading Info...");
+
+            // call the web service endpoint
+            $.ajax({
+                url: `http://localhost:3000/r/subreaddit/` + subreaddit_id,
+                type: 'GET',
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (data, textStatus, xhr) {
+                    var subreaddit = data;
+                    // compile the data that the card needs for it's creation
+
+                    document.getElementById("name").value = subreaddit.subreaddit_name;
+                    document.getElementById("description").value = subreaddit.subreaddit_description;
+
+                    $('#load').html("");
+                },
+
+
+                error: function (xhr, textStatus, errorThrown) {
+                    console.log('Error in Operation');
+                    console.log(xhr);
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    $('#loadingText').html("<h6 class='text-danger'>ERROR LOADING!</h6>");
+                    if (xhr.status == 403) {
+                        $('#msg').html('F̵̤̈ò̵̬r̶͙̃b̴͖͛i̶̲͒d̸̞̓d̵̮́e̷̬̐n̵̻̄');
+                    }
+                }
+            });
+        };
+
+
+        $(document).ready(function () {
+            var queryParams = new URLSearchParams(window.location.search);
+            console.log("---------Query Parameters---------");
+            console.log("Query Param (source): " + window.location.search);
+            console.log("Query Param (extracted): " + queryParams);
+
+            var subreaddit_id = queryParams.get("id");
+
+            loadSubreadditInfo(subreaddit_id);
+
+            $("#update").click(function () {
+                var name = $('#name').val();
+                var description = $('#description').val();
+
+                const requestBody = {
+                    subreaddit_name: name,
+                    subreaddit_description: description
+                };
+
+                console.log(requestBody);
+
+                // axios.put(`https://readdit-backend.herokuapp.com/r/subreaddit/` + subreaddit_id,requestBody)
+
+                axios.put(`http://localhost:3000/r/subreaddit/` + subreaddit_id, requestBody)
+                    .then(response => {
+                        $('#load').html('Subreaddit updated successfully!');
+                    })
+                    .catch(error => {
+                        $('#load').html('Error updating Subreaddit');
+                    })
+            });
+
+            $("#Return").click(function () {
+                window.location.assign("http://localhost:3001/admin/ManageSubs.html");
+            });
+        })
+
+    </script>
+</head>
+
+<body>
+    <div id="edit_form_container" class="login-form">
+        <h1 class="text-center">Edit User</h1>
+        <div class="form-group">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" class="form-control" name="name" placeholder="name" required="required" /><br>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label><br>
+            <input type="text" id="description" class="form-control" name="description" placeholder="Description"
+                required="required" /><br>
+        </div>
+
+        <p><input style="background-color: #6a5acd; color : white; margin: 10px; width: 500px;" type="button" id="update" value="Update" /></p>
+        <p><input style="background-color: #6a5acd; color : white; margin: 10px; width: 500px;" type="button" id="Return" value="Return to Manage Subreaddits" /></p>
+    </div>
+    <div id="load">
+
+    </div>
+    </div>
+</body>
+
+</html>
