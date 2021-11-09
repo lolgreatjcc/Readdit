@@ -24,6 +24,7 @@ const mediaUpload = require("./mediaUpload");
 
 const subreaddit = require('./subreaddit.js');
 const post = require('./post.js');
+const comment = require('./comment.js');
 //-----------------------------------
 // Middleware functions
 //-----------------------------------
@@ -274,6 +275,8 @@ app.get('/search',printDebugInfo, function (req, res) {
     });
 
 });
+
+app.use('/comment', comment)
 
 app.use('/r', subreaddit);
 
