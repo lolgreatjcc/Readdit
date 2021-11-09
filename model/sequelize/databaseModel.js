@@ -16,7 +16,6 @@ const password = "3ee893d6"
 const host = 'us-cdbr-east-04.cleardb.com'
 
 
-
 const sequelize = new Sequelize(database, user, password, {
     host: host,
     dialect: 'mysql',
@@ -177,6 +176,22 @@ const Media = sequelize.define('Media', {
         allowNull: false
     },
     fk_post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
+})
+
+const Moderator = sequelize.define('Moderator', {
+    moderator_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true
+    },
+    fk_subreaddit_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    fk_user_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     }

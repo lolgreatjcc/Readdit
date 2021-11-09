@@ -40,6 +40,7 @@ var subreaddit = {
         }).then(function (result) {
             return callback(null, result);
         })
+        
     },
 
     getSubreaddit: function (subreaddit_name, callback) {
@@ -115,7 +116,22 @@ var subreaddit = {
             }
         })
 
-        
+    },
+//     getAllSubreaddits: function (callback) {
+//         Subreaddit.findAll().then(function (result) { 
+//             return callback(null,result);
+//         }).catch(function (err) {
+//             return callback(err,null)
+//         })
+//     }
+    getModerators: function (subreaddit_name, callback) {
+        Subreaddit.findAll({
+            where: {subreaddit_name: subreaddit_name}
+        }).then( function (result) {
+            return callback(null,result);
+        }).catch( function (err) {
+            return callback(err,null);
+        })
     },
 }
 

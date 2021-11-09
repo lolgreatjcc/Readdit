@@ -68,6 +68,15 @@ var user = {
         })
     },
 
+    getUserByUsername: function (username, callback) {
+        User.findAll({
+            where: {username: {[Op.like]: username + "%"}}
+        })
+            .then(function (result) {
+                return callback(null,result);
+            })
+    },
+
     getAll: function (callback) {
         // find multiple entries
         User.findAll({ raw: true, attributes: ['user_id', 'username', 'email', 'profile_pic', 'two_fa', 'fk_user_type_id'] }).then(function (result) {
