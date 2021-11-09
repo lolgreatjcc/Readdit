@@ -58,6 +58,7 @@
                                                 <td>${user.profile_pic}</td>
                                                 <td>${twofa}</td>
                                                 <td>${type}</td>
+                                                <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="EditCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Edit</button> </td>
                                                 <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="DeleteCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
                                             </tr>`;
                     }
@@ -139,6 +140,11 @@
 
                 }
             });
+
+            $('body').on('click', '.EditCall', function () {
+                var user_id = event.srcElement.id;
+                window.location.assign("http://localhost:3001/admin/editUser.html?id=" + user_id);
+            });
         });
 
     </script>
@@ -161,6 +167,7 @@
                         <th scope="col">Profile Pic URL</th>
                         <th scope="col">Two FA</th>
                         <th scope="col">User Type</th>
+                        <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
