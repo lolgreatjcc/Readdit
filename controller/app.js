@@ -11,20 +11,30 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 
+//imports for media upload
+var path = require('path');
 const multer = require('multer');
-const upload = multer({dest: '../mediaUploadTemp'})
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, './mediaUploadTemp/')
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
+    }
+  })
+const upload = multer({dest: './mediaUploadTemp', storage:storage})
 
 
 const user = require('../model/user.js');
-const verifyModule = require('./verify');
+const verify = require('./verify');
 const subreadditModel = require('../model/subreaddit')
-const verify = verifyModule.verify;
 const mediaUpload = require("./mediaUpload");
 
 
 const subreaddit = require('./subreaddit.js');
 const post = require('./post.js');
 const comment = require('./comment.js');
+const moderator = require('./moderator.js')
 //-----------------------------------
 // Middleware functions
 //-----------------------------------
@@ -99,7 +109,7 @@ app.get('/users',printDebugInfo, function (req, res) {
 });
 
 //getoneuser
-app.get('/users/:user_id',printDebugInfo, verify, function (req, res) {
+app.get('/users/:user_id',printDebugInfo, verify.verifySameUserId, function (req, res) {
     var userid = req.params.user_id;
     
     user.getUser(userid, function (err, result) {
@@ -138,10 +148,10 @@ app.post('/users',printDebugInfo, function (req, res) {
 });
 
 //edit user
-app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify,  function (req, res) {
+app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify.verifySameUserId,  function (req, res) {
     var user_id = req.params.user_id;
     var old_password = req.body.oldpwd;
-    var profile_pic = req.body.profile_pic;
+    var pfp = req.body.profile_pic;
     var two_fa = parseInt(req.body.two_fa);
 
     if (isNaN(user_id)) {
@@ -196,7 +206,7 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify,  func
             }
             else{
                 console.log("No Image");
-                submitEdit();
+                submitEdit(pfp);
             }   
         }
         else {
@@ -216,6 +226,19 @@ app.delete('/users/:userid', printDebugInfo, function (req, res) {
             res.status(204).send({"Result" : result});
         } else {
             res.status(500).send({ "Result:": "Internal Server Error" });
+        }
+    });
+
+});
+
+app.get('/usernameSearch/:username',printDebugInfo, function (req, res) {
+    var username = req.params.username;
+
+    user.getUserByUsername(username, function (err, result) {
+        if (!err) {
+            res.status(200).send({"Result" : result});
+        } else {
+            res.status(500).send({"Result:":"Internal Server Error"});
         }
     });
 
@@ -281,6 +304,8 @@ app.use('/comment', comment)
 app.use('/r', subreaddit);
 
 app.use('/post/', post);
+
+app.use('/moderator/', moderator)
 
 //-----------------------------------
 // exports
