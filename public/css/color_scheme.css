@@ -22,6 +22,10 @@ body {
     font-weight: 700;
 }
 
+.tabColour {
+    background-color: #6a5acd!important;
+}
+
 #removeModerator {
     background-color: #eb4040;
     color: white;

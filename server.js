@@ -36,6 +36,10 @@ app.get('/r/:subreaddit', function (req,res) {
     res.status(200).sendFile('subreaddit.html', { root: __dirname + "/public/r/" } );
 })
 
+app.get('/r/:subreaddit/:postid', function (req,res) {
+    res.status(200).sendFile('viewPost.html', { root: __dirname + "/public/r/" } );
+})
+
 app.use(serveStatic(__dirname + "/public"));
 
 
