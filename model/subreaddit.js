@@ -52,6 +52,16 @@ var subreaddit = {
         })
     },
 
+    getSubreadditByID: function (subreaddit_id, callback) {
+        Subreaddit.findOne({
+            where: {subreaddit_id: subreaddit_id}
+        }).then( function (result) {
+            return callback(null,result);
+        }).catch( function (err) {
+            return callback(err,null);
+        })
+    },
+
     searchSubreaddit: function (subreaddit_name, callback) {
         Subreaddit.findAll({
             where: { subreaddit_name: { [Op.like]: subreaddit_name + "%" } }
@@ -74,7 +84,39 @@ var subreaddit = {
         }).then(function (result) {
             return callback(null, result);
         })
-    }
+    },
+
+    edit: function (subreaddit_id, subreaddit, callback) {
+        var subreaddit_name = subreaddit.subreaddit_name;
+        var subreaddit_description = subreaddit.subreaddit_description;
+        Subreaddit.findOne({ where: {
+
+            [Op.and]: [
+                { subreaddit_id: subreaddit_id }
+            ]
+        } })
+        .then(function (result) {
+            console.log("Result: " + result)
+            if (typeof result === "undefined" || result == null) {
+                var result = "Wrong Password";
+                return callback(true, null); 
+            }
+            else {
+                Subreaddit.update(
+                    {
+                        subreaddit_name: subreaddit_name,
+                        subreaddit_description: subreaddit_description,
+                    },
+                    { where: { subreaddit_id: subreaddit_id } }
+                )
+                    .then(function (result) {
+                        return callback(null, result);
+                    })
+            }
+        })
+
+        
+    },
 }
 
 
