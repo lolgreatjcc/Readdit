@@ -9,4 +9,5 @@ $('head').append(`
         crossorigin="anonymous">
     </script>
     <script src="https://kit.fontawesome.com/5f9967f196.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
 `)
