@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../../includeHTMLs/head.js"></script>
+    <script src="../../includeHTMLs/header.js"></script>
+
+    <title>Post</title>
+</head>
+
+<body>
+    <div class="container-xxl my-md-4">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="post rounded mb-2">
+                    <div class="row g-0">
+                        <div class="col-1 upvote-section py-2 justify-content-center">
+                            <a class="text-center d-block py-1 post-upvote" id="post_${data[i].post_id}_upvote"><i
+                                    class="fas fa-arrow-up text-dark"></i></a>
+                            <p id="post#-val" class="text-center mb-0">####</p>
+                            <a class="text-center d-block py-1 post-downvote" id="post_${data[i].post_id}_downvote"><i
+                                    class="fas fa-arrow-down text-dark"></i></a>
+                        </div>
+                        <div class="col-11 bg-white p-2">
+                            <div class="d-flex flex-row align-items-baseline">
+                                <h6 class="d-inline fw-bold clickable-link">
+                                    r/<a id="post_subreaddit"></a></h6>
+                                <p class="fw-light text-secondary mx-1">•</p>
+                                <p class="d-inline text-secondary me-1">Posted by</p>
+                                <p class="d-inline text-secondary clickable-link"> u/<a id="post_username"></a></p>
+                                <p class="fw-light text-secondary mx-1">•</p>
+                                <p class="text-secondary" id="post_timeAgo"></p>
+                            </div>
+
+                            <h4 id="post_title"></h4>
+                            <p id="post_content"></p>
+                            <div class="mx-3">
+                                <div class="toolbar d-flex flex-row align-items-center mb-2">
+                                    <div class="d-flex flex-row text-secondary me-4">
+                                        <span class="material-icons md-24 me-1">chat_bubble_outline</span>
+                                        <p class="mb-0 fw-bold me-1" id="comment_total"></p>
+                                        <p class="mb-0 fw-bold fs-6">Comments</p>
+                                    </div>
+                                    <div class="d-flex flex-row text-secondary me-4">
+                                        <span class="material-icons md-24 mx-1">share</span>
+                                        <p class="mb-0 fw-bold fs-6">Share</p>
+                                    </div>
+                                    <div class="d-flex flex-row text-secondary me-4">
+                                        <span class="material-icons md-24 mx-1">bookmark_border</span>
+                                        <p class="mb-0 fw-bold fs-6">Save</p>
+                                    </div>
+                                    <div class="d-flex flex-row text-secondary me-4">
+                                        <span class="material-icons md-24 mx-1">outlined_flag</span>
+                                        <p class="mb-0 fw-bold fs-6">Report</p>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <div>
+                                        <p class="mb-0">Comment as u/<span class="text-secondary">/username/</span></p>
+                                    </div>
+                                    <form class="">
+                                        <textarea class="form-control body-borders rounded-0 rounded-top"
+                                            style="min-height: 122px; border-bottom: 0;"
+                                            placeholder="What are your thoughts?" id="comment_content"></textarea>
+                                        <div class="bg-darker body-borders rounded-bottom p-2 d-flex">
+                                            <div class="flex-grow-1"></div>
+                                            <input type="button" value="Comment" id="comment_submit"
+                                                class="invert-scheme btn">
+                                        </div>
+
+                                    </form>
+                                    <hr>
+                                    <div id="comment_div">
+                                        <!-- <div class="comment row ">
+                                            <div class="col-1 d-flex flex-column">
+                                                <p>/img/</p>
+                                                <div class="comment-line flex-grow-1 w-50"></div>
+
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="d-flex flex-row">
+                                                    <p>/username/</p>
+                                                    <p class="fw-light text-secondary mx-1">•</p>
+                                                    <p class="text-secondary" id="post_${data[i].post_id}_time">
+                                                        ${comment_date_output}</p>
+                                                </div>
+                                                <p class="mb-2">${comment_content}</p>
+                                                <div class="d-flex flex-row align-items-center">
+                                                    <a class="text-center d-block p-1 post-upvote"
+                                                        id="post_${data[i].post_id}_upvote"><i
+                                                            class="fas fa-arrow-up text-dark"></i>
+                                                    </a>
+                                                    <p class="mb-0 mx-3">###</p>
+                                                    <a class="text-center d-block p-1 post-downvote"
+                                                        id="post_${data[i].post_id}_downvote"><i
+                                                            class="fas fa-arrow-down text-dark"></i></a>
+                                                </div>
+
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-4">
+                <div class="bg-white body-borders rounded shadow-sm mb-3">
+                    <div class="invert-scheme p-2 py-3 rounded-top" id="about_community_header">
+                        <div class="ms-2">
+                            <h6 class="fw-bolder text-white mb-0" id="community_name"></h6>
+                            <small class="fw-normal">r/<span id="subreaddit_name"></span></small>
+                        </div>
+
+                    </div>
+                    <div class="p-2">
+                        <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100">Join Community</a>
+                    </div>
+                </div>
+                <div class="bg-white body-borders rounded shadow-sm">
+                    <div id="about_community_header" class="p-2 py-3 rounded-top">
+                        <h6 class="fw-bold text-white mb-0 ms-2">About Community</h6>
+                    </div>
+                    <div class="p-2">
+                        <p id="community_desc">Short description about subreaddit</p>
+                        <p class="text-center mb-0">##</p>
+                        <p class="text-center">Members</p>
+                        <hr />
+                        <div class="d-flex flex-row align-items-center mx-3">
+                            <i class="fas fa-birthday-cake fa-xl text-scheme"></i>
+                            <p class="ms-2 mb-0 fw-bold text-scheme">Created</p>
+                            <p class="ms-1 mb-0" id="community_create_month">MMM</p>
+                            <p class="ms-1 mb-0" id="community_create_day">DD</p>
+                            <p class="mb-0">,</p>
+                            <p class="ms-1 mb-0" id="community_create_year">YYYY</p>
+                        </div>
+                        <hr class="mb-2" />
+                        <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100">Create Post</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var pathname = window.location.pathname;
+            var subreaddit_path = pathname.split('/')[2];
+            var post_id = pathname.split('/')[3];
+            var retrieved_post_id;
+            $.ajax({
+                method: 'GET',
+                url: `http://localhost:3000/post/` + post_id,
+                contentType: "application/json; charset=utf-8",
+                success: function (post_data, status, xhr) {
+                    if (post_data.Subreaddit.subreaddit_name != subreaddit_path) {
+                        window.location.href = `http://localhost:3000/r/${post_data.Subreaddit.subreaddit_name}/${post_id}`;
+                    } else {
+                        console.log(post_data);
+                        $('#post_subreaddit').append(post_data.Subreaddit.subreaddit_name);
+                        $('#post_username').append(post_data.User.username);
+                        $('#post_title').append(post_data.title);
+                        $('#post_content').append(post_data.content);
+
+                        // Calculates Time
+                        var date = new Date(post_data.created_at);
+                        var date_now = new Date();
+                        var hours_between_dates = (date_now - date) / (60 * 60 * 1000);
+                        var days_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 1000))
+                        var weeks_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 7 * 1000))
+
+                        var post_date_output;
+                        if (hours_between_dates < 24) {
+                            post_date_output = `${hours_between_dates} hours ago`
+                        } else if (days_between_dates <= 7) {
+                            post_date_output = `${days_between_dates} days ago`
+                        } else {
+                            post_date_output = `${weeks_between_dates} weeks ago`
+                        }
+                        $('#post_timeAgo').append(post_date_output);
+                        retrieved_post_id = post_data.post_id;
+
+                        // Retrieve Post Data
+                        $.ajax({
+                            url: `http://localhost:3000/r/` + subreaddit_path,
+                            method: 'GET',
+                            contentType: "application/json; charset=utf-8",
+                            success: function (data, status, xhr) {
+                                data = JSON.parse(data);
+                                $("#community_name").html(data.subreaddit_name);
+                                $("#subreaddit_name").html(data.subreaddit_name);
+                                $('#community_desc').html(data.subreaddit_description)
+                                var date = new Date(data.created_at);
+                                var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                                $('#community_create_month').html(months[date.getMonth() - 1]);
+                                $('#community_create_day').html(date.getDate());
+                                $('#community_create_year').html(date.getFullYear());
+
+                            },
+                            error: function (xhr, status, error) {
+                                // TBD
+                            }
+                        })
+                    }
+                }
+            });
+
+
+            // Retrieve Comment Data
+            $.ajax({
+                url: `http://localhost:3000/comment/` + post_id,
+                method: 'GET',
+                contentType: "application/json; charset=utf-8",
+                success: function (data, status, xhr) {
+                    data = data.Result;
+                    $('#comment_total').append(data.length);
+                    for (var i = 0; i < data.length; i++) {
+
+                        // Calculates Time
+                        var date = new Date(data[i].created_at);
+                        var date_now = new Date();
+                        var seconds_between_dates = Math.floor((date_now - date) / 1000);
+                        var minutes_between_dates = Math.floor((date_now - date) / (60 * 1000));
+                        var hours_between_dates = Math.floor((date_now - date) / (60 * 60 * 1000));
+                        var days_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 1000))
+                        var weeks_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 7 * 1000))
+
+                        var post_date_output;
+                        console.log(minutes_between_dates)
+                        if(seconds_between_dates < 60) {
+                            post_date_output = `${seconds_between_dates} seconds ago`
+                        } else if (minutes_between_dates < 60) {
+                            post_date_output = `${minutes_between_dates} minutes ago`
+                        }
+                        else if (hours_between_dates < 24) {
+                            post_date_output = `${hours_between_dates} hours ago`
+                        } else if (days_between_dates <= 7) {
+                            post_date_output = `${days_between_dates} days ago`
+                        } else {
+                            post_date_output = `${weeks_between_dates} weeks ago`
+                        }
+
+
+                        $('#comment_div').append(`
+                        
+                                    <div class="comment row mb-4">
+                                            <div class="col-1 d-flex flex-column">
+                                                <p>/img/</p>
+                                                <div class="comment-line flex-grow-1 w-50"></div>
+
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="d-flex flex-row">
+                                                    <p>${data[i].User.username}</p>
+                                                    <p class="fw-light text-secondary mx-1">•</p>
+                                                    <p class="text-secondary">${post_date_output}</p>
+                                                </div>
+                                                <p class="mb-2">${data[i].comment}</p>
+                                                <div class="d-flex flex-row align-items-center">
+                                                    <a class="text-center d-block p-1 post-upvote">
+                                                        <i class="fas fa-arrow-up text-dark"></i>
+                                                    </a>
+                                                    <p class="mb-0 mx-3">###</p>
+                                                    <a class="text-center d-block p-1 post-downvote"><i
+                                                            class="fas fa-arrow-down text-dark"></i></a>
+                                                </div>
+
+                                            </div>
+                                        </div>`
+                        )
+                    }
+                }
+            });
+
+            // Parse Comments
+            $('#comment_submit').on('click', function () {
+                var comment_content = $('#comment_content').val();
+
+                // Temoporary User_id
+                var user_id = 2;
+
+                var data = {
+                    post_id: retrieved_post_id,
+                    user_id: user_id,
+                    comment: comment_content
+                }
+                $.ajax({
+                    url: `http://localhost:3000/comment`,
+                    method: 'POST',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(data),
+                    success: function (data, status, xhr) {
+                        console.log(data);
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr)
+                    }
+                })
+            })
+
+
+        })
+    </script>
+</body>
+
+</html>
