@@ -167,6 +167,7 @@
                         
 
                         $('#post_div').append(`
+                        
                         <div class="post rounded mb-2">
                         <div class="row g-0">
                         <div class="col-1 upvote-section py-2 justify-content-center">
@@ -177,6 +178,7 @@
                                     class="fas fa-arrow-down text-dark"></i></a>
                         </div>
                         <div class="col-11 bg-white p-2">
+                            
                             <div class="d-flex flex-row align-items-baseline">
                                 <h6 class="d-inline fw-bold clickable-link">r/<a>${data[i].Subreaddit.subreaddit_name}</a></h6>
                                 <p class="fw-light text-secondary mx-1">•</p>
@@ -186,10 +188,14 @@
                                 <p class="text-secondary" id="post_${data[i].post_id}_time">${post_date_output}</p>
                             </div>
 
-                            <h5 id="post_${data[i].post_id}_title">${data[i].title}</h5>
+                            <a href="/r/${data[i].Subreaddit.subreaddit_name}/${data[i].post_id}">
+                            <h5 id="post_${data[i].post_id}_content">${data[i].content}</h5>
+                            </a>
+
                         </div>
                         </div>
                         </div>
+                        
                     `)
                     }
 

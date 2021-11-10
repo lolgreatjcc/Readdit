@@ -8,8 +8,10 @@ $(document).ready(() => {
     <script>
         function runSearch(){
             var query = $('#Search').val();
-            window.location.href = "/search.html?subreaddit=" + query;
+            window.location.href = "/search.html?query=" + query;
         }
+
+
     </script>
     <nav class="navbar navbar-dark navbar-expand-lg" id="header">
     <div class=" container-fluid">
@@ -31,7 +33,7 @@ $(document).ready(() => {
                     <a class="nav-link" href="#">Link</a>
                 </li>
             </ul>
-            <form class="flex-grow-1 me-5 ms-5">
+            <form class="flex-grow-1 me-5 ms-5" action="javascript:runSearch()">
                 <div class="input-group">
                     <input class="form-control bg-light h-100" type="text" placeholder="Search for Post / Subreadit"
                         aria-label="Search" id="Search">
