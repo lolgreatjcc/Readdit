@@ -63,7 +63,7 @@ var post = {
             console.log(err)
             callback(null,err)
         })
-    }
+    },
 
     getPost: function (post_id, callback) {
         Post.findOne({
