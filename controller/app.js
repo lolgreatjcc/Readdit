@@ -33,6 +33,7 @@ const mediaUpload = require("./mediaUpload");
 
 const subreaddit = require('./subreaddit.js');
 const post = require('./post.js');
+const comment = require('./comment.js');
 const moderator = require('./moderator.js')
 //-----------------------------------
 // Middleware functions
@@ -280,6 +281,8 @@ app.post('/api/login', printDebugInfo, function (req, res) {
 
 });
 
+
+app.use('/comment', comment)
 
 app.use('/r', subreaddit);
 

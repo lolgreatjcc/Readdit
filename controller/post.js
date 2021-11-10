@@ -98,6 +98,7 @@ router.get('/get/r/:subreaddit', function (req,res) {
     })
 })
 
+
 //get post searches
 router.get('/search', printDebugInfo, function (req, res) {
     var query = req.query.query;
@@ -122,6 +123,17 @@ router.get('/get/r/:subreaddit/:post_id', function (req,res) {
             if (result == null){
                 res.status(404).send({"Error":"Unable to find requested post."})
             }
+           res.status(200).send(result);
+        } else {
+            res.status(500).send(err);
+        }
+    })
+})
+
+router.get('/:post_id', function (req,res) {
+    req_post_id = req.params.post_id;
+    post.getPost(req_post_id, function (result,err) {
+        if(!err) {
             res.status(200).send(result);
         } else {
             res.status(500).send(err);

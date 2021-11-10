@@ -40,10 +40,36 @@ var post = {
             callback(null,err)
         })
     },
+
     getOnePostInSubreaddit: function (subreaddit_name, post_id, callback) {
         Post.findOne({
             where : {post_id: post_id},
             attributes: ['post_id', 'title', 'content', 'pinned', 'created_at'],
+            include: [
+                  {
+                      model: User,
+                      attributes: ['username']
+                  }, 
+                  {   
+                      model: Subreaddit,
+                    where: {subreaddit_name: subreaddit_name},
+                    attributes: ['subreaddit_name']
+                }
+            ],
+        }).then(function (result) {
+            console.log(result)
+          callback(result,null)
+        }).catch(function (err) {
+            console.log(err)
+            callback(null,err)
+        })
+    }
+
+    getPost: function (post_id, callback) {
+        Post.findOne({
+            attributes: ['post_id', 'title', 'content', 'pinned', 'created_at'],
+            where: {post_id: post_id},
+
             include: [
                 {
                     model: User,
@@ -51,14 +77,13 @@ var post = {
                 }, 
                 {   
                     model: Subreaddit,
-                    where: {subreaddit_name: subreaddit_name},
-                    attributes: ['subreaddit_name']
+                  attributes: ['subreaddit_name']
                 }
             ],
+
         }).then(function (result) {
             console.log(result)
-            
-            callback(result,null)
+          callback(result,null)
         }).catch(function (err) {
             console.log(err)
             callback(null,err)
@@ -86,7 +111,6 @@ var post = {
             callback(err,null);
         })
     },
-
 }
 
 module.exports = post;
