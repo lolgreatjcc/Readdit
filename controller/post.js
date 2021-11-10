@@ -97,4 +97,15 @@ router.get('/get/r/:subreaddit', function (req,res) {
     })
 })
 
+router.get('/:post_id', function (req,res) {
+    req_post_id = req.params.post_id;
+    post.getPost(req_post_id, function (result,err) {
+        if(!err) {
+            res.status(200).send(result);
+        } else {
+            res.status(500).send(err);
+        }
+    })
+})
+
 module.exports = router

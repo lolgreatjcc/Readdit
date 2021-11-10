@@ -160,6 +160,37 @@ Subreaddit.hasMany(Post, {
     foreignKey: 'fk_subreaddit_id'
 });
 
+const Comment = sequelize.define('Comment', {
+    comment_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true,
+    },
+    fk_user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    comment: {
+        type: DataTypes.STRING(1000),
+        allowNull: false
+    },
+    fk_post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    created_at: {
+        type: 'TIMESTAMP',
+        allowNull: true
+    }
+})
+
+Comment.belongsTo(User, {
+    foreignKey: 'fk_user_id'
+})
+
+Comment.belongsTo(Post, {
+    foreignKey: 'fk_post_id'
+})
 
 const Media = sequelize.define('Media', {
     media_id: {

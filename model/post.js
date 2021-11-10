@@ -38,6 +38,29 @@ var post = {
             console.log(err)
             callback(null,err)
         })
+    },
+    getPost: function (post_id, callback) {
+        Post.findOne({
+            attributes: ['post_id', 'title', 'content', 'pinned', 'created_at'],
+            where: {post_id: post_id},
+            include: [
+                {
+                    model: User,
+                    attributes: ['username']
+                }, 
+                {   
+                    model: Subreaddit,
+                    attributes: ['subreaddit_name']
+                }
+            ],
+
+        }).then(function (result) {
+            console.log(result)
+            callback(result,null)
+        }).catch(function (err) {
+            console.log(err)
+            callback(null,err)
+        })
     }
 }
 
