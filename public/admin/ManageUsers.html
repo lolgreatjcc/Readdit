@@ -50,12 +50,12 @@
                         else {
                             var type = "Developer"
                         }
-
+                        var pfp = (user.profile_pic).replace("http://res.cloudinary.com/readditmedia/image/upload/","");
                         appendString += `<tr>
                                                 <th scope="row">${i + 1}</th>
                                                 <td>${user.username}</td>
                                                 <td>${user.email}</td>
-                                                <td>${user.profile_pic}</td>
+                                                <td>${pfp}</td>
                                                 <td>${twofa}</td>
                                                 <td>${type}</td>
                                                 <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="EditCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Edit</button> </td>
@@ -165,7 +165,7 @@
                         <th scope="col">Username</th>
                         <th scope="col">Email</th>
                         <th scope="col">Profile Pic URL</th>
-                        <th scope="col">Two FA</th>
+                        <th scope="col">2FA</th>
                         <th scope="col">User Type</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
