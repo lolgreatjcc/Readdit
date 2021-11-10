@@ -40,6 +40,7 @@
                                                 <td>${subreaddits.subreaddit_description}</td>
                                                 <td>${subreaddits["User.creator"]}</td>
                                                 <td>${subreaddits.created_at}</td>
+                                                <td> <button type="submit" name="${subreaddits.subreaddit_name}" id = "${subreaddits.subreaddit_id}" class="EditCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Edit</button> </td>
                                                 <td> <button type="submit" id = "${subreaddits.subreaddit_id}" name="${subreaddits.subreaddit_name}" class="DeleteCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
                                             </tr>`;
                     }
@@ -115,6 +116,11 @@
                     });
                 }
             });
+
+            $('body').on('click', '.EditCall', function () {
+                var subreaddit_id = event.srcElement.id;
+                window.location.assign("http://localhost:3001/admin/editSubs.html?id=" + subreaddit_id);
+            });
         });
 
     </script>
@@ -136,6 +142,7 @@
                         <th scope="col">Description</th>
                         <th scope="col">Owner</th>
                         <th scope="col">Created At</th>
+                        <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
