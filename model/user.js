@@ -179,7 +179,33 @@ var user = {
         }).then(function (result) {
             return callback(null, result);
         })
-    }
+    },
+
+    update: function (userid, user, callback) {
+        var profile_pic = user.profile_pic;
+        var fk_user_type_id = user.fk_user_type_id;
+        User.findOne({ where: {
+
+            [Op.and]: [
+                { user_id: userid }
+            ]
+        } })
+        .then(function (result) {
+            console.log("Result: " + result)
+            User.update(
+                {
+                    profile_pic: profile_pic,
+                    fk_user_type_id: fk_user_type_id
+                },
+                { where: { user_id: userid } }
+            )
+                .then(function (result) {
+                    return callback(null, result);
+                })
+        })
+
+        
+    },
 }
 
 //-----------------------------------
