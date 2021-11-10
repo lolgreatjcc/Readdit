@@ -23,15 +23,21 @@ const verify = {
           console.log(err);
           return res.status(403).send({ message: "Unauthorized access", errCode: 1 });
         } else {
-          if (data.user_id != user_id){
-            console.log("token user_id: " + data.user_id);
-            console.log("form user_id: " + user_id);
-              return res.status(403).send({ message: "Unauthorized access", errCode: 2 });
-          }
-          else{
-            req.body.fk_user_type_id = data.type;
-              next();
-          }
+              if (data.type == 3) {
+                req.body.fk_user_type_id = data.user_id;
+                next();
+              }
+              else {
+                if (data.user_id != user_id){
+                  console.log("token user_id: " + data.user_id);
+                  console.log("form user_id: " + user_id);
+                    return res.status(403).send({ message: "Unauthorized access", errCode: 2 });
+                }
+                else{
+                  req.body.fk_user_type_id = data.type;
+                    next();
+                }
+              }
         }
       });
     } else {

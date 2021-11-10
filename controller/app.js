@@ -122,27 +122,48 @@ app.get('/users/:user_id',printDebugInfo, verify.verifySameUserId, function (req
 });
 
 //adduser
-app.post('/users',printDebugInfo, function (req, res) { 
+app.post('/users', upload.single("image"), printDebugInfo, function (req, res) { 
     var username = req.body.username;
     var password = req.body.password;
     var email = req.body.email;
-    var profile_pic = req.body.profile_pic;
+    var pfp = req.body.profile_pic;
     var two_fa = req.body.two_fa;
     var fk_user_type_id = req.body.fk_user_type_id;
 
-    user.addUser(username, password, email, profile_pic, two_fa, fk_user_type_id, function (err, result) {
-        if (!err) {
-            if (result == "duplicate") {
-                res.status(422).send({ "Result:": "Unprocessable Entity" });
-            }
+    function submitEdit(profile_pic){
+        user.addUser(username, password, email, profile_pic, two_fa, fk_user_type_id, function (err, result) {
+            if (!err) {
+                if (result == "duplicate") {
+                    res.status(422).send({ "Result:": "Unprocessable Entity" });
+                }
+                else {
+                    res.status(201).send({"Result" : result})
+                }
+            } 
             else {
-                res.status(201).send({"Result" : result})
+                res.status(500).send({"Result:":"Internal Server Error"});
             }
-        } 
-        else {
-            res.status(500).send({"Result:":"Internal Server Error"});
-        }
-    });
+        }); 
+    }
+
+    var file = req.file;
+    if (file != null){
+        console.log("Image Uploading...")
+
+        mediaUpload(file, function (err,result){
+            if (result){
+                var profile_pic = result.media_url;
+                submitEdit(profile_pic)
+            }
+            else{
+                res.status(500).json({message: err.message});
+            }
+        })
+    }
+    else{
+        console.log("No Image");
+        submitEdit(pfp);
+    }  
 
 });
 
@@ -214,6 +235,39 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify.verify
     });
 
     
+});
+
+//update user
+app.put('/user/:user_id',  printDebugInfo, function (req, res) {
+    var user_id = req.params.user_id;
+    var profile_pic = req.body.profile_pic;
+
+    if (isNaN(user_id)) {
+        res.status(400).send("Blank ID");
+        return;
+    }
+
+
+
+    var data = {
+        profile_pic: profile_pic,
+        fk_user_type_id: req.body.fk_user_type_id
+    };
+
+    user.update(user_id, data, function (err, result) {
+        if (!err) {
+            var output = {
+                "success": true,
+                "affected rows": result.affectedRows,
+                "changed rows": result.changedRows
+            };
+            res.status(200).send(output);
+        }
+        else {
+            res.status(500).send({"Result:":"Internal Server Error"});
+        }
+    });
+
 });
 
 //delete user
