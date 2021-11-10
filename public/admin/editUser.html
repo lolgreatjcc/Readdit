@@ -5,14 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Readdit</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
@@ -20,21 +13,46 @@
     <script src="../includeHTMLs/header.js"></script>
     <script>
 
-        function loadUserInfo(user) {
+        function loadUserInfo(user_id, token) {
             $('#load').html("Loading Info...");
 
             // call the web service endpoint
             $.ajax({
-                url: `http://localhost:3000/r/subreaddit/` + subreaddit_id,
+                url: `http://localhost:3000/users/` + user_id,
                 type: 'GET',
+                headers: { "Authorization": "Bearer " + token },
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',
                 success: function (data, textStatus, xhr) {
-                    var subreaddit = data;
+                    var user = data.Result;
                     // compile the data that the card needs for it's creation
-
-                    document.getElementById("name").value = subreaddit.subreaddit_name;
-                    document.getElementById("description").value = subreaddit.subreaddit_description;
+                    if (user.fk_user_type_id == 3) {
+                        console.log("developer");
+                        $("#role").val("3");
+                    }
+                    else {
+                        console.log("user");
+                        $("#role").val("1");
+                    }
+                    $('#title').html(`Edit ${user.username}`);
+                    //display pfp
+                    var pfp = (user.profile_pic).replace("http://res.cloudinary.com/readditmedia/image/upload/","");
+                    $('#profileurl').html(`<p id = "profile_pic" val="${pfp}"> ${pfp} </p>`);
+                    try {
+                        if (user.profile_pic === "undefined" || user.profile_pic == null || user.profile_pic.trim().length == 0 || user.profile_pic == "NULL") {
+                            $('#pfpImg').html('<img style="width:200px;" src="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png" alt="No pfp to show" id="pfp" class="pb-2"></img><br>')
+                        }
+                        else {
+                            console.log("Pfp: " + user.profile_pic);
+                            var pfpTempString = user.profile_pic.split("upload");
+                            user.profile_pic = pfpTempString[0] + "upload" + "/ar_1.0,c_fill/r_max" + pfpTempString[1]
+                            $('#pfpImg').html('<img style="width:200px;" src="' + user.profile_pic + '" alt="No pfp to show" id="pfp" class="pb-2"></img><br>')
+                        }
+                    }
+                    catch (error) {
+                        $('#pfpImg').html('<img style="width:200px;" src="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png" alt="No pfp to show" id="pfp" class="pb-2"></img><br>')
+                        console.log(error)
+                    }
 
                     $('#load').html("");
                 },
@@ -55,39 +73,57 @@
 
 
         $(document).ready(function () {
+            var userData = localStorage.getItem('userInfo');
+            var token = localStorage.getItem("token")
+            // userData = userData.slice(1,-1);
+
+            var userJsonData = JSON.parse(userData);
+            var role = userJsonData.fk_user_type_id;
+
+            var tmpToken = localStorage.getItem('token');
+
             var queryParams = new URLSearchParams(window.location.search);
             console.log("---------Query Parameters---------");
             console.log("Query Param (source): " + window.location.search);
             console.log("Query Param (extracted): " + queryParams);
 
-            var subreaddit_id = queryParams.get("id");
+            var user_id = queryParams.get("id");
 
-            loadSubreadditInfo(subreaddit_id);
+            loadUserInfo(user_id, tmpToken);
 
             $("#update").click(function () {
-                var name = $('#name').val();
-                var description = $('#description').val();
+                $('#load').html('Submitting update...');
+                var profile_pic = $('#profileurl').val();
+                var fk_user_type_id = parseInt($('#role').val());
 
                 const requestBody = {
-                    subreaddit_name: name,
-                    subreaddit_description: description
+                    profile_pic: profile_pic,
+                    fk_user_type_id: fk_user_type_id
                 };
 
                 console.log(requestBody);
 
                 // axios.put(`https://readdit-backend.herokuapp.com/r/subreaddit/` + subreaddit_id,requestBody)
 
-                axios.put(`http://localhost:3000/r/subreaddit/` + subreaddit_id, requestBody)
+                axios.put(`http://localhost:3000/user/` + user_id, requestBody)
                     .then(response => {
-                        $('#load').html('Subreaddit updated successfully!');
+                        $('#load').html('User updated successfully!');
                     })
                     .catch(error => {
-                        $('#load').html('Error updating Subreaddit');
+                        $('#load').html('Error updating User');
                     })
             });
 
             $("#Return").click(function () {
-                window.location.assign("http://localhost:3001/admin/ManageSubs.html");
+                window.location.assign("http://localhost:3001/admin/ManageUsers.html");
+            });
+
+            $("#image").click(function () {
+                var check = confirm("Delete profile picture?");
+                if (check) {
+                    $('#pfpImg').html('<img style="width:200px;" src="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png" alt="No pfp to show" id="pfp" class="pb-2"></img><br>')
+                    $('#profileurl').html(`<p id = "profile_pic" val=""></p>`);
+                }
             });
         })
 
@@ -95,20 +131,24 @@
 </head>
 
 <body>
-    <div id="edit_form_container" class="login-form">
-        <h1 class="text-center">Edit User</h1>
-        <div class="form-group">
-            <label for="name">Name:</label><br>
-            <input type="text" id="name" class="form-control" name="name" placeholder="name" required="required" /><br>
-        </div>
-        <div class="form-group">
-            <label for="description">Description:</label><br>
-            <input type="text" id="description" class="form-control" name="description" placeholder="Description"
-                required="required" /><br>
+    <div>
+        <h1 style="margin: 10px;" id="title">Edit...</h1>
+        <div style="margin: 10px;">
+            <div id="pfpImg"></div>
+            <div id="profileurl"></div>
+            <input type="submit" id="image" name="image" value="Delete Profile Picture"/><br><br>
+
+            <label style="font-weight: bold;" for="role">User Role:</label><br>
+            <select name="role" id="role">
+                <option value="1">User</option>
+                <option value="3">Developer</option>
+            </select>
         </div>
 
-        <p><input style="background-color: #6a5acd; color : white; margin: 10px; width: 500px;" type="button" id="update" value="Update" /></p>
-        <p><input style="background-color: #6a5acd; color : white; margin: 10px; width: 500px;" type="button" id="Return" value="Return to Manage Subreaddits" /></p>
+        <p><input style="background-color: #6a5acd; color : white; margin: 10px; width: 500px;" type="button"
+                id="update" value="Update" /></p>
+        <p><input style="background-color: #6a5acd; color : white; margin: 10px; width: 500px;" type="button"
+                id="Return" value="Return to Manage Users" /></p>
     </div>
     <div id="load">
 
