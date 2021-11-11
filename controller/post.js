@@ -18,6 +18,7 @@ const storage = multer.diskStorage({
   })
 const upload = multer({dest: './mediaUploadTemp', storage:storage})
 const mediaUpload = require("./mediaUpload");
+const app = require('./app');
 
 //uploading post images
 router.post('/create', upload.array("media",8), (req,res) => {
@@ -130,6 +131,7 @@ router.get('/get/r/:subreaddit/:post_id', function (req,res) {
     })
 })
 
+
 router.get('/:post_id', function (req,res) {
     req_post_id = req.params.post_id;
     post.getPost(req_post_id, function (result,err) {
@@ -140,5 +142,7 @@ router.get('/:post_id', function (req,res) {
         }
     })
 })
+
+
 
 module.exports = router

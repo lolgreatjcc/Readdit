@@ -4,17 +4,17 @@ const { Sequelize, Model, DataTypes } = require('sequelize');
 //local credentials, comment as neccessary
 
 
-// const database = "readdit";
-// const user = "root";
-// const password = "FrozenLava123"
-// const host = 'localhost'
+const database = "readdit";
+const user = "root";
+const password = "FrozenLava123"
+const host = 'localhost'
 
 // heroku credentials, comment as neccessary. ensure database has data
 
-const database = "heroku_1c89f72eef4896a";
-const user = "b7a6c1ee0950ab";
-const password = "3ee893d6"
-const host = 'us-cdbr-east-04.cleardb.com'
+// const database = "heroku_1c89f72eef4896a";
+// const user = "b7a6c1ee0950ab";
+// const password = "3ee893d6"
+// const host = 'us-cdbr-east-04.cleardb.com'
 
 
 const sequelize = new Sequelize(database, user, password, {
@@ -193,6 +193,34 @@ Comment.belongsTo(Post, {
     foreignKey: 'fk_post_id'
 })
 
+const Saved = sequelize.define('Saved', {
+    saved_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true,
+    },
+    fk_user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    fk_post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    created_at: {
+        type: 'TIMESTAMP',
+        allowNull: true
+    }
+})
+
+Saved.belongsTo(User, {
+    foreignKey: 'fk_user_id'
+})
+
+Saved.belongsTo(Post, {
+    foreignKey: 'fk_post_id'
+})
+
 const Media = sequelize.define('Media', {
     media_id: {
         type: DataTypes.INTEGER,
@@ -228,6 +256,56 @@ const Moderator = sequelize.define('Moderator', {
         allowNull: false
     }
 })
+
+const Post_Vote = sequelize.define('Post_Vote', {
+    post_vote_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true
+    },
+    fk_post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    vote_type: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    },
+    fk_user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    created_at: {
+        type: 'TIMESTAMP',
+        allowNull: true
+    }
+})
+
+const Comment_Vote = sequelize.define('Comment_Vote', {
+    comment_vote_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true
+    },
+    fk_comment_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    vote_type: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    },
+    fk_user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    created_at: {
+        type: 'TIMESTAMP',
+        allowNull: true
+    }
+})
+
+
 
 async function syncing() { 
     await User.sync();
