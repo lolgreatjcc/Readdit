@@ -78,6 +78,10 @@ body {
     background-color: #6a5acd35;
 }
 
+.hoverable:hover {
+    background-color: #6a5acd35;
+}
+
 .clickable-link:hover {
     text-decoration: underline;
 }
