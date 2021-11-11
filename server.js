@@ -1,12 +1,7 @@
 //ADES CA1 Play2Win
 const express=require('express');
 const serveStatic=require('serve-static');
-
-
-//var port = process.env.PORT;
-var hostname="localhost";
-var port=3001;
-
+require('dotenv').config();
 var app=express();
 
 app.use(function(req,res,next){
@@ -42,13 +37,16 @@ app.get('/r/:subreaddit/:post_id', function (req,res) {
 
 app.use(serveStatic(__dirname + "/public"));
 
-
-// app.listen(port,function(){
-//     console.log(`Server hosted!`);
-//     console.log("Localhost link:")
-//     console.log("http://localhost:3001/template.html")
-// });
-
-app.listen(port,hostname,function(){
+if (process.env.PORT != null){
+    const port = process.env.PORT;
+    app.listen(port,function(){
+        console.log(`Server hosted on heroku!`);
+    });
+}
+else{
+    const hostname="localhost";
+    const port=3001;
+    app.listen(port,hostname,function(){
     console.log(`Server hosted at http://${hostname}:${port}`);
 });
+}
