@@ -1,7 +1,6 @@
 //ADES CA1 Play2Win
 const express=require('express');
 const serveStatic=require('serve-static');
-require('dotenv').config();
 var app=express();
 
 app.use(function(req,res,next){
@@ -34,6 +33,8 @@ app.get('/r/:subreaddit', function (req,res) {
 app.get('/r/:subreaddit/:post_id', function (req,res) {
     res.status(200).sendFile('post.html', { root: __dirname + "/public/r/" } );
 })
+
+app.use('/profile', profile)
 
 app.use(serveStatic(__dirname + "/public"));
 
