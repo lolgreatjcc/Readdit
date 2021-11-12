@@ -35,6 +35,7 @@ const subreaddit = require('./subreaddit.js');
 const post = require('./post.js');
 const comment = require('./comment.js');
 const moderator = require('./moderator.js')
+const save = require('./save.js')
 //-----------------------------------
 // Middleware functions
 //-----------------------------------
@@ -340,7 +341,9 @@ app.use('/comment', comment)
 
 app.use('/r', subreaddit);
 
-app.use('/post/', post);
+app.use('/post', post);
+
+app.use('/save', save);
 
 app.use('/moderator/', moderator)
 
