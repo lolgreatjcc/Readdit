@@ -33,7 +33,9 @@ const mediaUpload = require("./mediaUpload");
 
 const subreaddit = require('./subreaddit.js');
 const post = require('./post.js');
+const comment = require('./comment.js');
 const moderator = require('./moderator.js')
+const save = require('./save.js')
 //-----------------------------------
 // Middleware functions
 //-----------------------------------
@@ -334,27 +336,14 @@ app.post('/api/login', printDebugInfo, function (req, res) {
 
 });
 
-//-----------------------------------
-// subreaddit endpoints
-//-----------------------------------
 
-//search for subreaddit
-app.get('/search',printDebugInfo, function (req, res) {
-    var query = req.query.subreaddit;
-    
-    subreadditModel.searchSubreaddit(query, function (err, result) {
-        if (!err) {
-            res.status(200).send({"Result" : result});
-        } else {
-            res.status(500).send({"Result:":"Internal Server Error"});
-        }
-    });
-
-});
+app.use('/comment', comment)
 
 app.use('/r', subreaddit);
 
-app.use('/post/', post);
+app.use('/post', post);
+
+app.use('/save', save);
 
 app.use('/moderator/', moderator)
 

@@ -160,6 +160,65 @@ Subreaddit.hasMany(Post, {
     foreignKey: 'fk_subreaddit_id'
 });
 
+const Comment = sequelize.define('Comment', {
+    comment_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true,
+    },
+    fk_user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    comment: {
+        type: DataTypes.STRING(1000),
+        allowNull: false
+    },
+    fk_post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    created_at: {
+        type: 'TIMESTAMP',
+        allowNull: true
+    }
+})
+
+Comment.belongsTo(User, {
+    foreignKey: 'fk_user_id'
+})
+
+Comment.belongsTo(Post, {
+    foreignKey: 'fk_post_id'
+})
+
+const Saved = sequelize.define('Saved', {
+    saved_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true,
+    },
+    fk_user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    fk_post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    created_at: {
+        type: 'TIMESTAMP',
+        allowNull: true
+    }
+})
+
+Saved.belongsTo(User, {
+    foreignKey: 'fk_user_id'
+})
+
+Saved.belongsTo(Post, {
+    foreignKey: 'fk_post_id'
+})
 
 const Media = sequelize.define('Media', {
     media_id: {
@@ -196,6 +255,56 @@ const Moderator = sequelize.define('Moderator', {
         allowNull: false
     }
 })
+
+const Post_Vote = sequelize.define('Post_Vote', {
+    post_vote_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true
+    },
+    fk_post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    vote_type: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    },
+    fk_user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    created_at: {
+        type: 'TIMESTAMP',
+        allowNull: true
+    }
+})
+
+const Comment_Vote = sequelize.define('Comment_Vote', {
+    comment_vote_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true
+    },
+    fk_comment_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    vote_type: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    },
+    fk_user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    created_at: {
+        type: 'TIMESTAMP',
+        allowNull: true
+    }
+})
+
+
 
 async function syncing() { 
     await User.sync();

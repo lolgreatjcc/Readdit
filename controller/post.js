@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const printDebugInfo = require('./printDebugInfo');
 //Model Imports
 const post = require('../model/post.js');
 const media = require('../model/media.js');
@@ -18,6 +18,7 @@ const storage = multer.diskStorage({
   })
 const upload = multer({dest: './mediaUploadTemp', storage:storage})
 const mediaUpload = require("./mediaUpload");
+const app = require('./app');
 
 //uploading post images
 router.post('/create', upload.array("media",8), (req,res) => {
@@ -86,6 +87,7 @@ router.post('/create', upload.array("media",8), (req,res) => {
     })
 })
 
+//get posts from one subreaddit
 router.get('/get/r/:subreaddit', function (req,res) {
     req_subreaddit = req.params.subreaddit;
     post.getPostsInSubreaddit(req_subreaddit, function (result,err) {
@@ -96,5 +98,51 @@ router.get('/get/r/:subreaddit', function (req,res) {
         }
     })
 })
+
+
+//get post searches
+router.get('/search', printDebugInfo, function (req, res) {
+    var query = req.query.query;
+    
+    post.searchPost(query, function (err, result) {
+        if (!err) {
+            res.status(200).send({"Result" : result});
+        } else {
+            res.status(500).send({"Result:":"Internal Server Error"});
+        }
+    });
+
+});
+
+//get specific post from one subreaddit
+router.get('/get/r/:subreaddit/:post_id', function (req,res) {
+    req_subreaddit = req.params.subreaddit;
+    post_id = req.params.post_id
+    
+    post.getOnePostInSubreaddit(req_subreaddit,post_id, function (result,err) {
+        if(!err) {
+            if (result == null){
+                res.status(404).send({"Error":"Unable to find requested post."})
+            }
+           res.status(200).send(result);
+        } else {
+            res.status(500).send(err);
+        }
+    })
+})
+
+
+router.get('/:post_id', function (req,res) {
+    req_post_id = req.params.post_id;
+    post.getPost(req_post_id, function (result,err) {
+        if(!err) {
+            res.status(200).send(result);
+        } else {
+            res.status(500).send(err);
+        }
+    })
+})
+
+
 
 module.exports = router
