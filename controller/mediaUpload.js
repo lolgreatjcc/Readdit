@@ -2,8 +2,10 @@ var cloudinary = require("../model/cloudinary");
 const fs = require('fs');
 const { promisify } = require('util');
 const unlinkAsync = promisify(fs.unlink);
+
 const path = require("path");
 const media = require("../model/media");
+
 
 async function mediaUpload(file,callback){
     var file = file;
@@ -78,5 +80,6 @@ function typeOfContent(fileName){
 
   return {validFileType:validFileType,content_type:content_type}
 }
+
 
 module.exports = mediaUpload;
