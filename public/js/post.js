@@ -1,5 +1,5 @@
-//const baseUrl = ["http://localhost:3000","http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.herokuapp.com/"]
+const baseUrl = ["http://localhost:3000","http://localhost:3001"]
+//const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.herokuapp.com/"]
 $(document).ready(function () {
     var pathname = window.location.pathname;
     var subreaddit_path = pathname.split('/')[2];
@@ -10,7 +10,7 @@ $(document).ready(function () {
         url: `${baseUrl[0]}/post/` + post_id,
         contentType: "application/json; charset=utf-8",
         success: function (post_data, status, xhr) {
-            if (post_data.Subreaddit.subreaddit_name != subreaddit_path) {
+            if (post_data.Subreaddit.subreaddit_name != decodeURI(subreaddit_path)) {
                 window.location.href = `/r/${post_data.Subreaddit.subreaddit_name}/${post_id}`;
             } else {
                 console.log(post_data);

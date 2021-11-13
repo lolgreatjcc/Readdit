@@ -16,17 +16,21 @@ body {
     font-weight: 600;
 }
 
-#signUpButton, #addModerator {
+#signUpButton, #addModerator, #addFlair, #flair {
     background-color: #6a5acd;
     color: white;
     font-weight: 700;
+}
+
+#flair{
+    cursor:default
 }
 
 .tabColour {
     background-color: #6a5acd!important;
 }
 
-#removeModerator {
+#removeModerator, #removeFlair {
     background-color: #eb4040;
     color: white;
     font-weight: 700;
