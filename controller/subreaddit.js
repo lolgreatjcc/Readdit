@@ -2,31 +2,7 @@ const express = require('express');
 const router = express.Router();
 const subreaddit = require('../model/subreaddit')
 const verify = require('./verify');
-
-function printDebugInfo(req, res, next) {
-    try{
-    console.log();
-    console.log("----------------[ Debug Info ]-----------------");
-    //console.log(`Servicing ${urlPattern}..`);
-    console.log("Servicing " + req.url + " ..");
-
-    console.log("> req params:" + JSON.stringify(req.params));
-    console.log("> req.body:" + JSON.stringify(req.body));
-    console.log("> req.headers:" + JSON.stringify(req.headers));
-    console.log(" req body (without JSON Parse): " + req.body)
-    // console.log("> req.myOwnDebugInfo:" + JSON.stringify(req.myOwnDebugInfo));
-
-    console.log("----------------[ Debug Info ]-----------------");
-    console.log();
-
-
-    next();
-    }
-    catch(error){
-        console.log("Error in printDebugInfo. Error: " + error);
-        next();
-    }
-}
+const printDebugInfo = require('./printDebugInfo');
 
 // Creates a New Community/Subreaddit
 router.post('/create', printDebugInfo, (req,res) => {
@@ -166,6 +142,20 @@ router.delete('/subreaddit/:subreadditid', printDebugInfo, function (req, res) {
 
 });
 
+
+//search for subreaddit
+router.get('/search/query', printDebugInfo, function (req, res) {
+    var query = req.query.query;
+    
+    subreaddit.searchSubreaddit(query, function (err, result) {
+        if (!err) {
+            res.status(200).send({"Result" : result});
+        } else {
+          res.status(500).send({"Result:":"Internal Server Error"});
+        }
+    });
+  });
+
 //edit subreaddit
 router.put('/subreaddit/:subreadditid', printDebugInfo, function (req, res) {
     var subreaddit_id = req.params.subreadditid;
@@ -196,8 +186,6 @@ router.put('/subreaddit/:subreadditid', printDebugInfo, function (req, res) {
             res.status(500).send({"Result:":"Internal Server Error"});
         }
     });
-
-    
 });
 
 module.exports = router
