@@ -6,7 +6,7 @@ const { Sequelize, Model, DataTypes } = require('sequelize');
 
 const database = "readdit";
 const user = "root";
-const password = "FrozenLava123"
+const password = "Electronicman123"
 const host = 'localhost'
 
 // heroku credentials, comment as neccessary. ensure database has data
@@ -236,6 +236,27 @@ const Media = sequelize.define('Media', {
         allowNull: false
     },
     fk_post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
+})
+
+const Flair = sequelize.define('Flair', {
+    flair_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    flair_name: {
+        type: DataTypes.STRING(45),
+        allowNull: false
+    },
+    flair_colour: {
+        type: DataTypes.STRING(7),
+        allowNull: false
+    },
+    fk_subreaddit_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     }

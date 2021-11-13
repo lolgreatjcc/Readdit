@@ -28,16 +28,23 @@ router.post('/create', upload.array("media",8), (req,res) => {
     var content = req.body.content;
     var fk_subreaddit_id = req.body.subreaddit_id;
     var fk_user_id = req.body.user_id;
+    var fk_flair_id = req.body.fk_flair_id;
     var file = req.files;
 
-    post.createPost(title, content, fk_subreaddit_id,fk_user_id, async function (err,result) {
+    if (isNaN(fk_flair_id)){
+        fk_flair_id = null;
+    }
+
+
+    post.createPost(title, content, fk_subreaddit_id,fk_user_id, fk_flair_id, async function (err,result) {
         if(!err) {
             var fk_post_id = result.post_id
             //uploading media to cloudinary + saving record to media table
                 var success = true;
                 var fileLength = file.length;
                 var progress = 0;
-                for (var i=0;i<fileLength;i++){
+                if (fileLength > 0){
+                    for (var i=0;i<fileLength;i++){
                     progress++;
                     if (!success){
                         break;
@@ -64,22 +71,30 @@ router.post('/create', upload.array("media",8), (req,res) => {
                             });
                         }
                         else{
+                            await unlinkAsync(file[i].path);
                             throw err.message;
                         }}
                         catch(err){
                             console.log("Error: " + err);
                             if (err == "Invalid File Type"){
                                 success = false;
+                                await unlinkAsync(file[i].path);
                                 res.status(400).send({Error:err});
                             }
                             else{
                                 success = false;
+                                await unlinkAsync(file[i].path);
                                 res.status(500).send({Error:err});
                             }
                             
                         }
                     });
-                };          
+                    }; 
+                }
+                else{
+                    res.status(201).send({ "Result": "Post created successfully."});
+                }
+                         
             
         } else {
             res.status(500).send({Error:err});

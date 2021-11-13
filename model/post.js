@@ -3,12 +3,13 @@ const { Post, Subreaddit, User, Saved } = sequelize.models;
 const { Op } = require("sequelize");
 
 var post = {
-    createPost: function (title, content, fk_subreaddit_id, fk_user_id, callback) {
+    createPost: function (title, content, fk_subreaddit_id, fk_user_id, fk_flair_id, callback) {
         Post.create({
             title: title,
             content: content,
             fk_subreaddit_id: fk_subreaddit_id,
-            fk_user_id: fk_user_id
+            fk_user_id: fk_user_id,
+            fk_flair_id: fk_flair_id
         }).then(function (result) {
             console.log(result)
             return callback(null, result);
