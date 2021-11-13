@@ -7,11 +7,11 @@ $(document).ready(function () {
     var retrieved_post_id;
     $.ajax({
         method: 'GET',
-        url: `${baseUrl[0]}/post/` + post_id,
+        url: `http://localhost:3000/post/` + post_id,
         contentType: "application/json; charset=utf-8",
         success: function (post_data, status, xhr) {
             if (post_data.Subreaddit.subreaddit_name != subreaddit_path) {
-                window.location.href = `/r/${post_data.Subreaddit.subreaddit_name}/${post_id}`;
+                window.location.href = `http://localhost:3000/r/${post_data.Subreaddit.subreaddit_name}/${post_id}`;
             } else {
                 console.log(post_data);
                 $('#post_subreaddit').append(post_data.Subreaddit.subreaddit_name);
@@ -39,7 +39,7 @@ $(document).ready(function () {
 
                 // Retrieve Post Data
                 $.ajax({
-                    url: `${baseUrl[0]}/r/` + subreaddit_path,
+                    url: `http://localhost:3000/r/` + subreaddit_path,
                     method: 'GET',
                     contentType: "application/json; charset=utf-8",
                     success: function (data, status, xhr) {
@@ -62,10 +62,106 @@ $(document).ready(function () {
         }
     });
 
+    //retrives media for post
+    $.ajax({
+        //headers: { 'authorization': 'Bearer ' + tmpToken },
+        url: 'http://localhost:3000/media/media/' + post_id,
+        type: 'GET',
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json',
+        success: function (data, textStatus, xhr) {
+            var media = data.Result;
+            console.log(media.length);
+            if (media.length > 1) {
+                var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">`
+                for (var i = 0; i < media.length; i++) {
+                    if (i == 0) {
+                        appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${i}" class="active"></li>`;
+                    }
+                    else {
+                        appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${i}"></li>`;
+                    }
+                }
+                appendStringStart += `</ol> <div class="carousel-inner">`;
+
+                var appendStringEnd = `
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </div>`
+
+                //run multiple file display
+                for (var i = 0; i < media.length; i++) {
+                    console.log(media[i]);
+                    if (i == 0) {
+                        var item = 'carousel-item active';
+                    }
+                    else {
+                        var item = 'carousel-item';
+                    }
+                    if (media[i].fk_content_type == "1") {
+                        appendStringStart += `<div class="${item}">
+                                <img style="height: 600px; width: 500px; object-fit: cover;" src="${media[i].media_url}" alt="Image not available"> 
+                            </div>`;
+                    }
+                    else if (media[i].fk_content_type == "2") {
+                        appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted >
+                                            <source src="${media[i].media_url}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                    </video> </div>`;
+                    }
+                    else {
+                        appendStringStart += `<div class="${item}">
+                                <img style="height: 600px; width: 500px; object-fit: cover;" src="${media[i].media_url}" alt="GIF not available"> 
+                            </div>`;
+                    }
+                }
+
+                var appendString = appendStringStart + appendStringEnd;
+                $(`#post_media`).html(appendString);
+
+            }
+            else {
+                console.log(media[0].fk_content_type)
+                //run single file display
+                if (media[0].fk_content_type == "1") {
+                    $(`#post_media`).html(`<img style="max-height: 600px; max-width: 500px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
+                }
+                else if (media[0].fk_content_type == "2") {
+                    $(`#post_media`).html(`<video height="400" controls autoplay muted >
+                                            <source src="${media[0].media_url}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                    </video>`)
+                }
+                else {
+                    $(`#post_media`).html(`<img style="max-height: 600px; max-width: 500px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
+                }
+            }
+
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.log('Error in Operation');
+            console.log(xhr)
+            console.log(textStatus);
+            console.log(errorThrown);
+            console.log(xhr.status);
+            //if (xhr.status == 401) {
+            //    $('$msg').html('Unauthorised User');
+            //}
+        }
+    });
+
 
     // Retrieve Comment Data
     $.ajax({
-        url: `${baseUrl[0]}/comment/` + post_id,
+        url: `http://localhost:3000/comment/` + post_id,
         method: 'GET',
         contentType: "application/json; charset=utf-8",
         success: function (data, status, xhr) {
@@ -84,7 +180,7 @@ $(document).ready(function () {
 
                 var post_date_output;
                 console.log(minutes_between_dates)
-                if(seconds_between_dates < 60) {
+                if (seconds_between_dates < 60) {
                     post_date_output = `${seconds_between_dates} seconds ago`
                 } else if (minutes_between_dates < 60) {
                     post_date_output = `${minutes_between_dates} minutes ago`
@@ -142,7 +238,7 @@ $(document).ready(function () {
             comment: comment_content
         }
         $.ajax({
-            url: `${baseUrl[0]}/comment`,
+            url: `http://localhost:3000/comment`,
             method: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
