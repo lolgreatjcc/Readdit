@@ -1,6 +1,104 @@
 const baseUrl = ["http://localhost:3000","http://localhost:3001"]
 //const baseUrl = "https://readdit-backend.herokuapp.com/"
 
+function addImage(post_id) {
+    //retrives media for post
+    $.ajax({
+        //headers: { 'authorization': 'Bearer ' + tmpToken },
+        url: 'http://localhost:3000/media/media/' + post_id,
+        type: 'GET',
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json',
+        success: function (data, textStatus, xhr) {
+            var media = data.Result;
+            console.log(media.length);
+            if (media.length > 1) {
+                var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">`
+                for (var i = 0; i < media.length; i++) {
+                    if (i == 0) {
+                        appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${i}" class="active"></li>`;
+                    }
+                    else {
+                        appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${i}"></li>`;
+                    }
+                }
+                appendStringStart += `</ol> <div class="carousel-inner">`;
+
+                var appendStringEnd = `
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </div>`
+
+                //run multiple file display
+                for (var i = 0; i < media.length; i++) {
+                    console.log(media[i]);
+                    if (i == 0) {
+                        var item = 'carousel-item active';
+                    }
+                    else {
+                        var item = 'carousel-item';
+                    }
+                    if (media[i].fk_content_type == "1") {
+                        appendStringStart += `<div class="${item}">
+                                <img style="height:500px; width: 400px; object-fit: cover;" src="${media[i].media_url}" alt="Image not available"> 
+                            </div>`;
+                    }
+                    else if (media[i].fk_content_type == "2") {
+                        appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted >
+                                            <source src="${media[i].media_url}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                    </video> </div>`;
+                    }
+                    else {
+                        appendStringStart += `<div class="${item}">
+                                <img style="height: 600px; width: 500px; object-fit: cover;" src="${media[i].media_url}" alt="GIF not available"> 
+                            </div>`;
+                    }
+                }
+
+                appendString = appendStringStart + appendStringEnd;
+                $(`#post_media` + post_id).html(appendString);
+
+            }
+            else if (media.length == 0) {
+                $(`#post_media` + post_id).html(``);
+            }
+            else {
+                console.log(media);
+                //run single file display
+                if (media[0].fk_content_type == "1") {
+                    $(`#post_media`+ post_id).html(`<img style="max-height: 500px; max-width: 400px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
+                }
+                else if (media[0].fk_content_type == "2") {
+                    $(`#post_media`+ post_id).html(`<video height="400" controls autoplay muted >
+                                            <source src="${media[0].media_url}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                    </video>`)
+                }
+                else {
+                    $(`#post_media`+ post_id).html(`<img style="max-height: 600px; max-width: 500px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
+                }
+            }
+
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.log('Error in Operation');
+            console.log(xhr)
+            console.log(textStatus);
+            console.log(errorThrown);
+            console.log(xhr.status);
+        }
+    });
+}
+
 $(document).ready(function () {
     var pathname = window.location.pathname;
     $.ajax({
@@ -37,6 +135,7 @@ $(document).ready(function () {
                 // Calculates Time
                 var date = new Date(data[i].created_at);
                 var date_now = new Date();
+
                 var seconds_between_dates = Math.floor((date_now - date) / 1000);
                 var minutes_between_dates = Math.floor((date_now - date) / (60 * 1000));
                 var hours_between_dates = Math.floor((date_now - date) / (60 * 60 * 1000));
@@ -81,7 +180,12 @@ $(document).ready(function () {
                         <p class="text-secondary" id="post_${data[i].post_id}_time">${post_date_output}</p>
                     </div>
 
-                    <h5 id="post_${data[i].post_id}_content">${data[i].content}</h5>
+
+                    <a style="text-decoration:none" href="/r/${data[i].Subreaddit.subreaddit_name}/${data[i].post_id}">
+                    <h5 style="color : black;" id="post_${data[i].post_id}_content">${data[i].title}</h5>
+                    </a>
+                    <p>${data[i].content}<p>
+                    <div id="post_media${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark"> ${addImage(data[i].post_id)} </div>
                     <div class="toolbar d-flex flex-row align-items-center mt-2">
                             <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
                                 <span class="material-icons md-24 ms-0 me-1">chat_bubble_outline</span>
