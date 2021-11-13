@@ -240,6 +240,27 @@ const Media = sequelize.define('Media', {
     }
 })
 
+const Flair = sequelize.define('Flair', {
+    flair_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    flair_name: {
+        type: DataTypes.STRING(45),
+        allowNull: false
+    },
+    flair_colour: {
+        type: DataTypes.STRING(7),
+        allowNull: false
+    },
+    fk_subreaddit_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
+})
+
 const Moderator = sequelize.define('Moderator', {
     moderator_id: {
         type: DataTypes.INTEGER,
