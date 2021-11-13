@@ -1,5 +1,5 @@
-//const baseUrl = "http://localhost:3000";
-const baseUrl = "https://readdit-backend.herokuapp.com/"
+const baseUrl = "http://localhost:3000";
+//const baseUrl = "https://readdit-backend.herokuapp.com/"
 
 $(document).ready(function () {
 
@@ -42,7 +42,7 @@ $(document).ready(function () {
         var subreaddit_id = $('#create_post_community').val();
         var title = $('#create_post_title').val();
         var content = $('#create_post_content').val();
-
+        var fk_flair_id = document.getElementById("create_post_flair").value;
         // Temporary User id
         var user_id = 2
         let webFormData = new FormData();
@@ -50,6 +50,7 @@ $(document).ready(function () {
         webFormData.append('content',content);
         webFormData.append('subreaddit_id',subreaddit_id);
         webFormData.append('user_id',user_id);
+        webFormData.append('fk_flair_id', fk_flair_id);
         var media = document.getElementsByClassName('media');
         console.log("Media length: " + media.length);
         for (var i=0;i<media.length;i++){
@@ -73,4 +74,45 @@ $(document).ready(function () {
             }
         })
     })
+
+    
 })
+
+function selectedSubreadditId(){
+        var subreaddit_id = document.getElementById("create_post_community").value;
+        showFlairs(subreaddit_id);
+}
+
+function showFlairs(subreaddit_id){
+    $.ajax({
+        url: `${baseUrl}/flair/` + subreaddit_id,
+        method: 'GET',
+        contentType: "application/json; charset=utf-8",
+        success: function (data, status, xhr) { 
+            $("#create_post_flair").html("<option disabled selected value=null>Choose a Flair</option>");
+            var data = data.Result;
+            if (data.length == 0){
+                document.getElementById("flair_section").hidden = true;
+            }
+            else{
+                for (var i=0;i<data.length;i++){
+                console.log(JSON.stringify(data[i]));
+                $("#create_post_flair").append(`
+                    <option id='flair_id_${data[i].flair_id}' value='${data[i].flair_id}'>${data[i].flair_name}</option>
+                `);
+                document.getElementById("flair_section").hidden = false;
+            } 
+            }
+            
+        },
+        error: function (xhr, status, error) {
+            $("#currentModerators").html(`
+                <div class="row g-0 border-top">
+                <div class="col-12 bg-white p-2 text-center d-flex justify-content-center align-items-center">
+                    <h5>Error loading moderators</h5>
+                </div>
+            </div>
+                `);
+        }
+    })
+}

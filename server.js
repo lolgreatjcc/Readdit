@@ -26,6 +26,10 @@ app.get('/moderator', function (req,res) {
     res.status(200).sendFile('moderator.html', {root: __dirname + '/public/r/'});
 })
 
+app.get('/moderator/flair', function (req,res) {
+    res.status(200).sendFile('flair.html', {root: __dirname + '/public/r/'});
+})
+
 app.get('/r/:subreaddit', function (req,res) {
     res.status(200).sendFile('subreaddit.html', { root: __dirname + "/public/r/" } );
 })
@@ -34,7 +38,7 @@ app.get('/r/:subreaddit/:post_id', function (req,res) {
     res.status(200).sendFile('post.html', { root: __dirname + "/public/r/" } );
 })
 
-app.use('/profile', profile)
+//app.use('/profile', profile)
 
 app.use(serveStatic(__dirname + "/public"));
 

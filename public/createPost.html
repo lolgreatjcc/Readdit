@@ -26,8 +26,14 @@
                         <div class="px-3 pt-3">
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="create_post_community">r/</label>
-                                <select class="form-select body-borders" id="create_post_community">
+                                <select class="form-select body-borders" id="create_post_community" onchange="selectedSubreadditId()">
                                     <option disabled selected>Choose a Community</option>
+                                </select>
+                            </div>
+                            <div class="input-group mb-3" id="flair_section" hidden>
+                                <label class="input-group-text" for="create_post_flair">Flair:</label>
+                                <select class="form-select body-borders" id="create_post_flair">
+                                    <option disabled selected value=null>Choose a Flair</option>
                                 </select>
                             </div>
                         </div>
