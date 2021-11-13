@@ -158,6 +158,4 @@ router.get('/:post_id', function (req,res) {
     })
 })
 
-
-
 module.exports = router

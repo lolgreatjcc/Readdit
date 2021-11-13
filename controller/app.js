@@ -37,6 +37,7 @@ const comment = require('./comment.js');
 const moderator = require('./moderator.js');
 const save = require('./save.js');
 const flair = require('./flair.js');
+
 //-----------------------------------
 // Middleware functions
 //-----------------------------------
@@ -339,7 +340,7 @@ app.post('/api/login', printDebugInfo, function (req, res) {
 });
 
 
-app.use('/comment', comment)
+app.use('/comment', comment);
 
 app.use('/r', subreaddit);
 
@@ -350,6 +351,9 @@ app.use('/save', save);
 app.use('/moderator', moderator);
 
 app.use('/flair', flair)
+
+app.use('/media/', media);
+
 
 //-----------------------------------
 // exports
