@@ -1,5 +1,5 @@
 //ADES CA1 Play2Win
-const { Sequelize, Model, DataTypes } = require('sequelize');
+const { Sequelize, Model, DataTypes, BOOLEAN } = require('sequelize');
 
 //local credentials, comment as neccessary
 
@@ -325,6 +325,38 @@ const Comment_Vote = sequelize.define('Comment_Vote', {
     }
 })
 
+const Report = sequelize.define('Report', {
+    report_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        primaryKey: true,
+    },
+    report_description: {
+        type: DataTypes.STRING(1000),
+        allowNull: false
+    },
+
+    fk_post_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    fk_user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    created_at: {
+        type: 'TIMESTAMP',
+        allowNull: true
+    }
+})
+
+Report.belongsTo(User, {
+    foreignKey: 'fk_user_id'
+})
+
+Report.belongsTo(Post, {
+    foreignKey: 'fk_post_id'
+})
 
 
 async function syncing() { 
