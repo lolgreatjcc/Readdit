@@ -34,8 +34,9 @@ const mediaUpload = require("./mediaUpload");
 const subreaddit = require('./subreaddit.js');
 const post = require('./post.js');
 const comment = require('./comment.js');
-const moderator = require('./moderator.js');
-const save = require('./save.js');
+const moderator = require('./moderator.js')
+const save = require('./save.js')
+const vote = require('./vote.js');
 const flair = require('./flair.js');
 const media = require('./media');
 //-----------------------------------
@@ -348,12 +349,13 @@ app.use('/post', post);
 
 app.use('/save', save);
 
-app.use('/moderator', moderator);
+app.use('/moderator/', moderator);
+
+app.use('/vote', vote);
 
 app.use('/flair', flair)
 
 app.use('/media/', media);
-
 
 //-----------------------------------
 // exports

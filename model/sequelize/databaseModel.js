@@ -156,6 +156,8 @@ Post.belongsTo(User, {
     foreignKey: 'fk_user_id'
 })
 
+
+
 Subreaddit.hasMany(Post, {
     foreignKey: 'fk_subreaddit_id'
 });
@@ -300,6 +302,14 @@ const Post_Vote = sequelize.define('Post_Vote', {
         allowNull: true
     }
 })
+
+Post.hasMany(Post_Vote, {
+    foreignKey: 'fk_post_id'
+})
+
+Post_Vote.belongsTo(Post, {
+    foreignKey: 'fk_post_id'
+});
 
 const Comment_Vote = sequelize.define('Comment_Vote', {
     comment_vote_id: {

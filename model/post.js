@@ -1,6 +1,5 @@
 var sequelize = require('./sequelize/databaseModel.js');
-
-const { Post, Subreaddit, User, Saved } = sequelize.models;
+const { Post, Subreaddit, User, Saved, Post_Vote } = sequelize.models;
 const { Op } = require("sequelize");
 
 var post = {
@@ -31,11 +30,29 @@ var post = {
                     model: Subreaddit,
                     where: { subreaddit_name: subreaddit_name },
                     attributes: ['subreaddit_name','subreaddit_id']
+                },
+                {
+                    model: Post_Vote,
+                    attributes: ['vote_type']
                 }
             ],
         }).then(function (result) {
-            console.log(result)
 
+            // This block of code calculates the post's popularity
+            for(var i = 0; i < result.length; i++){
+                result[i] = result[i].dataValues;
+                var popularity_rating = 0;
+
+                for(var x = 0; x < result[i].Post_Votes.length; x++) {
+                    if (result[i].Post_Votes[x].vote_type == true) {
+                        popularity_rating += 1;
+                    }
+                    else {
+                        popularity_rating -= 1;
+                    }
+                }
+                result[i].Post_Votes = popularity_rating;
+            }
             callback(result, null)
         }).catch(function (err) {
             console.log(err)

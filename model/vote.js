@@ -1,5 +1,5 @@
 var sequelize = require('./sequelize/databaseModel.js');
-const { Post_Vote, Comment_Vote } = sequelize.models;
+const { Post_Vote, Comment_Vote, Post, Subreaddit } = sequelize.models;
 
 var vote = {
     createPostVote: function (vote_type, fk_post_id, fk_user_id, callback) {
@@ -8,17 +8,6 @@ var vote = {
             fk_post_id: fk_post_id,
             fk_user_id: fk_user_id
         }).then(function (result) {
-            callback(result, null);
-        }).catch(function (err) {
-            callback(null, err);
-        });
-    },
-    createCommentVote: function (vote_type, fk_comment_id, fk_user_id, callback) {
-        Comment_Vote.create({
-            vote_type: vote_type,
-            fk_comment_id: fk_comment_id,
-            fk_user_id: fk_user_id
-        }).then(function (result,) {
             callback(result, null);
         }).catch(function (err) {
             callback(null, err);
@@ -35,14 +24,38 @@ var vote = {
             callback(null, err);
         });
     },
-    getCommentVotes: function (fk_comment_id, callback) {
-        Comment_Vote.findAll({
+    // Retrieves users votes for a specific post
+    getUserPostVotes: function (fk_user_id,fk_post_id, callback) {
+        Post_Vote.findAll({
             where: {
-                fk_comment_id: fk_comment_id
+                fk_post_id: fk_post_id,
+                fk_user_id: fk_user_id
             }
         }).then(function (result) {
-            callback(result , null);
+            callback(result, null);
         }).catch(function (err) {
+            callback(null, err);
+        });
+    },
+    // Retrieves users votes for a specific subreaddit
+    getUserSubreadditPostVotes: function (fk_user_id,fk_subreaddit_id, callback) {
+        Post_Vote.findAll({
+            where: {
+                fk_user_id:fk_user_id
+            },
+            include: [{
+                model: Post,
+                include: [{
+                    model: Subreaddit,
+                    where: {
+                        subreaddit_id: fk_subreaddit_id
+                    }
+                }]
+            }]
+        }).then(function (result) {
+            callback(result, null);
+        }).catch(function (err) {
+            console.log(err);
             callback(null, err);
         });
     },
@@ -60,6 +73,43 @@ var vote = {
             callback(null, err);
         });
     },
+    deletePostVote: function (fk_post_id, fk_user_id, callback) {
+        Post_Vote.destroy({
+            where: {
+                fk_post_id: fk_post_id,
+                fk_user_id: fk_user_id
+            }
+        }).then(function (result) {
+            callback(result, null);
+        }).catch(function (err) {
+            callback(null, err);
+        });
+    },
+
+
+    createCommentVote: function (vote_type, fk_comment_id, fk_user_id, callback) {
+        Comment_Vote.create({
+            vote_type: vote_type,
+            fk_comment_id: fk_comment_id,
+            fk_user_id: fk_user_id
+        }).then(function (result,) {
+            callback(result, null);
+        }).catch(function (err) {
+            callback(null, err);
+        });
+    },
+    getCommentVotes: function (fk_comment_id, callback) {
+        Comment_Vote.findAll({
+            where: {
+                fk_comment_id: fk_comment_id
+            }
+        }).then(function (result) {
+            callback(result , null);
+        }).catch(function (err) {
+            callback(null, err);
+        });
+    },
+
     updateCommentVote: function (vote_type, fk_comment_id, fk_user_id, callback) {
         Comment_Vote.update({
             vote_type: vote_type
@@ -76,3 +126,4 @@ var vote = {
     }
 }
 
+module.exports = vote;
