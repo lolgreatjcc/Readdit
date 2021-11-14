@@ -7,4 +7,5 @@ Admission Number: P2004147 */
 #share {
     background: none;
     border: none;
+    cursor: pointer;
 }
