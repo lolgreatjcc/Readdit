@@ -37,7 +37,7 @@ const comment = require('./comment.js');
 const moderator = require('./moderator.js');
 const save = require('./save.js');
 const flair = require('./flair.js');
-
+const media = require('./media');
 //-----------------------------------
 // Middleware functions
 //-----------------------------------

@@ -27,6 +27,8 @@ function checkOwner(req, res, next){
     })
 }
 
+
+
 // Get all moderators
 router.get('/:subreaddit_id', printDebugInfo, (req,res) => {
 
@@ -77,6 +79,34 @@ router.delete('/:moderator_id/:subreaddit_id', printDebugInfo, verify.extractUse
         }
         
     })
+})
+
+//check if logged in user is subreaddit moderator
+router.get('/checkModerator/:subreaddit_name', verify.extractUserId, (req,res) => {
+    var {subreaddit_name} = req.params;
+    var fk_user_id = req.body.token_user_id;
+    var fk_subreaddit_id;
+    subreaddit.getSubreaddit(subreaddit_name, function(err,result){
+        if(!err) {
+            fk_subreaddit_id = result.subreaddit_id;
+
+            moderator.checkModerator(fk_user_id, fk_subreaddit_id, function (err, result) {
+                if(!err) {
+                    res.status(200).send({"Result":"Is Moderator"})
+                }
+                else{
+                    res.status(403).send({"Error":"Logged In user is not moderator"});
+                }
+                
+            })
+        }else {
+            console.log(err);
+            // tbd
+            res.status(500).send(err);
+        }
+    })
+    
+    
 })
 
 
