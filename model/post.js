@@ -1,6 +1,5 @@
 var sequelize = require('./sequelize/databaseModel.js');
-
-const { Post, Subreaddit, User, Saved } = sequelize.models;
+const { Post, Subreaddit, User, Saved, Post_Vote } = sequelize.models;
 const { Op } = require("sequelize");
 
 var post = {
@@ -30,12 +29,30 @@ var post = {
                 {
                     model: Subreaddit,
                     where: { subreaddit_name: subreaddit_name },
-                    attributes: ['subreaddit_name']
+                    attributes: ['subreaddit_name','subreaddit_id']
+                },
+                {
+                    model: Post_Vote,
+                    attributes: ['vote_type']
                 }
             ],
         }).then(function (result) {
-            console.log(result)
 
+            // This block of code calculates the post's popularity
+            for(var i = 0; i < result.length; i++){
+                result[i] = result[i].dataValues;
+                var popularity_rating = 0;
+
+                for(var x = 0; x < result[i].Post_Votes.length; x++) {
+                    if (result[i].Post_Votes[x].vote_type == true) {
+                        popularity_rating += 1;
+                    }
+                    else {
+                        popularity_rating -= 1;
+                    }
+                }
+                result[i].Post_Votes = popularity_rating;
+            }
             callback(result, null)
         }).catch(function (err) {
             console.log(err)
@@ -195,16 +212,16 @@ var post = {
                 }, 
                 {   
                     model: Subreaddit,
-                  attributes: ['subreaddit_name']
+                  attributes: ['subreaddit_name',"subreaddit_id"]
                 }
             ],
 
         }).then(function (result) {
             console.log(result)
-          callback(result,null)
+            return callback(result,null)
         }).catch(function (err) {
             console.log(err)
-            callback(null,err)
+            return callback(null,err)
         })
     },
     searchPost: function (title, callback) {
@@ -227,6 +244,79 @@ var post = {
         }).catch(function (err) {
             console.log(err);
             callback(err,null);
+        })
+    },
+    searchPost: function (title, callback) {
+        Post.findAll({
+            where : {title: {[Op.like]: "%" + title + "%"}},
+            attributes: ['post_id', 'title', 'content', 'pinned', 'created_at', "fk_subreaddit_id", "fk_user_id"],
+            include: [
+                {
+                    model: User,
+                    attributes: ['username']
+                }, 
+                {   
+                    model: Subreaddit,
+                    attributes: ['subreaddit_name']
+                }
+            ],
+        }).then(function (result) {
+            console.log(result);
+            callback(null,result);
+        }).catch(function (err) {
+            console.log(err);
+            callback(err,null);
+        })
+    },
+    pinPost: function (post_id, fk_subreaddit_id, callback) {
+        Post.findOne({ where: { 
+            [Op.and]: [
+            { fk_subreaddit_id: fk_subreaddit_id },
+            { pinned: 1 }
+        ] } })
+        .then(function (result) {
+            if (result != null && typeof result != "undefined" && Object.keys(result).length != 0){
+                Post.update(
+                    {pinned: 0},
+                    {where: { post_id: result.post_id }
+                })
+            }
+            try{
+                if (result.post_id != post_id){
+                    Post.update(
+                        {pinned: 1},
+                        {where: {[Op.and]: [
+                            { fk_subreaddit_id: fk_subreaddit_id },
+                            { post_id: post_id }
+                        ]}
+                    }).then(function(result){
+                        return callback(null,result)
+                    }).catch(function(error){
+                        return callback(error,null)
+                    })
+                }
+                else{
+                    return callback(null,result)
+                }
+            }
+            catch (error){
+                Post.update(
+                    {pinned: 1},
+                    {where: {[Op.and]: [
+                        { fk_subreaddit_id: fk_subreaddit_id },
+                        { post_id: post_id }
+                    ]}
+                }).then(function(result){
+                    return callback(null,result)
+                }).catch(function(error){
+                    return callback(error,null)
+                })
+            }
+            
+            
+        }).catch(function (err) {
+            console.log(err);
+            return callback(err,null);
         })
     },
 }

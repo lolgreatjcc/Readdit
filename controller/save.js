@@ -20,7 +20,6 @@ router.get('/posts', function (req,res) {
     var user_id = req.query.user_id;
     post.getSavedPosts(user_id, function (result,err) {
         if(!err) {
-            console.log(result);
             res.status(200).send(result);
         } else {
             res.status(500).send(err);
