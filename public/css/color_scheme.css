@@ -82,6 +82,40 @@ body {
     background-color: #6a5acd35;
 }
 
+.upvoted {
+    background-color: #734f96;
+}
+
+.upvoted i {
+    color: white!important;
+}
+
+.upvoted:hover {
+    background-color: #6a5acd35;
+    color: black!important;
+}
+
+.upvoted:hover i {
+    color: black!important;
+}
+
+.downvoted {
+    background-color: #734f96!important;
+}
+
+.downvoted i {
+    color: white!important;
+}
+
+.downvoted:hover {
+    background-color: #6a5acd35!important;
+    color: black!important;
+}
+
+.downvoted:hover i {
+    color: black!important;
+}
+
 .hoverable:hover {
     background-color: #6a5acd35;
 }
