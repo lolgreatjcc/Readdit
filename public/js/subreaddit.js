@@ -1,4 +1,4 @@
-const baseUrl = ["http://localhost:3000","http://localhost:3001"]
+const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 //const baseUrl = "https://readdit-backend.herokuapp.com/"
 
 function addImage(post_id) {
@@ -75,16 +75,16 @@ function addImage(post_id) {
                 console.log(media);
                 //run single file display
                 if (media[0].fk_content_type == "1") {
-                    $(`#post_media`+ post_id).html(`<img style="max-height: 500px; max-width: 400px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
+                    $(`#post_media` + post_id).html(`<img style="max-height: 500px; max-width: 400px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
                 }
                 else if (media[0].fk_content_type == "2") {
-                    $(`#post_media`+ post_id).html(`<video height="400" controls autoplay muted >
+                    $(`#post_media` + post_id).html(`<video height="400" controls autoplay muted >
                                             <source src="${media[0].media_url}" type="video/mp4">
                                             Your browser does not support the video tag.
                                     </video>`)
                 }
                 else {
-                    $(`#post_media`+ post_id).html(`<img style="max-height: 600px; max-width: 500px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
+                    $(`#post_media` + post_id).html(`<img style="max-height: 600px; max-width: 500px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
                 }
             }
 
@@ -200,10 +200,12 @@ $(document).ready(function () {
                                 <span class="material-icons ms-0">bookmark</span>
                                 <p class="mb-0 fw-bold fs-6">Unsave</p>
                             </div>
-                            <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
-                                <span class="material-icons md-24 mx-1 ms-0">outlined_flag</span>
-                                <p class="mb-0 fw-bold fs-6">Report</p>
-                            </div>
+                            <button style="border-width : 0px; background-color:white;" type="button" onclick="report(${data[i].post_id})" id="report">
+                                <div class="d-flex flex-row text-secondary me-4">
+                                    <span class="material-icons md-24 mx-1">outlined_flag</span>
+                                    <p class="mb-0 fw-bold fs-6">Report</p>
+                                </div>
+                            </button>
                     </div>
 
                 </div>
@@ -214,7 +216,7 @@ $(document).ready(function () {
             `)
             }
 
-            
+
 
             // Handle Saving of Posts
             $('.save').on('click', function (e) {
@@ -321,6 +323,9 @@ function checkOwner(subreadditName) {
             <div class="p-2" >
                 <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100" href="/moderator/flair?subreaddit=${subreadditName}">Edit Flairs</a>
             </div>
+            <div class="p-2" >
+                <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100" href="/moderator/manageReport.html?subreaddit=${subreadditName}">Manage Reports</a>
+            </div>
             `)
         },
         error: function (xhr, status, error) {
@@ -329,10 +334,14 @@ function checkOwner(subreadditName) {
     });
 }
 
-function copy(copyStr){
+function copy(copyStr) {
     /* Copy the text inside the text field */
     navigator.clipboard.writeText(copyStr);
 
-  /* Alert the copied text */
-  alert("Copied to clipboard!");
+    /* Alert the copied text */
+    alert("Copied to clipboard!");
+}
+
+function report(post_id) {
+    window.location.assign(baseUrl[1] + '/report.html?post_id=' + post_id);
 }
