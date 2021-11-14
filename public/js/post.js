@@ -9,7 +9,7 @@ $(document).ready(function () {
         method: 'GET',
         url: `http://localhost:3000/post/` + post_id,
         contentType: "application/json; charset=utf-8",
-        success: function (post_data, status, xhr) {
+        success: async function (post_data, status, xhr) {
 
             if (post_data.Subreaddit.subreaddit_name != decodeURI(subreaddit_path)) {
                 window.location.href = `/r/${post_data.Subreaddit.subreaddit_name}/${post_id}`;
@@ -20,6 +20,32 @@ $(document).ready(function () {
                 $('#post_username').append(post_data.User.username);
                 $('#post_title').append(post_data.title);
                 $('#post_content').append(post_data.content);
+
+                //checks if pinned
+                if (post_data.pinned == 1){
+                    $(`#post_info`).append(`
+                    <p class="fw-light text-secondary mx-1">•</p>
+                    <p class="text-secondary">Pinned By Moderators</p>
+                    `)
+                }
+
+                //checks if moderator or owner
+                var moderator = await checkModerator(post_data.Subreaddit.subreaddit_name);
+                var owner = await checkOwner(post_data.Subreaddit.subreaddit_name);
+                if (owner || moderator){
+                    $(`.post`).append(`
+                    <div class="pin" id="${post_data.post_id}_${post_data.Subreaddit.subreaddit_id}">
+                        <span class="material-icons md-24 ms-0 mx-1">push_pin</span>
+                    </div>  
+                    `)
+                }
+
+                // Handles clicking on pin button
+                $('.pin').on('click', function (e) {
+                    e.stopPropagation();
+                    var pin_id = $(this).attr('id');
+                    pin(pin_id);
+                })
 
                 // Calculates Time
                 var date = new Date(post_data.created_at);
@@ -63,6 +89,8 @@ $(document).ready(function () {
             }
         }
     });
+
+    
 
     //retrives media for post
     $.ajax({
@@ -273,4 +301,61 @@ function report() {
     console.log("REPORT POST: " + post_id);
 
     window.location.assign(baseUrl[1] + '/report.html?post_id=' + post_id);
+}
+
+function checkOwner(subreadditName) {
+    return new Promise(function(resolve, reject) {
+        var token = localStorage.getItem("token");
+        $.ajax({
+            url: `${baseUrl[0]}/r/checkOwner/` + subreadditName,
+            method: 'GET',
+            contentType: "application/json; charset=utf-8",
+            headers: { authorization: "Bearer " + token },
+            success: function (data, status, xhr) {
+                resolve(true);
+            },
+            error: function (xhr, status, error) {
+                resolve(false);
+            }
+        });
+    })
+}
+
+function checkModerator(subreadditName) {
+    return new Promise(function(resolve, reject) {
+        var token = localStorage.getItem("token");
+        $.ajax({
+            url: `${baseUrl[0]}/moderator/checkModerator/` + subreadditName,
+            method: 'GET',
+            contentType: "application/json; charset=utf-8",
+            headers: { authorization: "Bearer " + token },
+            success: function (data, status, xhr) {
+                resolve(true);
+            },
+            error: function (xhr, status, error) {
+                resolve(false);
+            }
+        });
+    })
+}
+
+function pin(post_subreaddit_id){
+    var post_subreaddit_id_arr = post_subreaddit_id.split('_');
+    var post_id = post_subreaddit_id_arr[0]
+    var fk_subreaddit_id = post_subreaddit_id_arr[1]
+    var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
+    var token = localStorage.getItem("token");
+    $.ajax({
+        url: `${baseUrl[0]}/post/pin`,
+        method: 'PUT',
+        contentType: "application/json; charset=utf-8",
+        headers:{'authorization': "Bearer " + token},
+        data: data,
+        success: function (data, status, xhr) {
+            window.location.reload()
+        },
+        error: function (xhr, status, error) {
+            alert("Error updating pins")
+        }
+    })
 }
