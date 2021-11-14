@@ -7,7 +7,6 @@ var report = {
     createReport: function (report_description, fk_post_id, fk_user_id, callback) {
         Report.create({
             report_description: report_description,
-            resolved: resolved,
             fk_post_id: fk_post_id,
             fk_user_id: fk_user_id
         }).then(function (result) {
