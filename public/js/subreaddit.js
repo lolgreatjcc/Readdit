@@ -235,10 +235,12 @@ $(document).ready(function () {
                                 <span class="material-icons ms-0">bookmark</span>
                                 <p class="mb-0 fw-bold fs-6">Unsave</p>
                             </div>
-                            <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
-                                <span class="material-icons md-24 mx-1 ms-0">outlined_flag</span>
-                                <p class="mb-0 fw-bold fs-6">Report</p>
-                            </div>
+                            <button style="border-width : 0px; background-color:white;" type="button" onclick="report(${data[i].post_id})" id="report">
+                                <div class="d-flex flex-row text-secondary me-4">
+                                    <span class="material-icons md-24 mx-1">outlined_flag</span>
+                                    <p class="mb-0 fw-bold fs-6">Report</p>
+                                </div>
+                            </button>
                     </div>
 
                 </div>
@@ -257,7 +259,8 @@ $(document).ready(function () {
                 </div>  
             `)
             }
-            
+
+      
             // Block of code shows user's upvotes and downvotes on posts
             // temp user_id
             var user_id = 2;
@@ -494,17 +497,20 @@ function checkOwner(subreadditName) {
             contentType: "application/json; charset=utf-8",
             headers: { authorization: "Bearer " + token },
             success: function (data, status, xhr) {
-                $("#moderator").html(`
-                <div id="about_community_header" class="p-2 py-3 rounded-top">
-                    <h6 class="fw-bold text-white mb-0 ms-2">Moderators</h6>
-                </div>
-                <div class="p-2" >
-                    <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100" href="/moderator?subreaddit=${subreadditName}">Edit Moderators</a>
-                </div>
-                <div class="p-2" >
-                    <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100" href="/moderator/flair?subreaddit=${subreadditName}">Edit Flairs</a>
-                </div>
-                `)
+              $("#moderator").html(`
+              <div id="about_community_header" class="p-2 py-3 rounded-top">
+                  <h6 class="fw-bold text-white mb-0 ms-2">Moderators</h6>
+              </div>
+              <div class="p-2" >
+                  <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100" href="/moderator?subreaddit=${subreadditName}">Edit Moderators</a>
+              </div>
+              <div class="p-2" >
+                  <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100" href="/moderator/flair?subreaddit=${subreadditName}">Edit Flairs</a>
+              </div>
+              <div class="p-2" >
+                  <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100" href="/moderator/manageReport.html?subreaddit=${subreadditName}">Manage Reports</a>
+              </div>
+              `)
                 resolve(true);
             },
             error: function (xhr, status, error) {
@@ -566,6 +572,19 @@ function pin(post_subreaddit_id){
         error: function (xhr, status, error) {
             alert("Error updating pins")
         }
+    });
+}
+
+function copy(copyStr) {
+    /* Copy the text inside the text field */
+    navigator.clipboard.writeText(copyStr);
+
+    /* Alert the copied text */
+    alert("Copied to clipboard!");
+}
+
+function report(post_id) {
+    window.location.assign(baseUrl[1] + '/report.html?post_id=' + post_id);
     })
 
 }

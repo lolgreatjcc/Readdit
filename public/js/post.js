@@ -291,8 +291,16 @@ function copy(){
     /* Copy the text inside the text field */
     navigator.clipboard.writeText(copiedText);
 
-  /* Alert the copied text */
-  alert("Copied the text: " + copiedText);
+    /* Alert the copied text */
+    alert("Copied the text: " + copiedText);
+}
+
+function report() {
+    var pathname = window.location.pathname;
+    var post_id = pathname.split('/')[3];
+    console.log("REPORT POST: " + post_id);
+
+    window.location.assign(baseUrl[1] + '/report.html?post_id=' + post_id);
 }
 
 function checkOwner(subreadditName) {
