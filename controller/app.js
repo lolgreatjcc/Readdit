@@ -38,7 +38,10 @@ const moderator = require('./moderator.js')
 const save = require('./save.js')
 const vote = require('./vote.js');
 const flair = require('./flair.js');
-const media = require('./media');
+
+const media = require('./media.js');
+const report = require('./report.js');
+
 //-----------------------------------
 // Middleware functions
 //-----------------------------------
@@ -356,6 +359,8 @@ app.use('/vote', vote);
 app.use('/flair', flair)
 
 app.use('/media/', media);
+
+app.use('/report/', report);
 
 //-----------------------------------
 // exports
