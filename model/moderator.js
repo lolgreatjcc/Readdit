@@ -55,6 +55,21 @@ var moderator = {
             return callback(err,null);
         })
     },
+    checkModerator: function (fk_user_id, subreaddit_id, callback) {
+        Moderator.findOne({ where: {[Op.and]: [
+            { fk_subreaddit_id: subreaddit_id },
+            { fk_user_id: fk_user_id }
+        ] } })
+        .then(function (result) {
+            if (result != null) {
+                return callback(null, result)
+            }
+            else {
+                var err = "Not a moderator";
+                return callback(err, null);
+            }
+        })
+    },
 }
 
 

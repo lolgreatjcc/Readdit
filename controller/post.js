@@ -4,6 +4,7 @@ const printDebugInfo = require('./printDebugInfo');
 //Model Imports
 const post = require('../model/post.js');
 const media = require('../model/media.js');
+const moderator = require("../model/moderator.js")
 var path = require('path');
 
 //Imports required for media upload
@@ -19,6 +20,21 @@ const storage = multer.diskStorage({
 const upload = multer({dest: './mediaUploadTemp', storage:storage})
 const mediaUpload = require("./mediaUpload");
 const app = require('./app');
+const verify = require('./verify');
+
+function checkModerator(req, res, next){
+    var fk_subreaddit_id = req.body.fk_subreaddit_id;
+    var fk_user_id = req.body.token_user_id;
+    moderator.checkModerator(fk_user_id, fk_subreaddit_id, function (err, result) {
+        if(!err) {
+            next();
+        }
+        else{
+            res.status(403).send({"Error":"Logged In user is not moderator"});
+        }
+        
+    })
+}
 
 //uploading post images
 router.post('/create', upload.array("media",8), (req,res) => {
@@ -152,6 +168,17 @@ router.get('/:post_id', function (req,res) {
     post.getPost(req_post_id, function (result,err) {
         if(!err) {
             res.status(200).send(result);
+        } else {
+            res.status(500).send(err);
+        }
+    })
+})
+
+router.put('/pin', verify.extractUserId, checkModerator, function (req,res) {
+    var {post_id, fk_subreaddit_id} = req.body;
+    post.pinPost(post_id, fk_subreaddit_id, function (err,result) {
+        if(!err) {
+            res.status(204).send();
         } else {
             res.status(500).send(err);
         }

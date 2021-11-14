@@ -38,6 +38,7 @@ const moderator = require('./moderator.js')
 const save = require('./save.js')
 const vote = require('./vote.js');
 const flair = require('./flair.js');
+const media = require('./media');
 //-----------------------------------
 // Middleware functions
 //-----------------------------------
