@@ -36,6 +36,7 @@ const post = require('./post.js');
 const comment = require('./comment.js');
 const moderator = require('./moderator.js')
 const save = require('./save.js')
+const vote = require('./vote.js');
 //-----------------------------------
 // Middleware functions
 //-----------------------------------
@@ -67,6 +68,7 @@ function printDebugInfo(req, res, next) {
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var jsonParser = bodyParser.json();
 var cors = require('cors');
+
 
 
 //-----------------------------------
@@ -291,7 +293,9 @@ app.use('/post', post);
 
 app.use('/save', save);
 
-app.use('/moderator/', moderator)
+app.use('/moderator/', moderator);
+
+app.use('/vote', vote);
 
 //-----------------------------------
 // exports
