@@ -19,11 +19,26 @@ function checkOwner(){
             getSubreadditId();
         },
         error: function (xhr, status, error) {
-            window.location.href = "/home.html";
+            checkModerator(subreadditName);
         }
     });
 }
 
+function checkModerator(subreadditName) {
+    var token = localStorage.getItem("token");
+    $.ajax({
+        url: `${baseUrl}/moderator/checkModerator/` + subreadditName,
+        method: 'GET',
+        contentType: "application/json; charset=utf-8",
+        headers: { authorization: "Bearer " + token },
+        success: function (data, status, xhr) {
+            getSubreadditId();
+        },
+        error: function (xhr, status, error) {
+            window.location.href = "/home.html";
+        }
+    });
+}
 
 function getFlairs(){
     var subreaddit_id = localStorage.getItem('subreaddit_id');

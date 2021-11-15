@@ -30,12 +30,6 @@
                                     <option disabled selected>Choose a Community</option>
                                 </select>
                             </div>
-                            <div class="input-group mb-3" id="flair_section" hidden>
-                                <label class="input-group-text" for="create_post_flair">Flair:</label>
-                                <select class="form-select body-borders" id="create_post_flair">
-                                    <option disabled selected value=null>Choose a Flair</option>
-                                </select>
-                            </div>
                         </div>
                     </form>
                 </div>
@@ -64,8 +58,14 @@
 
 
                             </div>
-                            <h5>Flairs</h5>
-                            <p>Implemented Later</p>
+                            <h5 class="mb-2">Flairs</h5>
+                            <p id="no_flairs">Selected Subreaddit has no flairs yet.</p>
+                            <div class="input-group mb-3" id="flair_section" hidden>
+                                <!-- <label class="input-group-text" for="create_post_flair">Flair:</label> -->
+                                <select class="form-select body-borders" id="create_post_flair">
+                                    <option disabled selected value=null>No Flair Chosen - choose flair?</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="d-flex flex-row py-2" id="create_community_footer">
                             <div class="flex-grow-1"></div>
