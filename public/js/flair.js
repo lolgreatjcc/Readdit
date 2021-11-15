@@ -38,6 +38,23 @@ function checkModerator(subreadditName) {
             window.location.href = "/home.html";
         }
     });
+    
+}
+
+function checkModerator(subreadditName) {
+    var token = localStorage.getItem("token");
+    $.ajax({
+        url: `${baseUrl}/moderator/checkModerator/` + subreadditName,
+        method: 'GET',
+        contentType: "application/json; charset=utf-8",
+        headers: { authorization: "Bearer " + token },
+        success: function (data, status, xhr) {
+            getSubreadditId();
+        },
+        error: function (xhr, status, error) {
+            window.location.href = "/home.html";
+        }
+    });
 }
 
 function getFlairs(){
@@ -53,7 +70,7 @@ function getFlairs(){
                 $("#flairs").append(`
                 <div class="row g-0 border-top">
                 <div class="col-12 bg-white p-2 text-center d-flex justify-content-center align-items-center">
-                    <h5>There are no moderators</h5>
+                    <h5>There are no flairs</h5>
                 </div>
             </div>
                 `);

@@ -491,11 +491,11 @@ $(document).ready(function () {
                 var pin_id = $(this).attr('id');
                 pin(pin_id);
             })
-        },
-        error: function (xhr, status, error) {
-            console.log(xhr);
-        }
-    })
+    },
+    error: function (xhr, status, error) {
+        console.log(xhr);
+    }
+})
 })
 
 function checkOwner(subreadditName) {
@@ -594,6 +594,5 @@ function copy(copyStr) {
 }
 
 function report(post_id) {
-    window.location.assign(baseUrl[1] + '/report.html?post_id=' + post_id)
-
+    window.location.assign(baseUrl[1] + '/report.html?post_id=' + post_id);
 }
