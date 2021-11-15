@@ -36,19 +36,46 @@ $(document).ready(function () {
                 //checks if moderator or owner
                 var moderator = await checkModerator(post_data.Subreaddit.subreaddit_name);
                 var owner = await checkOwner(post_data.Subreaddit.subreaddit_name);
+                var report_delete = "";
                 if (owner || moderator){
                     $(`.post`).append(`
                     <div class="pin" id="${post_data.post_id}_${post_data.Subreaddit.subreaddit_id}">
                         <span class="material-icons md-24 ms-0 mx-1">push_pin</span>
                     </div>  
                     `)
+                    report_delete = `
+                    <button style="border-width : 0px; background-color:white;" type="button" class="delete" id="delete_${post_data.post_id}_${post_data.Subreaddit.subreaddit_id}">
+                        <div class="d-flex flex-row text-secondary me-4">
+                            <span class="material-icons md-24 mx-1">outlined_flag</span>
+                            <p class="mb-0 fw-bold fs-6">Delete</p>
+                        </div>
+                    </button>`
                 }
+                else{
+                    report_delete = `
+                    <button style="border-width : 0px; background-color:white;" type="button" onclick="report(${post_data.post_id})" id="report">
+                        <div class="d-flex flex-row text-secondary me-4">
+                            <span class="material-icons md-24 mx-1">outlined_flag</span>
+                            <p class="mb-0 fw-bold fs-6">Report</p>
+                        </div>
+                    </button>`
+                }
+
+                $(".toolbar").append(report_delete)
+                
+
 
                 // Handles clicking on pin button
                 $('.pin').on('click', function (e) {
                     e.stopPropagation();
                     var pin_id = $(this).attr('id');
                     pin(pin_id);
+                })
+
+                $('.delete').on('click', function (e) {
+                    e.stopPropagation();
+                    var delete_id = $(this).attr('id');
+                    deletePost(delete_id);
                 })
 
                 // Calculates Time
@@ -356,10 +383,33 @@ function pin(post_subreaddit_id){
         headers:{'authorization': "Bearer " + token},
         data: data,
         success: function (data, status, xhr) {
-            window.location.reload()
+            window.location.href()
         },
         error: function (xhr, status, error) {
             alert("Error updating pins")
         }
     })
+}
+
+function deletePost(post_subreaddit_id){
+    var post_subreaddit_id_arr = post_subreaddit_id.split('_');
+    var post_id = post_subreaddit_id_arr[1]
+    var fk_subreaddit_id = post_subreaddit_id_arr[2]
+    var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
+    var token = localStorage.getItem("token");
+    $.ajax({
+        url: `${baseUrl[0]}/post`,
+        method: 'DELETE',
+        contentType: "application/json; charset=utf-8",
+        headers:{'authorization': "Bearer " + token},
+        data: data,
+        success: function (data, status, xhr) {
+            var pathname = window.location.pathname;
+            var subreaddit_name = pathname.split('/')[2];
+            window.location.href = `/r/${subreaddit_name}`;
+        },
+        error: function (xhr, status, error) {
+            alert("Error deleting post")
+        }
+    });
 }

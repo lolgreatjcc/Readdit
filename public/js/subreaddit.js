@@ -216,6 +216,7 @@ $(document).ready(function () {
             console.log(data.length)
             for (var i = 0; i < data.length; i++) {
                 console.log(data[i]);
+
                 var copyStr = data[i].Subreaddit.subreaddit_name + "/" + data[i].post_id;
                 // Calculates Time
                 var date = new Date(data[i].created_at);
@@ -241,10 +242,37 @@ $(document).ready(function () {
                     post_date_output = `${weeks_between_dates} weeks ago`
                 }
 
+                var pinnedStr = "";
+                if(data[i].pinned == 1){
+                    pinnedStr =  `<p class="fw-light text-secondary mx-1">•</p>
+                                <p class="text-secondary">Pinned By Moderators</p>
+                    `
+                }
+
+                var report_delete = "";
+                if (owner||moderator){
+                    report_delete = `
+                    <button style="border-width : 0px; background-color:white;" type="button" class="delete" id="delete_${data[i].post_id}_${data[i].Subreaddit.subreaddit_id}">
+                        <div class="d-flex flex-row text-secondary me-4">
+                            <span class="material-icons md-24 mx-1">outlined_flag</span>
+                            <p class="mb-0 fw-bold fs-6">Delete</p>
+                        </div>
+                    </button>`
+                }
+                else{
+                    report_delete = `
+                    <button style="border-width : 0px; background-color:white;" type="button" onclick="report(${data[i].post_id})" id="report">
+                        <div class="d-flex flex-row text-secondary me-4">
+                            <span class="material-icons md-24 mx-1">outlined_flag</span>
+                            <p class="mb-0 fw-bold fs-6">Report</p>
+                        </div>
+                    </button>`
+
                 var flair_html = "";
                 // Displays Post Flair
                 if (data[i].Flair) {
                     flair_html = `<div class="ms-2 btn rounded-pill py-0 px-2" style="background-color:${data[i].Flair.flair_colour}"><span class="fw-bold text-white">${data[i].Flair.flair_name}</sp></div>`
+
                 }
 
                 var append_str = "";
@@ -266,58 +294,42 @@ $(document).ready(function () {
                         <p class="d-inline text-secondary clickable-link" id="post_${data[i].User.username}_user"> u/<a>${data[i].User.username}</a></p>
                         <p class="fw-light text-secondary mx-1">•</p>
                         <p class="text-secondary" id="post_${data[i].post_id}_time">${post_date_output}</p>
-            `
-                //indicator for pins
-                if (data[i].pinned == 1) {
-                    append_str += `<p class="fw-light text-secondary mx-1">•</p>
-                            <p class="text-secondary">Pinned By Moderators</p>
-                `
-                }
+                        ${pinnedStr}
 
-
-                append_str += `</div>
-                    <a style="text-decoration:none" href="/r/${data[i].Subreaddit.subreaddit_name}/${data[i].post_id}">
-                    <div class="d-flex flex-row">
-                    <h5 style="color : black;" class="mb-0" id="post_${data[i].post_id}_content">${data[i].title}</h5>
-                    ${flair_html}
                     </div>
-                    </a>
-                    <p>${data[i].content}<p>
-                    <div id="post_media${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark"> ${addImage(data[i].post_id)} </div>
-                    <div class="toolbar d-flex flex-row align-items-center mt-2">
-                            <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
-                                <span class="material-icons md-24 ms-0 me-1">chat_bubble_outline</span>
-                                <p class="mb-0 fw-bold me-1" id="comment_total"></p>
-                                <p class="mb-0 fw-bold fs-6">Comments</p>
-                            </div>
-                            <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable share" id="${copyStr}">
-                                <span class="material-icons md-24 ms-0 mx-1">share</span>
-                                <p class="mb-0 fw-bold fs-6">Share</p>
-                            </div>
-                            <div class="save d-flex flex-row text-secondary me-4 p-1 rounded hoverable" id="post_bookmark_${data[i].post_id}">
-                                <span class="material-icons ms-0">bookmark</span>
-                                <p class="mb-0 fw-bold fs-6">Unsave</p>
-                            </div>
-                            <button style="border-width : 0px; background-color:white;" type="button" onclick="report(${data[i].post_id})" id="report">
-                                <div class="d-flex flex-row text-secondary me-4">
-                                    <span class="material-icons md-24 mx-1">outlined_flag</span>
-                                    <p class="mb-0 fw-bold fs-6">Report</p>
+                        <a style="text-decoration:none" href="/r/${data[i].Subreaddit.subreaddit_name}/${data[i].post_id}">
+                        <h5 style="color : black;" id="post_${data[i].post_id}_content">${data[i].title}</h5>
+                        </a>
+                        <p>${data[i].content}<p>
+                        <div id="post_media${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark"> ${addImage(data[i].post_id)} </div>
+                        <div class="toolbar d-flex flex-row align-items-center mt-2">
+                                <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
+                                    <span class="material-icons md-24 ms-0 me-1">chat_bubble_outline</span>
+                                    <p class="mb-0 fw-bold me-1" id="comment_total"></p>
+                                    <p class="mb-0 fw-bold fs-6">Comments</p>
                                 </div>
-                            </button>
-                    </div>
+                                <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable share" id="${copyStr}">
+                                    <span class="material-icons md-24 ms-0 mx-1">share</span>
+                                    <p class="mb-0 fw-bold fs-6">Share</p>
+                                </div>
+                                <div class="save d-flex flex-row text-secondary me-4 p-1 rounded hoverable" id="post_bookmark_${data[i].post_id}">
+                                    <span class="material-icons ms-0">bookmark</span>
+                                    <p class="mb-0 fw-bold fs-6">Unsave</p>
+                                </div>
+                                ${report_delete}
+                        </div>
 
-                </div>
-                
-                </div>
-                </div>`
+                    </div>
+                    
+                    </div>
+                    </div>`
 
 
                 $('#post_div').append(append_str)
-
-
-                if (owner || moderator) {
-                    $(`#post_${data[i].post_id}`).append(`
-                <div class="pin" id="${data[i].post_id}_${data[i].Subreaddit.subreaddit_id}">
+      
+            if (owner || moderator){
+                $(`#post_${data[i].post_id}`).append(`
+                <div class="pin" id="pin_${data[i].post_id}_${data[i].Subreaddit.subreaddit_id}">
                     <span class="material-icons md-24 ms-0 mx-1">push_pin</span>
                 </div>  
             `)
@@ -327,21 +339,6 @@ $(document).ready(function () {
                 // Block of code shows user's upvotes and downvotes on posts
                 // temp user_id
 
-            }
-
-            var user_id = 2;
-            if (user_id) {
-                var vote_data = getUsersVotes(pathname, user_id);
-                console.log('vote_data', vote_data);
-                for (var x = 0; x < vote_data.length; x++) {
-                    var upvote_button = $(`#post_${vote_data[x].fk_post_id}_upvote`);
-                    var downvote_button = $(`#post_${vote_data[x].fk_post_id}_downvote`);
-                    if (vote_data[x].vote_type == true) {
-                        upvote_button.addClass('upvoted');
-                    } else {
-                        downvote_button.addClass('downvoted');
-                    }
-                }
             }
 
             // Handle Saving of Posts
@@ -548,13 +545,37 @@ $(document).ready(function () {
                 var pin_id = $(this).attr('id');
                 pin(pin_id);
             })
-        },
-        error: function (xhr, status, error) {
-            console.log(xhr);
+
+            $('.delete').on('click', function (e) {
+                e.stopPropagation();
+                var delete_id = $(this).attr('id');
+                deletePost(delete_id);
+            })
+
         }
-    })
 
     orderBy();
+        // Block of code shows user's upvotes and downvotes on posts
+        // temp user_id
+        var user_id = 2;
+        if (user_id) {
+            var data = getUsersVotes(pathname, user_id);
+            for(var i = 0 ; i<data.length; i++) {
+                var upvote_button = $(`#post_${data[i].fk_post_id}_upvote`);
+                var downvote_button = $(`#post_${data[i].fk_post_id}_downvote`);
+                if(data[i].vote_type == true) {
+                    upvote_button.addClass('upvoted');
+                }else {
+                    downvote_button.addClass('downvoted');
+                }
+            }
+        }
+
+    },
+    error: function (xhr, status, error) {
+        console.log(xhr);
+    }
+})
 })
 
 function checkOwner(subreadditName) {
@@ -625,9 +646,10 @@ function copy(copyStr) {
 
 function pin(post_subreaddit_id) {
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
-    var post_id = post_subreaddit_id_arr[0]
-    var fk_subreaddit_id = post_subreaddit_id_arr[1]
-    var data = JSON.stringify({ post_id: post_id, fk_subreaddit_id: fk_subreaddit_id });
+
+    var post_id = post_subreaddit_id_arr[1]
+    var fk_subreaddit_id = post_subreaddit_id_arr[2]
+    var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
     var token = localStorage.getItem("token");
     $.ajax({
         url: `${baseUrl[0]}/post/pin`,
@@ -653,9 +675,10 @@ function copy(copyStr) {
 }
 
 function report(post_id) {
-    window.location.assign(baseUrl[1] + '/report.html?post_id=' + post_id)
-
+    window.location.assign(baseUrl[1] + '/report.html?post_id=' + post_id);
 }
+
+
 
 
 function orderBy() {
@@ -665,4 +688,24 @@ function orderBy() {
         location.href = `?orderBy=${orderby}`;
 
     })
+}
+function deletePost(post_subreaddit_id){
+    var post_subreaddit_id_arr = post_subreaddit_id.split('_');
+    var post_id = post_subreaddit_id_arr[1]
+    var fk_subreaddit_id = post_subreaddit_id_arr[2]
+    var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
+    var token = localStorage.getItem("token");
+    $.ajax({
+        url: `${baseUrl[0]}/post`,
+        method: 'DELETE',
+        contentType: "application/json; charset=utf-8",
+        headers:{'authorization': "Bearer " + token},
+        data: data,
+        success: function (data, status, xhr) {
+            window.location.reload()
+        },
+        error: function (xhr, status, error) {
+            alert("Error deleting post")
+        }
+    });
 }
