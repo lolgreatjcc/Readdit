@@ -28,6 +28,10 @@ $(document).ready(function () {
                     <p class="text-secondary">Pinned By Moderators</p>
                     `)
                 }
+                if(post_data.Flair != null){
+                    console.log("working");
+                    $("#flair_section").append(`<div class="btn rounded-pill py-0 px-2" style="background-color:${post_data.Flair.flair_colour}"><span class="fw-bold text-white">${post_data.Flair.flair_name}</sp></div>`)
+                }
 
                 //checks if moderator or owner
                 var moderator = await checkModerator(post_data.Subreaddit.subreaddit_name);
@@ -65,7 +69,7 @@ $(document).ready(function () {
                 $('#post_timeAgo').append(post_date_output);
                 retrieved_post_id = post_data.post_id;
 
-                // Retrieve Post Data
+                // Retrieve Subreaddit Data
                 $.ajax({
                     url: `http://localhost:3000/r/` + subreaddit_path,
                     method: 'GET',
@@ -80,7 +84,6 @@ $(document).ready(function () {
                         $('#community_create_month').html(months[date.getMonth() - 1]);
                         $('#community_create_day').html(date.getDate());
                         $('#community_create_year').html(date.getFullYear());
-
                     },
                     error: function (xhr, status, error) {
                         // TBD
@@ -90,7 +93,8 @@ $(document).ready(function () {
         }
     });
 
-    
+    // Displays flair is post has an associated flair.
+
 
     //retrives media for post
     $.ajax({
