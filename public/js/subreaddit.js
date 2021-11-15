@@ -11,7 +11,6 @@ function addImage(post_id) {
         dataType: 'json',
         success: function (data, textStatus, xhr) {
             var media = data.Result;
-            console.log(media.length);
             if (media.length > 1) {
                 var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">`
@@ -39,7 +38,6 @@ function addImage(post_id) {
 
                 //run multiple file display
                 for (var i = 0; i < media.length; i++) {
-                    console.log(media[i]);
                     if (i == 0) {
                         var item = 'carousel-item active';
                     }
@@ -72,7 +70,6 @@ function addImage(post_id) {
                 $(`#post_media` + post_id).html(``);
             }
             else {
-                console.log(media);
                 //run single file display
                 if (media[0].fk_content_type == "1") {
                     $(`#post_media` + post_id).html(`<img style="max-height: 500px; max-width: 400px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
@@ -108,7 +105,6 @@ function getUsersVotes(subreaddit_id, user_id) {
         async: false,
         dataType: 'json',
         success: function (data, textStatus, xhr) {
-            console.log(data);
             results = data
         }
     })
@@ -151,19 +147,19 @@ $(document).ready(function () {
 
             var sortedData = [];
             for (var i = 0; i < data.length; i++) {
-                if (data[i].pinned == 1){
+                if (data[i].pinned == 1) {
                     sortedData.unshift(data[i]);
                 }
-                else{
+                else {
                     sortedData.push(data[i]);
                 }
             }
 
             data = sortedData;
-
+            console.log(data.length)
             for (var i = 0; i < data.length; i++) {
-                console.log("Number of posts: " + data.length)
-                console.log(JSON.stringify(data[i]));
+                console.log(data[i]);
+
                 var copyStr = data[i].Subreaddit.subreaddit_name + "/" + data[i].post_id;
                 // Calculates Time
                 var date = new Date(data[i].created_at);
@@ -214,6 +210,12 @@ $(document).ready(function () {
                             <p class="mb-0 fw-bold fs-6">Report</p>
                         </div>
                     </button>`
+
+                var flair_html = "";
+                // Displays Post Flair
+                if(data[i].Flair){
+                    flair_html = `<div class="ms-2 btn rounded-pill py-0 px-2" style="background-color:${data[i].Flair.flair_colour}"><span class="fw-bold text-white">${data[i].Flair.flair_name}</sp></div>`
+
                 }
 
                 var append_str = "";
@@ -236,6 +238,7 @@ $(document).ready(function () {
                         <p class="fw-light text-secondary mx-1">•</p>
                         <p class="text-secondary" id="post_${data[i].post_id}_time">${post_date_output}</p>
                         ${pinnedStr}
+
                     </div>
                         <a style="text-decoration:none" href="/r/${data[i].Subreaddit.subreaddit_name}/${data[i].post_id}">
                         <h5 style="color : black;" id="post_${data[i].post_id}_content">${data[i].title}</h5>
@@ -264,18 +267,22 @@ $(document).ready(function () {
                     </div>
                     </div>`
 
-
+                
                 $('#post_div').append(append_str)
-            
-            
+      
             if (owner || moderator){
                 $(`#post_${data[i].post_id}`).append(`
                 <div class="pin" id="pin_${data[i].post_id}_${data[i].Subreaddit.subreaddit_id}">
                     <span class="material-icons md-24 ms-0 mx-1">push_pin</span>
                 </div>  
             `)
-            }
+                }
 
+
+                // Block of code shows user's upvotes and downvotes on posts
+                // temp user_id
+
+            }
 
             // Handle Saving of Posts
             $('.save').on('click', function (e) {
@@ -338,7 +345,9 @@ $(document).ready(function () {
                         }
                     })
                 }
+
             })
+
 
             // Handles clicking on share button
             $('.share').on('click', function (e) {
@@ -467,7 +476,7 @@ $(document).ready(function () {
 
             // Handles clicking on a post
             $('.post').on('click', function (e) {
-                var post =  $(this);
+                var post = $(this);
                 var post_id = post.attr('id').split('_')[1];
                 var subreaddit = pathname;
                 location.href = `${subreaddit}/${post_id}`;
@@ -502,6 +511,7 @@ $(document).ready(function () {
                 }
             }
         }
+
     },
     error: function (xhr, status, error) {
         console.log(xhr);
@@ -510,7 +520,7 @@ $(document).ready(function () {
 })
 
 function checkOwner(subreadditName) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/r/checkOwner/` + subreadditName,
@@ -518,7 +528,7 @@ function checkOwner(subreadditName) {
             contentType: "application/json; charset=utf-8",
             headers: { authorization: "Bearer " + token },
             success: function (data, status, xhr) {
-              $("#moderator").html(`
+                $("#moderator").html(`
               <div id="about_community_header" class="p-2 py-3 rounded-top">
                   <h6 class="fw-bold text-white mb-0 ms-2">Moderators</h6>
               </div>
@@ -542,7 +552,7 @@ function checkOwner(subreadditName) {
 }
 
 function checkModerator(subreadditName) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/moderator/checkModerator/` + subreadditName,
@@ -571,12 +581,13 @@ function copy(copyStr) {
     /* Copy the text inside the text field */
     navigator.clipboard.writeText(copyStr);
 
-  /* Alert the copied text */
-  alert("Copied to clipboard!");
+    /* Alert the copied text */
+    alert("Copied to clipboard!");
 }
 
-function pin(post_subreaddit_id){
+function pin(post_subreaddit_id) {
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
+
     var post_id = post_subreaddit_id_arr[1]
     var fk_subreaddit_id = post_subreaddit_id_arr[2]
     var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
@@ -585,7 +596,7 @@ function pin(post_subreaddit_id){
         url: `${baseUrl[0]}/post/pin`,
         method: 'PUT',
         contentType: "application/json; charset=utf-8",
-        headers:{'authorization': "Bearer " + token},
+        headers: { 'authorization': "Bearer " + token },
         data: data,
         success: function (data, status, xhr) {
             window.location.reload()
