@@ -5,7 +5,7 @@ const { Sequelize, Model, DataTypes, BOOLEAN } = require('sequelize');
 
 const database = "readdit";
 const user = "root";
-const password = "Electronicman123"
+const password = "FrozenLava123"
 const host = 'localhost'
 
 // heroku credentials, comment as neccessary. ensure database has data
@@ -261,6 +261,10 @@ const Flair = sequelize.define('Flair', {
         type: DataTypes.INTEGER,
         allowNull: false
     }
+})
+
+Post.belongsTo(Flair, {
+    foreignKey: 'fk_flair_id'
 })
 
 const Moderator = sequelize.define('Moderator', {
