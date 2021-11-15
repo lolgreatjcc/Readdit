@@ -4,7 +4,8 @@ const printDebugInfo = require('./printDebugInfo');
 //Model Imports
 const post = require('../model/post.js');
 const media = require('../model/media.js');
-const moderator = require("../model/moderator.js")
+const moderator = require("../model/moderator.js");
+const subreaddit = require("../model/subreaddit.js");
 var path = require('path');
 
 //Imports required for media upload
@@ -29,8 +30,21 @@ function checkModerator(req, res, next) {
         if (!err) {
             next();
         }
-        else {
-            res.status(403).send({ "Error": "Logged In user is not moderator" });
+        else{
+            subreaddit.getSubreadditByID(fk_subreaddit_id, function (err, result) {
+                if(!err) {
+                    var result = result.dataValues;
+                    if (result.fk_creator_user_id == fk_user_id){
+                        next();
+                    }
+                    else{
+                        res.status(403).send({"Error":"Logged In user is not moderator"});
+                    }
+                }else {
+                    res.status(500).send(err);
+                }
+                
+            })
         }
 
     })
@@ -178,6 +192,17 @@ router.put('/pin', verify.extractUserId, checkModerator, function (req, res) {
     var { post_id, fk_subreaddit_id } = req.body;
     post.pinPost(post_id, fk_subreaddit_id, function (err, result) {
         if (!err) {
+            res.status(204).send();
+        } else {
+            res.status(500).send(err);
+        }
+    })
+})
+
+router.delete('/', verify.extractUserId, checkModerator, function (req,res) {
+    var {post_id, fk_subreaddit_id} = req.body;
+    post.deletePost(post_id, fk_subreaddit_id, function (err,result) {
+        if(!err) {
             res.status(204).send();
         } else {
             res.status(500).send(err);

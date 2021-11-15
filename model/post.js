@@ -337,6 +337,18 @@ var post = {
                 return callback(err, null);
             })
     },
+    deletePost : function (post_id, fk_subreaddit_id, callback) {
+        Post.destroy({
+            where: {[Op.and]: [
+                { fk_subreaddit_id: fk_subreaddit_id },
+                { post_id: post_id }
+            ]}
+        }).then(function (result) {
+            return callback(null, result);
+        }).catch(function(error){
+            return callback(error,null);
+        })
+    },
 }
 
 module.exports = post;
