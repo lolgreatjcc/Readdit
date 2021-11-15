@@ -5,12 +5,12 @@ const verify = require('./verify');
 const printDebugInfo = require('./printDebugInfo');
 
 // Creates a New Community/Subreaddit
-router.post('/create', printDebugInfo, (req,res) => {
+router.post('/create', printDebugInfo, verify.extractUserId, (req,res) => {
 
     // # rmb to add check for user id
     var community_name = req.body.subreaddit_name;
     var description = req.body.description;
-    var creator_user_id = req.body.user_id;
+    var creator_user_id = req.body.token_user_id;
 
     
     subreaddit.createSubreaddit(community_name, description, creator_user_id, function (err, result) {

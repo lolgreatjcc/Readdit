@@ -1,5 +1,6 @@
 var sequelize = require('./sequelize/databaseModel.js');
 const { Flair } = sequelize.models;
+const { Op } = require("sequelize");
 
 var flair = {
     getFlairs: function (fk_subreaddit_id, callback) {
@@ -12,7 +13,10 @@ var flair = {
         })
     },
     addFlair: function (flair_name, flair_colour, fk_subreaddit_id, callback) {
-        Flair.findOne({ where: { flair_name:flair_name } })
+        Flair.findOne({ where: {[Op.and]: [
+            { flair_name: flair_name },
+            { fk_subreaddit_id: fk_subreaddit_id }
+        ] } })
         .then(function (result) {
             if (result == null) {
                 Flair.create({
