@@ -115,6 +115,7 @@ function getUsersVotes(subreaddit_id, user_id) {
 
 $(document).ready(function () {
     var pathname = window.location.pathname;
+    console.log(pathname)
     $.ajax({
         url: `${baseUrl[0]}` + pathname,
         method: 'GET',
@@ -141,20 +142,76 @@ $(document).ready(function () {
         contentType: "application/json; charset=utf-8",
         success: async function (data, status, xhr) {
             console.log(data);
+
             var current_subreaddit_name = window.location.pathname.split('/')[2];
             var moderator = await checkModerator(current_subreaddit_name);
             var owner = await checkOwner(current_subreaddit_name);
 
+
+            var searchParams = new URLSearchParams(window.location.search)
+            var orderBy = searchParams.get('orderBy')
+
+            var pinnedData = [];
+            var otherData = [];
             var sortedData = [];
             for (var i = 0; i < data.length; i++) {
                 if (data[i].pinned == 1) {
-                    sortedData.unshift(data[i]);
+                    pinnedData.unshift(data[i]);
                 }
                 else {
-                    sortedData.push(data[i]);
+                    otherData.push(data[i]);
                 }
             }
 
+            if (orderBy != null) {
+                if (orderBy == "Popular") {
+                    $("#Popular").addClass("invert-scheme");
+
+                    for (var i = 0; i < otherData.length; i++) {
+                        console.log(i)
+                        if (i == otherData.length - 1) {
+                            break;
+                        }
+                        console.log(otherData[i].votes < otherData[i + 1].Post_Votes);
+                        if (otherData[i].Post_Votes < otherData[i + 1].Post_Votes) {
+                            var tmp = otherData[i];
+                            otherData[i] = otherData[i + 1];
+                            otherData[i + 1] = tmp;
+
+                            i = -1;
+                        }
+
+
+                    }
+                }
+                else if (orderBy == "Newest") {
+                    $("#Newest").addClass("invert-scheme");
+                    for (let i = 0; i < otherData.length; i++) {
+
+                        if (i == otherData.length - 1) {
+                            break;
+                        }
+
+                        var date1 = new Date(otherData[i].created_at);
+                        var date2 = new Date(otherData[i + 1].created_at);
+                        console.log(date1.getTime());
+                        console.log(date2.getTime());
+                        if (date2.getTime() > date1.getTime()) {
+                            console.log("swapping")
+                            var tmp = otherData[i];
+                            otherData[i] = otherData[i + 1];
+                            otherData[i + 1] = tmp;
+
+                            i = -1;
+                        }
+                    }
+                }
+                else {
+                    $("#Oldest").addClass("invert-scheme");
+                }
+            }
+
+            sortedData = pinnedData.concat(otherData);
             data = sortedData;
             console.log(data.length)
             for (var i = 0; i < data.length; i++) {
@@ -213,7 +270,7 @@ $(document).ready(function () {
 
                 var flair_html = "";
                 // Displays Post Flair
-                if(data[i].Flair){
+                if (data[i].Flair) {
                     flair_html = `<div class="ms-2 btn rounded-pill py-0 px-2" style="background-color:${data[i].Flair.flair_colour}"><span class="fw-bold text-white">${data[i].Flair.flair_name}</sp></div>`
 
                 }
@@ -267,7 +324,7 @@ $(document).ready(function () {
                     </div>
                     </div>`
 
-                
+
                 $('#post_div').append(append_str)
       
             if (owner || moderator){
@@ -496,6 +553,8 @@ $(document).ready(function () {
             })
 
         }
+
+    orderBy();
         // Block of code shows user's upvotes and downvotes on posts
         // temp user_id
         var user_id = 2;
@@ -619,6 +678,17 @@ function report(post_id) {
     window.location.assign(baseUrl[1] + '/report.html?post_id=' + post_id);
 }
 
+
+
+
+function orderBy() {
+    $('.orderby').on('click', function (e) {
+        console.log("clicked orderby")
+        var orderby = $(this).attr('id');
+        location.href = `?orderBy=${orderby}`;
+
+    })
+}
 function deletePost(post_subreaddit_id){
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
     var post_id = post_subreaddit_id_arr[1]
