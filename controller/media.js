@@ -18,4 +18,18 @@ router.get('/media/:id',printDebugInfo, function (req, res) {
 
 });
 
+//getoneuser
+router.get('/subreaddit/:id',printDebugInfo, function (req, res) {
+    var subreaddit_id = req.params.id;
+    
+    media.getAllMediaBySubreaddit(subreaddit_id, function (err, result) {
+        if (!err) {
+            res.status(200).send({"Result" : result});
+        } else {
+            res.status(500).send({"Result:":"Internal Server Error"});
+        }
+    });
+
+});
+
 module.exports = router
