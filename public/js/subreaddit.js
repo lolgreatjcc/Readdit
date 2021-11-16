@@ -1,93 +1,98 @@
 //const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
-function addImage(post_id) {
+function addImage(subreaddit_id) {
     //retrives media for post
     $.ajax({
         //headers: { 'authorization': 'Bearer ' + tmpToken },
-        url: `${baseUrl[0]}/media/media/` + post_id,
+        url: `${baseUrl[0]}/media/subreaddit/` + subreaddit_id,
         type: 'GET',
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
         success: function (data, textStatus, xhr) {
-            var media = data.Result;
-            console.log(media.length);
-            if (media.length > 1) {
-                var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">`
-                for (var i = 0; i < media.length; i++) {
+            var results = data.Result;
+            for (var i = 0; i < results.length; i++) {
+                var data = results[i];
+                var post_id = data.post_id;
+                var media = data.Media;
+
+                if (media.length > 1) {
+                    console.log("Running carousel");
+                    var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">`
                     if (i == 0) {
                         appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${i}" class="active"></li>`;
                     }
                     else {
                         appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${i}"></li>`;
                     }
+                    appendStringStart += `</ol> <div class="carousel-inner">`;
+
+                    var appendStringEnd = `
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="sr-only">Next</span>
+                            </a>
+                          </div>`;
+
+                    //run multiple file display
+                    for (var count = 0; count < media.length; count++) {
+                        if (count == 0) {
+                            var item = 'carousel-item active';
+                        }
+                        else {
+                            var item = 'carousel-item';
+                        }
+                        if (media[count].fk_content_type == "1") {
+                            appendStringStart += `<div class="${item}">
+                                    <img style="height:500px; width: 400px; object-fit: cover;" src="${media[count].media_url}" alt="Image not available"> 
+                                </div>`;
+                        }
+                        else if (media[count].fk_content_type == "2") {
+                            appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted loop>
+                                                <source src="${media[count].media_url}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                        </video> </div>`;
+                        }
+                        else {
+                            appendStringStart += `<div class="${item}">
+                                    <img style="height: 600px; width: 500px; object-fit: cover;" src="${media[count].media_url}" alt="GIF not available"> 
+                                </div>`;
+                        }
+                    }
+
+                    appendString = appendStringStart + appendStringEnd;
+                    $(`#post_media_` + post_id).html(appendString);
+
                 }
-                appendStringStart += `</ol> <div class="carousel-inner">`;
-
-                var appendStringEnd = `
-                        </div>
-                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Next</span>
-                        </a>
-                      </div>`
-
-                //run multiple file display
-                for (var i = 0; i < media.length; i++) {
-                    console.log(media[i]);
-                    if (i == 0) {
-                        var item = 'carousel-item active';
-                    }
-                    else {
-                        var item = 'carousel-item';
-                    }
-                    if (media[i].fk_content_type == "1") {
-                        appendStringStart += `<div class="${item}">
-                                <img style="height:500px; width: 400px; object-fit: cover;" src="${media[i].media_url}" alt="Image not available"> 
-                            </div>`;
-                    }
-                    else if (media[i].fk_content_type == "2") {
-                        appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted >
-                                            <source src="${media[i].media_url}" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                    </video> </div>`;
-                    }
-                    else {
-                        appendStringStart += `<div class="${item}">
-                                <img style="height: 600px; width: 500px; object-fit: cover;" src="${media[i].media_url}" alt="GIF not available"> 
-                            </div>`;
-                    }
-                }
-
-                appendString = appendStringStart + appendStringEnd;
-                $(`#post_media` + post_id).html(appendString);
-
-            }
-            else if (media.length == 0) {
-                $(`#post_media` + post_id).html(``);
-            }
-            else {
-                console.log(media);
-                //run single file display
-                if (media[0].fk_content_type == "1") {
-                    $(`#post_media` + post_id).html(`<img style="max-height: 500px; max-width: 400px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
-                }
-                else if (media[0].fk_content_type == "2") {
-                    $(`#post_media` + post_id).html(`<video height="400" controls autoplay muted >
-                                            <source src="${media[0].media_url}" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                    </video>`)
+                else if (media.length == 0) {
+                    console.log("Running no media");
+                    $(`#post_media_` + post_id).html(``);
                 }
                 else {
-                    $(`#post_media` + post_id).html(`<img style="max-height: 600px; max-width: 500px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
+                    console.log("Running single item");
+                    //run single file display
+                    if (media[0].fk_content_type == "1") {
+                        $(`#post_media_` + post_id).html(`<img style="max-height: 500px; max-width: 400px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
+                    }
+                    else if (media[0].fk_content_type == "2") {
+                        $(`#post_media_` + post_id).html(`<video height="400" controls autoplay muted loop>
+                                                <source src="${media[0].media_url}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                        </video>`)
+                    }
+                    else {
+                        $(`#post_media_` + post_id).html(`<img style="max-height: 600px; max-width: 500px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
+                    }
                 }
-            }
 
+
+            }
         },
         error: function (xhr, textStatus, errorThrown) {
             console.log('Error in Operation');
@@ -216,8 +221,9 @@ $(document).ready(function () {
             sortedData = pinnedData.concat(otherData);
             data = sortedData;
             console.log(data.length)
-
+            var subreaddit_id;
             for (var i = 0; i < data.length; i++) {
+                subreaddit_id = data[i].Subreaddit.subreaddit_id;
                 console.log("Number of posts: " + data.length)
                 console.log(JSON.stringify(data[i]));
                 var copyStr = data[i].Subreaddit.subreaddit_name + "/" + data[i].post_id;
@@ -252,14 +258,14 @@ $(document).ready(function () {
                 }
 
                 var pinnedStr = "";
-                if(data[i].pinned == 1){
-                    pinnedStr =  `<p class="fw-light text-secondary mx-1">•</p>
+                if (data[i].pinned == 1) {
+                    pinnedStr = `<p class="fw-light text-secondary mx-1">•</p>
                                 <p class="text-secondary">Pinned By Moderators</p>
                     `
                 }
 
                 var report_delete = "";
-                if (owner||moderator){
+                if (owner || moderator) {
                     report_delete = `
                     <button style="border-width : 0px; background-color:white;" type="button" class="delete" id="delete_${data[i].post_id}_${data[i].Subreaddit.subreaddit_id}">
                         <div class="d-flex flex-row text-secondary me-4">
@@ -268,7 +274,7 @@ $(document).ready(function () {
                         </div>
                     </button>`
                 }
-                else{
+                else {
                     report_delete = `
                     <button style="border-width : 0px; background-color:white;" type="button" onclick="report(${data[i].post_id})" id="report">
                         <div class="d-flex flex-row text-secondary me-4">
@@ -304,7 +310,7 @@ $(document).ready(function () {
                         ${flair_html}
                         </a>
                         <p>${data[i].content}<p>
-                        <div id="post_media${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark"> ${addImage(data[i].post_id)} </div>
+                        <div id="post_media_${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark"> </div>
                         <div class="toolbar d-flex flex-row align-items-center mt-2">
                                 <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
                                     <span class="material-icons md-24 ms-0 me-1">chat_bubble_outline</span>
@@ -329,24 +335,23 @@ $(document).ready(function () {
 
 
                 $('#post_div').append(append_str)
-            
-            
-            if (owner || moderator){
-                $(`#post_${data[i].post_id}`).append(`
+
+
+                if (owner || moderator) {
+                    $(`#post_${data[i].post_id}`).append(`
                 <div class="pin" id="pin_${data[i].post_id}_${data[i].Subreaddit.subreaddit_id}">
                     <span class="material-icons md-24 ms-0 mx-1">push_pin</span>
                 </div>  
             `)
+                }
             }
-            }
-
 
             // Handle Saving of Posts
             $('.save').on('click', function (e) {
                 e.stopPropagation();
                 var save_button = $(this);
                 var post_id = $(this).attr('id').split('_')[2];
-                if (user_id == false){
+                if (user_id == false) {
                     window.location.href = "/login.html"
                 }
 
@@ -418,74 +423,74 @@ $(document).ready(function () {
                 console.log("clicked upvote")
                 e.stopPropagation();
 
-                if (user_id == false){
+                if (user_id == false) {
                     window.location.href = "/login.html"
-                } 
-                else{
-                    var post_id = $(this).attr('id').split('_')[1];
-                var upvote_button = $(this);
-                var downvote_button = $(`#post_${post_id}_downvote`);
-
-                var popularity = $(`#post_${post_id}_popularity`);
-                var rating = popularity.text();
-
-                var data;
-                if (upvote_button.hasClass('upvoted')) {
-                    // Remove Upvote
-                    data = {
-                        post_id: post_id,
-                        user_id: user_id,
-                    }
-
-                    popularity.text(parseInt(rating) - 1);
-                    upvote_button.removeClass('upvoted');
-                    $.ajax({
-                        method: "DELETE",
-                        url: "http://localhost:3000/vote/post_rating",
-                        data: JSON.stringify({ data }),
-                        contentType: "application/json",
-                        success: function (data, status, xhr) {
-                            console.log(data);
-                        }
-                    })
                 }
                 else {
-                    rating = parseInt(rating) + 1;
-                    if (downvote_button.hasClass('downvoted')) {
-                        rating = parseInt(rating) + 1;
-                        downvote_button.removeClass('downvoted');
-                    }
-                    popularity.text(rating);
+                    var post_id = $(this).attr('id').split('_')[1];
+                    var upvote_button = $(this);
+                    var downvote_button = $(`#post_${post_id}_downvote`);
 
-                    upvote_button.addClass('upvoted');
-                    // Update change in vote OR Create Vote
-                    $.ajax({
-                        method: "POST",
-                        url: "http://localhost:3000/vote/post_rating",
-                        data: JSON.stringify({
+                    var popularity = $(`#post_${post_id}_popularity`);
+                    var rating = popularity.text();
+
+                    var data;
+                    if (upvote_button.hasClass('upvoted')) {
+                        // Remove Upvote
+                        data = {
                             post_id: post_id,
                             user_id: user_id,
-                            vote_type: 1,
-                        }),
-                        contentType: "application/json; charset=utf-8",
-                        success: function (data, status, xhr) {
-                            console.log(data);
                         }
-                    })
-                }
+
+                        popularity.text(parseInt(rating) - 1);
+                        upvote_button.removeClass('upvoted');
+                        $.ajax({
+                            method: "DELETE",
+                            url: "http://localhost:3000/vote/post_rating",
+                            data: JSON.stringify({ data }),
+                            contentType: "application/json",
+                            success: function (data, status, xhr) {
+                                console.log(data);
+                            }
+                        })
+                    }
+                    else {
+                        rating = parseInt(rating) + 1;
+                        if (downvote_button.hasClass('downvoted')) {
+                            rating = parseInt(rating) + 1;
+                            downvote_button.removeClass('downvoted');
+                        }
+                        popularity.text(rating);
+
+                        upvote_button.addClass('upvoted');
+                        // Update change in vote OR Create Vote
+                        $.ajax({
+                            method: "POST",
+                            url: "http://localhost:3000/vote/post_rating",
+                            data: JSON.stringify({
+                                post_id: post_id,
+                                user_id: user_id,
+                                vote_type: 1,
+                            }),
+                            contentType: "application/json; charset=utf-8",
+                            success: function (data, status, xhr) {
+                                console.log(data);
+                            }
+                        })
+                    }
                 }
 
-                
+
             })
 
             // Handles upvoting/downvoting a post
             $('.post-downvote').on('click', function (e) {
                 e.stopPropagation();
 
-                if (user_id == false){
+                if (user_id == false) {
                     window.location.href = "/login.html"
-                } 
-                else{
+                }
+                else {
                     var post_id = $(this).attr('id').split('_')[1];
                     var downvote_button = $(this);
                     var upvote_button = $(`#post_${post_id}_upvote`);
@@ -540,16 +545,16 @@ $(document).ready(function () {
                             }
                         })
                     }
-                } 
+                }
             })
 
             // Handles clicking on a post
-            $('.post').on('click', function (e) {
-                var post =  $(this);
-                var post_id = post.attr('id').split('_')[1];
-                var subreaddit = pathname;
-                location.href = `${subreaddit}/${post_id}`;
-            })
+            // $('.post').on('click', function (e) {
+            //     var post = $(this);
+            //     var post_id = post.attr('id').split('_')[1];
+            //     var subreaddit = pathname;
+            //     location.href = `${subreaddit}/${post_id}`;
+            // })
 
             // Handles clicking on pin button
             $('.pin').on('click', function (e) {
@@ -564,27 +569,29 @@ $(document).ready(function () {
                 deletePost(delete_id);
             })
 
-        
-        // Block of code shows user's upvotes and downvotes on posts
-        // temp user_id
-        if (user_id) {
-            var data = getUsersVotes(pathname, user_id);
-            for(var i = 0 ; i<data.length; i++) {
-                var upvote_button = $(`#post_${data[i].fk_post_id}_upvote`);
-                var downvote_button = $(`#post_${data[i].fk_post_id}_downvote`);
-                if(data[i].vote_type == true) {
-                    upvote_button.addClass('upvoted');
-                }else {
-                    downvote_button.addClass('downvoted');
+
+            // Block of code shows user's upvotes and downvotes on posts
+            // temp user_id
+            if (user_id) {
+                var data = getUsersVotes(pathname, user_id);
+                for (var i = 0; i < data.length; i++) {
+                    var upvote_button = $(`#post_${data[i].fk_post_id}_upvote`);
+                    var downvote_button = $(`#post_${data[i].fk_post_id}_downvote`);
+                    if (data[i].vote_type == true) {
+                        upvote_button.addClass('upvoted');
+                    } else {
+                        downvote_button.addClass('downvoted');
+                    }
                 }
             }
+            addImage(subreaddit_id);
+            $(`#load`).html(``);
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
         }
-    },
-    error: function (xhr, status, error) {
-        console.log(xhr);
-    }
-})
-orderBy();
+    })
+    orderBy();
 })
 
 function orderBy() {
@@ -597,7 +604,7 @@ function orderBy() {
 }
 
 function checkOwner(subreadditName) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/r/checkOwner/` + subreadditName,
@@ -605,7 +612,7 @@ function checkOwner(subreadditName) {
             contentType: "application/json; charset=utf-8",
             headers: { authorization: "Bearer " + token },
             success: function (data, status, xhr) {
-              $("#moderator").html(`
+                $("#moderator").html(`
               <div id="about_community_header" class="p-2 py-3 rounded-top">
                   <h6 class="fw-bold text-white mb-0 ms-2">Moderators</h6>
               </div>
@@ -629,7 +636,7 @@ function checkOwner(subreadditName) {
 }
 
 function checkModerator(subreadditName) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/moderator/checkModerator/` + subreadditName,
@@ -658,21 +665,21 @@ function copy(copyStr) {
     /* Copy the text inside the text field */
     navigator.clipboard.writeText(copyStr);
 
-  /* Alert the copied text */
-  alert("Copied to clipboard!");
+    /* Alert the copied text */
+    alert("Copied to clipboard!");
 }
 
-function pin(post_subreaddit_id){
+function pin(post_subreaddit_id) {
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
     var post_id = post_subreaddit_id_arr[1]
     var fk_subreaddit_id = post_subreaddit_id_arr[2]
-    var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
+    var data = JSON.stringify({ post_id: post_id, fk_subreaddit_id: fk_subreaddit_id });
     var token = localStorage.getItem("token");
     $.ajax({
         url: `${baseUrl[0]}/post/pin`,
         method: 'PUT',
         contentType: "application/json; charset=utf-8",
-        headers:{'authorization': "Bearer " + token},
+        headers: { 'authorization': "Bearer " + token },
         data: data,
         success: function (data, status, xhr) {
             window.location.reload()
@@ -695,17 +702,17 @@ function report(post_id) {
     window.location.assign(baseUrl[1] + '/report.html?post_id=' + post_id);
 }
 
-function deletePost(post_subreaddit_id){
+function deletePost(post_subreaddit_id) {
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
     var post_id = post_subreaddit_id_arr[1]
     var fk_subreaddit_id = post_subreaddit_id_arr[2]
-    var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
+    var data = JSON.stringify({ post_id: post_id, fk_subreaddit_id: fk_subreaddit_id });
     var token = localStorage.getItem("token");
     $.ajax({
         url: `${baseUrl[0]}/post`,
         method: 'DELETE',
         contentType: "application/json; charset=utf-8",
-        headers:{'authorization': "Bearer " + token},
+        headers: { 'authorization': "Bearer " + token },
         data: data,
         success: function (data, status, xhr) {
             window.location.reload()
@@ -716,14 +723,14 @@ function deletePost(post_subreaddit_id){
     });
 }
 
-function getUserId(){
-    return new Promise(function(resolve, reject) {
+function getUserId() {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/getUserId`,
             method: 'GET',
             contentType: "application/json; charset=utf-8",
-            headers:{'authorization': "Bearer " + token},
+            headers: { 'authorization': "Bearer " + token },
             success: function (data, status, xhr) {
                 resolve(data.user_id)
             },
