@@ -343,6 +343,11 @@ app.post('/api/login', printDebugInfo, function (req, res) {
 
 });
 
+//get user_id from token
+app.get('/getUserId',printDebugInfo, verify.extractUserId ,function (req, res) {
+    res.status(200).send({user_id:req.body.token_user_id})
+});
+
 
 app.use('/comment', comment);
 

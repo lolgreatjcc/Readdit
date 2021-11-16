@@ -12,9 +12,11 @@ var subreaddit = {
             subreaddit_name: subreaddit_name,
             subreaddit_description: description,
             fk_creator_user_id: creator_user_id
+            
         }).then(function (result) {
             return callback(null, result);
         }).catch(function (err) {
+            console.log("Error: " + err)
             return callback(err, null);
         })
     },

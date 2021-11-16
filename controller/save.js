@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const post = require('../model/post.js')
+const verify = require('./verify')
 
 // save a post
 router.post('/post', function (req,res) {

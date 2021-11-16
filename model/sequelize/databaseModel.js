@@ -263,6 +263,10 @@ const Flair = sequelize.define('Flair', {
     }
 })
 
+Post.belongsTo(Flair, {
+    foreignKey: 'fk_flair_id'
+})
+
 const Moderator = sequelize.define('Moderator', {
     moderator_id: {
         type: DataTypes.INTEGER,

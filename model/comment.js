@@ -23,7 +23,7 @@ var comment = {
             },
             include: [{
                 model: User,
-                attributes: ['username'],
+                attributes: ['username','profile_pic'],
             }]
         }).then(function (result) {
             return callback(null, result);
