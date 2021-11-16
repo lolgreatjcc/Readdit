@@ -7,7 +7,7 @@ $(document).ready(function () {
     var retrieved_post_id;
     $.ajax({
         method: 'GET',
-        url: `http://localhost:3000/post/` + post_id,
+        url: `${baseUrl[0]}/post/` + post_id,
         contentType: "application/json; charset=utf-8",
         success: async function (post_data, status, xhr) {
 
@@ -105,7 +105,7 @@ $(document).ready(function () {
 
                 // Retrieve Subreaddit Data
                 $.ajax({
-                    url: `http://localhost:3000/r/` + subreaddit_path,
+                    url: `${baseUrl[0]}/r/` + subreaddit_path,
                     method: 'GET',
                     contentType: "application/json; charset=utf-8",
                     success: function (data, status, xhr) {
@@ -133,7 +133,7 @@ $(document).ready(function () {
     //retrives media for post
     $.ajax({
         //headers: { 'authorization': 'Bearer ' + tmpToken },
-        url: 'http://localhost:3000/media/media/' + post_id,
+        url: `${baseUrl[0]}/media/media/` + post_id,
         type: 'GET',
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
@@ -229,7 +229,7 @@ $(document).ready(function () {
 
     // Retrieve Comment Data
     $.ajax({
-        url: `http://localhost:3000/comment/` + post_id,
+        url: `${baseUrl[0]}/comment/` + post_id,
         method: 'GET',
         contentType: "application/json; charset=utf-8",
         success: function (data, status, xhr) {
@@ -312,7 +312,7 @@ $(document).ready(function () {
             comment: comment_content
         }
         $.ajax({
-            url: `http://localhost:3000/comment`,
+            url: `${baseUrl[0]}/comment`,
             method: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
