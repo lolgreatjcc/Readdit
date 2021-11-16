@@ -23,7 +23,7 @@ const verify = {
           console.log(err);
           return res.status(403).send({ message: "Unauthorized access", errCode: 1 });
         } else {
-              if (data.type == 3) {
+              if (data.type == 2) {
                 req.body.fk_user_type_id = data.user_id;
                 next();
               }

@@ -130,7 +130,6 @@ router.get('/get/r/:subreaddit', function (req,res) {
     })
 })
 
-
 //get post searches
 router.get('/search', printDebugInfo, function (req, res) {
     var query = req.query.query;
@@ -162,7 +161,6 @@ router.get('/get/r/:subreaddit/:post_id', function (req,res) {
     })
 })
 
-
 router.get('/:post_id', function (req,res) {
     req_post_id = req.params.post_id;
     post.getPost(req_post_id, function (result,err) {
@@ -179,6 +177,17 @@ router.put('/pin', verify.extractUserId, checkModerator, function (req,res) {
     post.pinPost(post_id, fk_subreaddit_id, function (err,result) {
         if(!err) {
             res.status(204).send();
+        } else {
+            res.status(500).send(err);
+        }
+    })
+})
+
+router.get('/user/:user_id', function (req,res) {
+    var user_id = req.params.user_id;
+    post.getPostsByUser(user_id, function (result,err) {
+        if(!err) {
+            res.status(200).send(result);
         } else {
             res.status(500).send(err);
         }

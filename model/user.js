@@ -63,7 +63,7 @@ var user = {
     },
 
     getUser: function (userid, callback) {
-        User.findByPk(userid, { raw: true, attributes: ['user_id', 'username', 'email', 'profile_pic', 'two_fa', 'fk_user_type_id'] }).then(function (result) {
+        User.findByPk(userid, { raw: true, attributes: ['user_id', 'username', 'email', 'profile_pic', 'two_fa', 'fk_user_type_id','created_at'] }).then(function (result) {
             return callback(null, result);
         })
     },
@@ -79,7 +79,7 @@ var user = {
 
     getAll: function (callback) {
         // find multiple entries
-        User.findAll({ raw: true, attributes: ['user_id', 'username', 'email', 'profile_pic', 'two_fa', 'fk_user_type_id'] }).then(function (result) {
+        User.findAll({ raw: true, attributes: ['user_id', 'username', 'email', 'profile_pic', 'two_fa', 'fk_user_type_id','created_at'] }).then(function (result) {
             return callback(null, result);
         })
     },
