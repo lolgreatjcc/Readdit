@@ -81,12 +81,19 @@ $(document).ready(function () {
                 // Calculates Time
                 var date = new Date(post_data.created_at);
                 var date_now = new Date();
-                var hours_between_dates = (date_now - date) / (60 * 60 * 1000);
+                var seconds_between_dates = Math.floor((date_now - date) / 1000);
+                var minutes_between_dates = Math.floor((date_now - date) / (60 * 1000));
+                var hours_between_dates = Math.floor((date_now - date) / (60 * 60 * 1000));
                 var days_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 1000))
                 var weeks_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 7 * 1000))
 
                 var post_date_output;
-                if (hours_between_dates < 24) {
+                if (seconds_between_dates < 60) {
+                    post_date_output = `${seconds_between_dates} seconds ago`
+                } else if (minutes_between_dates < 60) {
+                    post_date_output = `${minutes_between_dates} minutes ago`
+                }
+                else if (hours_between_dates < 24) {
                     post_date_output = `${hours_between_dates} hours ago`
                 } else if (days_between_dates <= 7) {
                     post_date_output = `${days_between_dates} days ago`
@@ -390,7 +397,7 @@ function pin(post_subreaddit_id){
         headers:{'authorization': "Bearer " + token},
         data: data,
         success: function (data, status, xhr) {
-            window.location.href()
+            window.location.reload();
         },
         error: function (xhr, status, error) {
             alert("Error updating pins")

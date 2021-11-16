@@ -1,5 +1,5 @@
-const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-//const baseUrl = "https://readdit-backend.herokuapp.com/"
+//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.herokuapp.com/"]
 
 function loadUserInfo(user_id, token) {
     // call the web service endpoint

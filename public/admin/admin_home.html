@@ -19,39 +19,8 @@
         crossorigin="anonymous"></script>
     <script src="../includeHTMLs/head.js"></script>
     <script src="../includeHTMLs/header.js"></script>
-
-    <script>
-
-        $(document).ready(function () {
-            try {
-                var userData = localStorage.getItem('userInfo');
-                var token = localStorage.getItem("token")
-                // userData = userData.slice(1,-1);
-
-                var userJsonData = JSON.parse(userData);
-                var role = userJsonData.fk_user_type_id;
-
-                var tmpToken = localStorage.getItem('token');
-
-                if (role != 2) {
-                    alert("Unauthorized User!");
-                    window.location.assign("http://localhost:3001/home.html");
-                }
-            } catch (error) {
-                alert("Unauthenticated User!");
-                window.location.assign("http://localhost:3001/login.html");
-            }
-
-            $("#M-users").click(function () {
-                window.location.assign("http://localhost:3001/admin/ManageUsers.html");
-            });
-
-            $("#M-sub").click(function () {
-                window.location.assign("http://localhost:3001/admin/ManageSubs.html");
-            });
-        });
-
-    </script>
+    <script src="./js/admin_home.js"></script>
+    
 
 </head>
 
