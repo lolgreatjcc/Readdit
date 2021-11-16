@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Readdit</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/edit_form.css">
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="./includeHTMLs/head.js"></script>
+    <script src="./includeHTMLs/header.js"></script>
+    <script src="./js/profile.js"></script>
+
+</head>
+
+<body>
+    <div id="edit_form_container" class="login-form">
+        <h1 class="text-center m-4" >User Profile</h1>
+        <div class="form-group text-center" id="pfpImg">
+        </div>
+
+        <h3 class="text-center" id="username" name="username"> </h3>
+        <h4 class="text-center" id="age" name="age"></h4>
+    </div>
+
+    <div class="container">
+        <button onclick="displayPosts()" style = "background-color: #734f96;" type="submit" class="border-0 h4 mb-0 text-light" id="posts">User Posts</button>
+        <button onclick="displayComments()" style = "background-color: #734f96;" type="submit" class="border-0 h4 mb-0 text-light" id="comments">User Comments</button>
+        <div style = "background-color: #734f96;" class="border border-dark">
+
+            <table class="table m-2 border-0" style="background-color: white;" id="data_table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Post Title</th>
+                        <th scope="col">Posted in</th>
+                        <th scope="col">Posted at</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="table_data">
+                </tbody>
+            </table>
+
+            <div id="load">
+                <h5>LOADING POSTS...</h5>
+            </div>
+        </div>
+
+    </div>
+    <br>
+    <br>
+
+</body>
+
+</html>

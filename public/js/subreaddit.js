@@ -12,7 +12,7 @@ function addImage(post_id) {
         success: function (data, textStatus, xhr) {
             var media = data.Result;
             if (media.length > 1) {
-                var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
                         <ol class="carousel-indicators">`
                 for (var i = 0; i < media.length; i++) {
                     if (i == 0) {
@@ -50,7 +50,7 @@ function addImage(post_id) {
                             </div>`;
                     }
                     else if (media[i].fk_content_type == "2") {
-                        appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted >
+                        appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted loop>
                                             <source src="${media[i].media_url}" type="video/mp4">
                                             Your browser does not support the video tag.
                                     </video> </div>`;
@@ -75,7 +75,7 @@ function addImage(post_id) {
                     $(`#post_media` + post_id).html(`<img style="max-height: 500px; max-width: 400px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
                 }
                 else if (media[0].fk_content_type == "2") {
-                    $(`#post_media` + post_id).html(`<video height="400" controls autoplay muted >
+                    $(`#post_media` + post_id).html(`<video height="400" controls autoplay muted loop>
                                             <source src="${media[0].media_url}" type="video/mp4">
                                             Your browser does not support the video tag.
                                     </video>`)
@@ -157,6 +157,15 @@ $(document).ready(function () {
             var sortedData = [];
             for (var i = 0; i < data.length; i++) {
                 if (data[i].pinned == 1) {
+                    sortedData.unshift(data[i]);
+                }
+                else {
+                    sortedData.push(data[i]);
+                }
+            }
+
+            data = sortedData;
+            console.log(data.length);
                     pinnedData.unshift(data[i]);
                 }
                 else {
@@ -215,6 +224,7 @@ $(document).ready(function () {
             sortedData = pinnedData.concat(otherData);
             data = sortedData;
             console.log(data.length)
+
             for (var i = 0; i < data.length; i++) {
                 console.log(data[i]);
 
@@ -317,6 +327,12 @@ $(document).ready(function () {
                                     <span class="material-icons ms-0">bookmark</span>
                                     <p class="mb-0 fw-bold fs-6">Unsave</p>
                                 </div>
+                                <button style="border-width : 0px; background-color:white;" type="button" onclick="report(${data[i].post_id})" id="report">
+                                    <div class="d-flex flex-row text-secondary me-4">
+                                        <span class="material-icons md-24 mx-1">outlined_flag</span>
+                                        <p class="mb-0 fw-bold fs-6">Report</p>
+                                    </div>
+                                </button>
                                 ${report_delete}
                         </div>
 
@@ -327,6 +343,30 @@ $(document).ready(function () {
 
 
                 $('#post_div').append(append_str)
+
+
+                if (owner || moderator) {
+                    $(`#post_${data[i].post_id}`).append(`
+                    <div class="pin" id="${data[i].post_id}_${data[i].Subreaddit.subreaddit_id}">
+                        <span class="material-icons md-24 ms-0 mx-1">push_pin</span>
+                    </div>  
+                `)
+                }
+            }
+
+            // Block of code shows user's upvotes and downvotes on posts
+            // temp user_id
+            var user_id = 2;
+            if (user_id) {
+                var data = getUsersVotes(pathname, user_id);
+                for (var i = 0; i < data.length; i++) {
+                    var upvote_button = $(`#post_${data[i].fk_post_id}_upvote`);
+                    var downvote_button = $(`#post_${data[i].fk_post_id}_downvote`);
+                    if (data[i].vote_type == true) {
+                        upvote_button.addClass('upvoted');
+                    } else {
+                        downvote_button.addClass('downvoted');
+                    }
       
             if (owner || moderator){
                 $(`#post_${data[i].post_id}`).append(`
@@ -561,6 +601,10 @@ $(document).ready(function () {
                 pin(pin_id);
             })
 
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+        }
             $('.delete').on('click', function (e) {
                 e.stopPropagation();
                 var delete_id = $(this).attr('id');
