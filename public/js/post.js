@@ -1,5 +1,5 @@
-const baseUrl = ["http://localhost:3000","http://localhost:3001"]
-//const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.herokuapp.com/"]
+//const baseUrl = ["http://localhost:3000","http://localhost:3001"]
+const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.herokuapp.com/"]
 $(document).ready(function () {
     var pathname = window.location.pathname;
     var subreaddit_path = pathname.split('/')[2];
@@ -224,6 +224,7 @@ $(document).ready(function () {
         success: function (data, status, xhr) {
             data = data.Result;
             $('#comment_total').append(data.length);
+            var username = JSON.parse(localStorage.getItem('userInfo')).username;
             for (var i = 0; i < data.length; i++) {
 
                 // Calculates Time
@@ -250,12 +251,16 @@ $(document).ready(function () {
                     post_date_output = `${weeks_between_dates} weeks ago`
                 }
 
+                //formatting profile picture
+                var pfpTempString = data[i].User.profile_pic.split("upload");
+                data[i].User.profile_pic = pfpTempString[0] + "upload" + "/ar_1.0,c_fill/r_max" + pfpTempString[1]
+
 
                 $('#comment_div').append(`
                 
                             <div class="comment row mb-4">
                                     <div class="col-1 d-flex flex-column">
-                                        <p>/img/</p>
+                                    <img src="${data[i].User.profile_pic}" alt="profile image" id="pfp" class="pb-2"></img>
                                         <div class="comment-line flex-grow-1 w-50"></div>
 
                                     </div>
@@ -279,6 +284,8 @@ $(document).ready(function () {
                                 </div>`
                 )
             }
+
+            $(`#comment_as`).append(`<p class="mb-0">Comment as u/<span class="text-secondary">${username}</span></p>`)
         }
     });
 
@@ -286,12 +293,11 @@ $(document).ready(function () {
     $('#comment_submit').on('click', function () {
         var comment_content = $('#comment_content').val();
 
-        // Temoporary User_id
-        var user_id = 2;
+        // User_id
+        var token = localStorage.getItem('token');
 
         var data = {
             post_id: retrieved_post_id,
-            user_id: user_id,
             comment: comment_content
         }
         $.ajax({
@@ -299,6 +305,7 @@ $(document).ready(function () {
             method: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
+            headers: {authorization:"Bearer " + token},
             success: function (data, status, xhr) {
                 console.log(data);
                 location.reload();
