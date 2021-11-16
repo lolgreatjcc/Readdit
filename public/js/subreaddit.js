@@ -13,7 +13,7 @@ function addImage(post_id) {
             var media = data.Result;
             console.log(media.length);
             if (media.length > 1) {
-                var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
                         <ol class="carousel-indicators">`
                 for (var i = 0; i < media.length; i++) {
                     if (i == 0) {
@@ -52,7 +52,7 @@ function addImage(post_id) {
                             </div>`;
                     }
                     else if (media[i].fk_content_type == "2") {
-                        appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted >
+                        appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted loop>
                                             <source src="${media[i].media_url}" type="video/mp4">
                                             Your browser does not support the video tag.
                                     </video> </div>`;
@@ -78,7 +78,7 @@ function addImage(post_id) {
                     $(`#post_media` + post_id).html(`<img style="max-height: 500px; max-width: 400px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
                 }
                 else if (media[0].fk_content_type == "2") {
-                    $(`#post_media` + post_id).html(`<video height="400" controls autoplay muted >
+                    $(`#post_media` + post_id).html(`<video height="400" controls autoplay muted loop>
                                             <source src="${media[0].media_url}" type="video/mp4">
                                             Your browser does not support the video tag.
                                     </video>`)
@@ -151,16 +151,16 @@ $(document).ready(function () {
 
             var sortedData = [];
             for (var i = 0; i < data.length; i++) {
-                if (data[i].pinned == 1){
+                if (data[i].pinned == 1) {
                     sortedData.unshift(data[i]);
                 }
-                else{
+                else {
                     sortedData.push(data[i]);
                 }
             }
 
             data = sortedData;
-
+            console.log(data.length);
             for (var i = 0; i < data.length; i++) {
                 var copyStr = data[i].Subreaddit.subreaddit_name + "/" + data[i].post_id;
                 // Calculates Time
@@ -208,70 +208,70 @@ $(document).ready(function () {
                         <p class="fw-light text-secondary mx-1">•</p>
                         <p class="text-secondary" id="post_${data[i].post_id}_time">${post_date_output}</p>
             `
-            //indicator for pins
-            if(data[i].pinned == 1){
-                append_str += `<p class="fw-light text-secondary mx-1">•</p>
-                            <p class="text-secondary">Pinned By Moderators</p>
-                `
-            }
-            
-            append_str +=`</div>
-                    <a style="text-decoration:none" href="/r/${data[i].Subreaddit.subreaddit_name}/${data[i].post_id}">
-                    <h5 style="color : black;" id="post_${data[i].post_id}_content">${data[i].title}</h5>
-                    </a>
-                    <p>${data[i].content}<p>
-                    <div id="post_media${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark"> ${addImage(data[i].post_id)} </div>
-                    <div class="toolbar d-flex flex-row align-items-center mt-2">
-                            <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
-                                <span class="material-icons md-24 ms-0 me-1">chat_bubble_outline</span>
-                                <p class="mb-0 fw-bold me-1" id="comment_total"></p>
-                                <p class="mb-0 fw-bold fs-6">Comments</p>
-                            </div>
-                            <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable share" id="${copyStr}">
-                                <span class="material-icons md-24 ms-0 mx-1">share</span>
-                                <p class="mb-0 fw-bold fs-6">Share</p>
-                            </div>
-                            <div class="save d-flex flex-row text-secondary me-4 p-1 rounded hoverable" id="post_bookmark_${data[i].post_id}">
-                                <span class="material-icons ms-0">bookmark</span>
-                                <p class="mb-0 fw-bold fs-6">Unsave</p>
-                            </div>
-                            <button style="border-width : 0px; background-color:white;" type="button" onclick="report(${data[i].post_id})" id="report">
-                                <div class="d-flex flex-row text-secondary me-4">
-                                    <span class="material-icons md-24 mx-1">outlined_flag</span>
-                                    <p class="mb-0 fw-bold fs-6">Report</p>
-                                </div>
-                            </button>
-                    </div>
+                //indicator for pins
+                if (data[i].pinned == 1) {
+                    append_str += `<p class="fw-light text-secondary mx-1">•</p>
+                                <p class="text-secondary">Pinned By Moderators</p>
+                    `
+                }
 
-                </div>
-                
-                </div>
-                </div>`
+                append_str += `</div>
+                        <a style="text-decoration:none" href="/r/${data[i].Subreaddit.subreaddit_name}/${data[i].post_id}">
+                        <h5 style="color : black;" id="post_${data[i].post_id}_content">${data[i].title}</h5>
+                        </a>
+                        <p>${data[i].content}<p>
+                        <div id="post_media${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark"> ${addImage(data[i].post_id)} </div>
+                        <div class="toolbar d-flex flex-row align-items-center mt-2">
+                                <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
+                                    <span class="material-icons md-24 ms-0 me-1">chat_bubble_outline</span>
+                                    <p class="mb-0 fw-bold me-1" id="comment_total"></p>
+                                    <p class="mb-0 fw-bold fs-6">Comments</p>
+                                </div>
+                                <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable share" id="${copyStr}">
+                                    <span class="material-icons md-24 ms-0 mx-1">share</span>
+                                    <p class="mb-0 fw-bold fs-6">Share</p>
+                                </div>
+                                <div class="save d-flex flex-row text-secondary me-4 p-1 rounded hoverable" id="post_bookmark_${data[i].post_id}">
+                                    <span class="material-icons ms-0">bookmark</span>
+                                    <p class="mb-0 fw-bold fs-6">Unsave</p>
+                                </div>
+                                <button style="border-width : 0px; background-color:white;" type="button" onclick="report(${data[i].post_id})" id="report">
+                                    <div class="d-flex flex-row text-secondary me-4">
+                                        <span class="material-icons md-24 mx-1">outlined_flag</span>
+                                        <p class="mb-0 fw-bold fs-6">Report</p>
+                                    </div>
+                                </button>
+                        </div>
+
+                    </div>
+                    
+                    </div>
+                    </div>`
 
 
                 $('#post_div').append(append_str)
-            
-            
-            if (owner || moderator){
-                $(`#post_${data[i].post_id}`).append(`
-                <div class="pin" id="${data[i].post_id}_${data[i].Subreaddit.subreaddit_id}">
-                    <span class="material-icons md-24 ms-0 mx-1">push_pin</span>
-                </div>  
-            `)
+
+
+                if (owner || moderator) {
+                    $(`#post_${data[i].post_id}`).append(`
+                    <div class="pin" id="${data[i].post_id}_${data[i].Subreaddit.subreaddit_id}">
+                        <span class="material-icons md-24 ms-0 mx-1">push_pin</span>
+                    </div>  
+                `)
+                }
             }
 
-      
             // Block of code shows user's upvotes and downvotes on posts
             // temp user_id
             var user_id = 2;
             if (user_id) {
                 var data = getUsersVotes(pathname, user_id);
-                for(var i = 0 ; i<data.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                     var upvote_button = $(`#post_${data[i].fk_post_id}_upvote`);
                     var downvote_button = $(`#post_${data[i].fk_post_id}_downvote`);
-                    if(data[i].vote_type == true) {
+                    if (data[i].vote_type == true) {
                         upvote_button.addClass('upvoted');
-                    }else {
+                    } else {
                         downvote_button.addClass('downvoted');
                     }
                 }
@@ -468,7 +468,7 @@ $(document).ready(function () {
 
             // Handles clicking on a post
             $('.post').on('click', function (e) {
-                var post =  $(this);
+                var post = $(this);
                 var post_id = post.attr('id').split('_')[1];
                 var subreaddit = pathname;
                 location.href = `${subreaddit}/${post_id}`;
@@ -481,16 +481,16 @@ $(document).ready(function () {
                 pin(pin_id);
             })
 
+        
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
         }
-    },
-    error: function (xhr, status, error) {
-        console.log(xhr);
-    }
 })
 })
 
 function checkOwner(subreadditName) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/r/checkOwner/` + subreadditName,
@@ -498,7 +498,7 @@ function checkOwner(subreadditName) {
             contentType: "application/json; charset=utf-8",
             headers: { authorization: "Bearer " + token },
             success: function (data, status, xhr) {
-              $("#moderator").html(`
+                $("#moderator").html(`
               <div id="about_community_header" class="p-2 py-3 rounded-top">
                   <h6 class="fw-bold text-white mb-0 ms-2">Moderators</h6>
               </div>
@@ -522,7 +522,7 @@ function checkOwner(subreadditName) {
 }
 
 function checkModerator(subreadditName) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/moderator/checkModerator/` + subreadditName,
@@ -551,21 +551,21 @@ function copy(copyStr) {
     /* Copy the text inside the text field */
     navigator.clipboard.writeText(copyStr);
 
-  /* Alert the copied text */
-  alert("Copied to clipboard!");
+    /* Alert the copied text */
+    alert("Copied to clipboard!");
 }
 
-function pin(post_subreaddit_id){
+function pin(post_subreaddit_id) {
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
     var post_id = post_subreaddit_id_arr[0]
     var fk_subreaddit_id = post_subreaddit_id_arr[1]
-    var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
+    var data = JSON.stringify({ post_id: post_id, fk_subreaddit_id: fk_subreaddit_id });
     var token = localStorage.getItem("token");
     $.ajax({
         url: `${baseUrl[0]}/post/pin`,
         method: 'PUT',
         contentType: "application/json; charset=utf-8",
-        headers:{'authorization': "Bearer " + token},
+        headers: { 'authorization': "Bearer " + token },
         data: data,
         success: function (data, status, xhr) {
             window.location.reload()

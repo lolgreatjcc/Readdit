@@ -103,7 +103,7 @@ $(document).ready(function () {
             var media = data.Result;
             console.log(media.length);
             if (media.length > 1) {
-                var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
                         <ol class="carousel-indicators">`
                 for (var i = 0; i < media.length; i++) {
                     if (i == 0) {
@@ -142,7 +142,7 @@ $(document).ready(function () {
                             </div>`;
                     }
                     else if (media[i].fk_content_type == "2") {
-                        appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted >
+                        appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted loop>
                                             <source src="${media[i].media_url}" type="video/mp4">
                                             Your browser does not support the video tag.
                                     </video> </div>`;
@@ -165,7 +165,7 @@ $(document).ready(function () {
                     $(`#post_media`).html(`<img style="max-height: 600px; max-width: 500px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
                 }
                 else if (media[0].fk_content_type == "2") {
-                    $(`#post_media`).html(`<video height="400" controls autoplay muted >
+                    $(`#post_media`).html(`<video height="400" controls autoplay muted loop>
                                             <source src="${media[0].media_url}" type="video/mp4">
                                             Your browser does not support the video tag.
                                     </video>`)

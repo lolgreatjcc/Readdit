@@ -45,10 +45,7 @@
                             var type = "User"
                         }
                         else if (user.fk_user_type_id == 2) {
-                            var type = "Moderator"
-                        }
-                        else {
-                            var type = "Developer"
+                            var type = "Admin"
                         }
                         var pfp = (user.profile_pic).replace("http://res.cloudinary.com/readditmedia/image/upload/","");
                         appendString += `<tr>
@@ -92,7 +89,7 @@
 
                 var tmpToken = localStorage.getItem('token');
 
-                if (role != 3) {
+                if (role != 2) {
                     alert("Unauthorized User!");
                     window.location.assign("http://localhost:3001/home.html");
                 }
