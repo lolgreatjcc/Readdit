@@ -305,15 +305,6 @@ $(document).ready(function () {
                         <p class="d-inline text-secondary clickable-link" id="post_${data[i].User.username}_user"> u/<a>${data[i].User.username}</a></p>
                         <p class="fw-light text-secondary mx-1">•</p>
                         <p class="text-secondary" id="post_${data[i].post_id}_time">${post_date_output}</p>
-            `
-                //indicator for pins
-                if (data[i].pinned == 1) {
-                    append_str += `<p class="fw-light text-secondary mx-1">•</p>
-                                <p class="text-secondary">Pinned By Moderators</p>
-                    `
-                }
-
-                append_str += `</div>
                         ${pinnedStr}
 
                     </div>
