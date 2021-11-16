@@ -1,5 +1,5 @@
-const baseUrl = ["http://localhost:3000","http://localhost:3001"]
-//const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.herokuapp.com/"]
+//const baseUrl = ["http://localhost:3000","http://localhost:3001"]
+const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.herokuapp.com/"]
 $(document).ready(function () {
     var pathname = window.location.pathname;
     var subreaddit_path = pathname.split('/')[2];
@@ -28,23 +28,54 @@ $(document).ready(function () {
                     <p class="text-secondary">Pinned By Moderators</p>
                     `)
                 }
+                if(post_data.Flair != null){
+                    console.log("working");
+                    $("#flair_section").append(`<div class="btn rounded-pill py-0 px-2" style="background-color:${post_data.Flair.flair_colour}"><span class="fw-bold text-white">${post_data.Flair.flair_name}</sp></div>`)
+                }
 
                 //checks if moderator or owner
                 var moderator = await checkModerator(post_data.Subreaddit.subreaddit_name);
                 var owner = await checkOwner(post_data.Subreaddit.subreaddit_name);
+                var report_delete = "";
                 if (owner || moderator){
                     $(`.post`).append(`
                     <div class="pin" id="${post_data.post_id}_${post_data.Subreaddit.subreaddit_id}">
                         <span class="material-icons md-24 ms-0 mx-1">push_pin</span>
                     </div>  
                     `)
+                    report_delete = `
+                    <button style="border-width : 0px; background-color:white;" type="button" class="delete" id="delete_${post_data.post_id}_${post_data.Subreaddit.subreaddit_id}">
+                        <div class="d-flex flex-row text-secondary me-4">
+                            <span class="material-icons md-24 mx-1">outlined_flag</span>
+                            <p class="mb-0 fw-bold fs-6">Delete</p>
+                        </div>
+                    </button>`
                 }
+                else{
+                    report_delete = `
+                    <button style="border-width : 0px; background-color:white;" type="button" onclick="report(${post_data.post_id})" id="report">
+                        <div class="d-flex flex-row text-secondary me-4">
+                            <span class="material-icons md-24 mx-1">outlined_flag</span>
+                            <p class="mb-0 fw-bold fs-6">Report</p>
+                        </div>
+                    </button>`
+                }
+
+                $(".toolbar").append(report_delete)
+                
+
 
                 // Handles clicking on pin button
                 $('.pin').on('click', function (e) {
                     e.stopPropagation();
                     var pin_id = $(this).attr('id');
                     pin(pin_id);
+                })
+
+                $('.delete').on('click', function (e) {
+                    e.stopPropagation();
+                    var delete_id = $(this).attr('id');
+                    deletePost(delete_id);
                 })
 
                 // Calculates Time
@@ -65,7 +96,7 @@ $(document).ready(function () {
                 $('#post_timeAgo').append(post_date_output);
                 retrieved_post_id = post_data.post_id;
 
-                // Retrieve Post Data
+                // Retrieve Subreaddit Data
                 $.ajax({
                     url: `http://localhost:3000/r/` + subreaddit_path,
                     method: 'GET',
@@ -80,7 +111,6 @@ $(document).ready(function () {
                         $('#community_create_month').html(months[date.getMonth() - 1]);
                         $('#community_create_day').html(date.getDate());
                         $('#community_create_year').html(date.getFullYear());
-
                     },
                     error: function (xhr, status, error) {
                         // TBD
@@ -90,7 +120,8 @@ $(document).ready(function () {
         }
     });
 
-    
+    // Displays flair is post has an associated flair.
+
 
     //retrives media for post
     $.ajax({
@@ -197,6 +228,7 @@ $(document).ready(function () {
         success: function (data, status, xhr) {
             data = data.Result;
             $('#comment_total').append(data.length);
+            var username = JSON.parse(localStorage.getItem('userInfo')).username;
             for (var i = 0; i < data.length; i++) {
 
                 // Calculates Time
@@ -223,12 +255,16 @@ $(document).ready(function () {
                     post_date_output = `${weeks_between_dates} weeks ago`
                 }
 
+                //formatting profile picture
+                var pfpTempString = data[i].User.profile_pic.split("upload");
+                data[i].User.profile_pic = pfpTempString[0] + "upload" + "/ar_1.0,c_fill/r_max" + pfpTempString[1]
+
 
                 $('#comment_div').append(`
                 
                             <div class="comment row mb-4">
                                     <div class="col-1 d-flex flex-column">
-                                        <p>/img/</p>
+                                    <img src="${data[i].User.profile_pic}" alt="profile image" id="pfp" class="pb-2"></img>
                                         <div class="comment-line flex-grow-1 w-50"></div>
 
                                     </div>
@@ -252,6 +288,8 @@ $(document).ready(function () {
                                 </div>`
                 )
             }
+
+            $(`#comment_as`).append(`<p class="mb-0">Comment as u/<span class="text-secondary">${username}</span></p>`)
         }
     });
 
@@ -259,12 +297,11 @@ $(document).ready(function () {
     $('#comment_submit').on('click', function () {
         var comment_content = $('#comment_content').val();
 
-        // Temoporary User_id
-        var user_id = 2;
+        // User_id
+        var token = localStorage.getItem('token');
 
         var data = {
             post_id: retrieved_post_id,
-            user_id: user_id,
             comment: comment_content
         }
         $.ajax({
@@ -272,6 +309,7 @@ $(document).ready(function () {
             method: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
+            headers: {authorization:"Bearer " + token},
             success: function (data, status, xhr) {
                 console.log(data);
                 location.reload();
@@ -352,10 +390,33 @@ function pin(post_subreaddit_id){
         headers:{'authorization': "Bearer " + token},
         data: data,
         success: function (data, status, xhr) {
-            window.location.reload()
+            window.location.href()
         },
         error: function (xhr, status, error) {
             alert("Error updating pins")
         }
     })
+}
+
+function deletePost(post_subreaddit_id){
+    var post_subreaddit_id_arr = post_subreaddit_id.split('_');
+    var post_id = post_subreaddit_id_arr[1]
+    var fk_subreaddit_id = post_subreaddit_id_arr[2]
+    var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
+    var token = localStorage.getItem("token");
+    $.ajax({
+        url: `${baseUrl[0]}/post`,
+        method: 'DELETE',
+        contentType: "application/json; charset=utf-8",
+        headers:{'authorization': "Bearer " + token},
+        data: data,
+        success: function (data, status, xhr) {
+            var pathname = window.location.pathname;
+            var subreaddit_name = pathname.split('/')[2];
+            window.location.href = `/r/${subreaddit_name}`;
+        },
+        error: function (xhr, status, error) {
+            alert("Error deleting post")
+        }
+    });
 }
