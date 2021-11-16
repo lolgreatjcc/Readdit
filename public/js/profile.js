@@ -1,11 +1,11 @@
-const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-//const baseUrl = "https://readdit-backend.herokuapp.com/"
+//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
 function loadUserInfo(user_id, token) {
     // call the web service endpoint
     $.ajax({
         url: `${baseUrl[0]}/users/` + user_id,
-        // url: 'https://readdit-backend.herokuapp.com/users/'+ user_id,
+        // url: 'https://readdit-backend.herokuapp.comusers/'+ user_id,
         type: 'GET',
         //data: data2,
         contentType: "application/json; charset=utf-8",

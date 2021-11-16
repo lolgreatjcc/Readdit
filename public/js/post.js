@@ -1,5 +1,5 @@
 //const baseUrl = ["http://localhost:3000","http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.herokuapp.com/"]
+const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 $(document).ready(function () {
     var pathname = window.location.pathname;
     var subreaddit_path = pathname.split('/')[2];
@@ -7,7 +7,7 @@ $(document).ready(function () {
     var retrieved_post_id;
     $.ajax({
         method: 'GET',
-        url: `http://localhost:3000/post/` + post_id,
+        url: `${baseUrl[0]}/post/` + post_id,
         contentType: "application/json; charset=utf-8",
         success: async function (post_data, status, xhr) {
 
@@ -81,12 +81,19 @@ $(document).ready(function () {
                 // Calculates Time
                 var date = new Date(post_data.created_at);
                 var date_now = new Date();
-                var hours_between_dates = (date_now - date) / (60 * 60 * 1000);
+                var seconds_between_dates = Math.floor((date_now - date) / 1000);
+                var minutes_between_dates = Math.floor((date_now - date) / (60 * 1000));
+                var hours_between_dates = Math.floor((date_now - date) / (60 * 60 * 1000));
                 var days_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 1000))
                 var weeks_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 7 * 1000))
 
                 var post_date_output;
-                if (hours_between_dates < 24) {
+                if (seconds_between_dates < 60) {
+                    post_date_output = `${seconds_between_dates} seconds ago`
+                } else if (minutes_between_dates < 60) {
+                    post_date_output = `${minutes_between_dates} minutes ago`
+                }
+                else if (hours_between_dates < 24) {
                     post_date_output = `${hours_between_dates} hours ago`
                 } else if (days_between_dates <= 7) {
                     post_date_output = `${days_between_dates} days ago`
@@ -98,7 +105,7 @@ $(document).ready(function () {
 
                 // Retrieve Subreaddit Data
                 $.ajax({
-                    url: `http://localhost:3000/r/` + subreaddit_path,
+                    url: `${baseUrl[0]}/r/` + subreaddit_path,
                     method: 'GET',
                     contentType: "application/json; charset=utf-8",
                     success: function (data, status, xhr) {
@@ -126,7 +133,7 @@ $(document).ready(function () {
     //retrives media for post
     $.ajax({
         //headers: { 'authorization': 'Bearer ' + tmpToken },
-        url: 'http://localhost:3000/media/media/' + post_id,
+        url: `${baseUrl[0]}/media/media/` + post_id,
         type: 'GET',
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
@@ -222,7 +229,7 @@ $(document).ready(function () {
 
     // Retrieve Comment Data
     $.ajax({
-        url: `http://localhost:3000/comment/` + post_id,
+        url: `${baseUrl[0]}/comment/` + post_id,
         method: 'GET',
         contentType: "application/json; charset=utf-8",
         success: function (data, status, xhr) {
@@ -305,7 +312,7 @@ $(document).ready(function () {
             comment: comment_content
         }
         $.ajax({
-            url: `http://localhost:3000/comment`,
+            url: `${baseUrl[0]}/comment`,
             method: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
@@ -390,7 +397,7 @@ function pin(post_subreaddit_id){
         headers:{'authorization': "Bearer " + token},
         data: data,
         success: function (data, status, xhr) {
-            window.location.href()
+            window.location.reload();
         },
         error: function (xhr, status, error) {
             alert("Error updating pins")

@@ -1,5 +1,5 @@
 //const baseUrl = "http://localhost:3000";
-const baseUrl = "https://readdit-backend.herokuapp.com/"
+const baseUrl = "https://readdit-backend.herokuapp.com"
 
 function addUser(username, email, profile_pic, password, two_fa) {
     var type = "Customer";
@@ -20,7 +20,7 @@ function addUser(username, email, profile_pic, password, two_fa) {
 
     console.log(requestBody);
   
-    // axios.post(`https://readdit-backend.herokuapp.com/users`,requestBody)
+    // axios.post(`https://readdit-backend.herokuapp.comusers`,requestBody)
 
     axios.post(`${baseUrl}/users`, requestBody)
         .then(response => {
@@ -67,6 +67,6 @@ $(document).ready(function () {
 
     $("#Return").click(function () {
         window.location.href = "/login.html";
-        //window.location.assign("https://readdit-sp.herokuapp.com/login.html");
+        //window.location.assign("https://readdit-sp.herokuapp.comlogin.html");
     });
 });  

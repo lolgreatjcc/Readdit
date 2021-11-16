@@ -1,5 +1,5 @@
 //const baseUrl = "http://localhost:3000";
-const baseUrl = "https://readdit-backend.herokuapp.com/"
+const baseUrl = "https://readdit-backend.herokuapp.com"
 
 $(document).ready(function () {
     var userData = localStorage.getItem('userInfo');
@@ -13,7 +13,7 @@ $(document).ready(function () {
     
     $.ajax({
         headers: { 'authorization': 'Bearer ' + tmpToken },
-        // url: 'https://readdit-backend.herokuapp.com/users/' + userid,
+        // url: 'https://readdit-backend.herokuapp.comusers/' + userid,
         url: `${baseUrl}/users/` + userid,
         type: 'GET',
         //contentType: "application/json; charset=utf-8",
