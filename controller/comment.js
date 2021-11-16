@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const comment = require('../model/comment.js')
+const verify = require('./verify');
 
-router.post('', (req, res) => {
-    var user_id = req.body.user_id;
+router.post('', verify.extractUserId, (req,res) => {
+    var user_id = req.body.token_user_id;
     var comment_content = req.body.comment;
     var post_id = req.body.post_id;
     comment.createComment(user_id, comment_content, post_id, (err, result) => {
