@@ -63,6 +63,51 @@ var post = {
             callback(null, err)
         })
     },
+    getRecentPosts: function (callback) {
+        Post.findAll({
+            attributes: ['post_id', 'title', 'content', 'pinned', 'created_at'],
+            limit: 10,
+            include: [
+                {
+                    model: User,
+                    attributes: ['username']
+                },
+                {
+                    model: Subreaddit,
+                    attributes: ['subreaddit_name', 'subreaddit_id']
+                },
+                {
+                    model: Post_Vote,
+                    attributes: ['vote_type']
+                },
+                {
+                    model: Flair,
+                    attributes: ['flair_name', 'flair_colour']
+                }
+            ],
+        }).then(function (result) {
+
+            // This block of code calculates the post's popularity
+            for (var i = 0; i < result.length; i++) {
+                result[i] = result[i].dataValues;
+                var popularity_rating = 0;
+
+                for (var x = 0; x < result[i].Post_Votes.length; x++) {
+                    if (result[i].Post_Votes[x].vote_type == true) {
+                        popularity_rating += 1;
+                    }
+                    else {
+                        popularity_rating -= 1;
+                    }
+                }
+                result[i].Post_Votes = popularity_rating;
+            }
+            callback(result, null)
+        }).catch(function (err) {
+            console.log(err)
+            callback(null, err)
+        })
+    },
     getOnePostInSubreaddit: function (subreaddit_name, post_id, callback) {
         Post.findOne({
             where: { post_id: post_id },
@@ -142,6 +187,7 @@ var post = {
             return callback(null, err);
         })
     },
+    
     getSavedPosts: function (user_id, callback) {
         Saved.findAll({
             where: { fk_user_id: user_id },
