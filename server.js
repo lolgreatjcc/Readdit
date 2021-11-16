@@ -21,14 +21,16 @@ const app = require('./controller/app');
 //-----------------------------------
 // main
 //-----------------------------------
-// const port = process.env.PORT;
-// app.listen(port, () => {
-//     console.log(`Server started and accessible via ${port}`);
-// });
-
-
-const hostname = "localhost";
-const port = 3000;
-app.listen(port, hostname, () => {
-    console.log(`Server started and accessible via http://${hostname}:${port}/`);
+if (process.env.PORT != null){
+    const port = process.env.PORT;
+    app.listen(port,function(){
+        console.log(`Server hosted on heroku!`);
+    });
+}
+else{
+    const hostname="localhost";
+    const port=3000;
+    app.listen(port,hostname,function(){
+    console.log(`Server hosted at http://${hostname}:${port}`);
 });
+}
