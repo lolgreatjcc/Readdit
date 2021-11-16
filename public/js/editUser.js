@@ -1,5 +1,5 @@
 //const baseUrl = "http://localhost:3000";
-const baseUrl = "https://readdit-backend.herokuapp.com/"
+const baseUrl = "https://readdit-backend.herokuapp.com"
 
 function loadUserInfo() {
     var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
@@ -7,7 +7,7 @@ function loadUserInfo() {
     // call the web service endpoint
     $.ajax({
         url: `${baseUrl}/users/` + user_id,
-        // url: 'https://readdit-backend.herokuapp.com/users/'+ user_id,
+        // url: 'https://readdit-backend.herokuapp.comusers/'+ user_id,
         type: 'GET',
         //data: data2,
         contentType: "application/json; charset=utf-8",
@@ -108,7 +108,7 @@ function editUser() {
     console.log(...webFormData);
     //  call web service endpoint
     $.ajax({
-        // url: 'https://readdit-backend.herokuapp.com/users/' + user_id,
+        // url: 'https://readdit-backend.herokuapp.comusers/' + user_id,
         url: `${baseUrl}/users/` + user_id,
         method: 'PUT',
         data: webFormData,

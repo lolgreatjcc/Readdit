@@ -1,5 +1,5 @@
 //const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.herokuapp.com/"]
+const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
 function addImage(post_id) {
     //retrives media for post

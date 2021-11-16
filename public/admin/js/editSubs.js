@@ -1,5 +1,5 @@
 //const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.herokuapp.com/"]
+const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
         function loadSubreadditInfo(subreaddit_id) {
             $('#load').html("Loading Info...");
@@ -56,7 +56,7 @@ const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.he
 
                 console.log(requestBody);
 
-                // axios.put(`https://readdit-backend.herokuapp.com/r/subreaddit/` + subreaddit_id,requestBody)
+                // axios.put(`https://readdit-backend.herokuapp.comr/subreaddit/` + subreaddit_id,requestBody)
 
                 axios.put(`${baseUrl[0]}/r/subreaddit/` + subreaddit_id, requestBody)
                     .then(response => {

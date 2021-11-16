@@ -41,7 +41,7 @@
             // HTML file input, chosen by user
             webFormData.append("image", image);
 
-            // axios.post(`https://readdit-backend.herokuapp.com/users`,requestBody)
+            // axios.post(`https://readdit-backend.herokuapp.comusers`,requestBody)
 
             axios.post(`http://localhost:3000/users`, webFormData, {
                 headers: {
@@ -98,7 +98,7 @@
 
             $("#Return").click(function () {
                 window.location.assign("http://localhost:3001/login.html");
-                //window.location.assign("https://readdit-sp.herokuapp.com/login.html");
+                //window.location.assign("https://readdit-sp.herokuapp.comlogin.html");
             });
         });
     </script>

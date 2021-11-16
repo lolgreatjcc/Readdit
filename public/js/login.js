@@ -1,5 +1,5 @@
 //const baseUrl = "http://localhost:3000";
-const baseUrl = "https://readdit-backend.herokuapp.com/"
+const baseUrl = "https://readdit-backend.herokuapp.com"
 
 $(document).ready(function () {
     $("#Login").click(function () {
@@ -12,7 +12,6 @@ $(document).ready(function () {
 
         //  call web service endpoint
         $.ajax({
-            //url: 'https://readdit-backend.herokuapp.com/api/login',
             url: `${baseUrl}/api/login`,
             type: 'POST',
             data: data,
@@ -23,7 +22,7 @@ $(document).ready(function () {
                 if (data != null) {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('userInfo', data.UserData);
-                    // window.location.assign("https://readdit-sp.herokuapp.com/home.html");
+                    // window.location.assign("https://readdit-sp.herokuapp.comhome.html");
                     window.location.href = `/home.html`;
                 } else {
                     console.log("Error");

@@ -1,5 +1,5 @@
 //const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.herokuapp.com/"]
+const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
         function addUser(username, email, profile_pic, password, two_fa, image) {
             console.log("Username: " + username);
@@ -19,7 +19,7 @@ const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.he
             // HTML file input, chosen by user
             webFormData.append("image", image);
 
-            // axios.post(`https://readdit-backend.herokuapp.com/users`,requestBody)
+            // axios.post(`https://readdit-backend.herokuapp.comusers`,requestBody)
 
             axios.post(`${baseUrl[0]}/users`, webFormData, {
                 headers: {
@@ -95,6 +95,6 @@ const baseUrl = ["https://readdit-backend.herokuapp.com/","https://readdit-sp.he
 
             $("#Return").click(function () {
                 window.location.assign(`${baseUrl[1]}/admin/ManageUsers.html`);
-                //window.location.assign("https://readdit-sp.herokuapp.com/admin/ManageUsers.html");
+                //window.location.assign("https://readdit-sp.herokuapp.comadmin/ManageUsers.html");
             });
         });
