@@ -155,8 +155,6 @@ Post.belongsTo(User, {
     foreignKey: 'fk_user_id'
 })
 
-
-
 Subreaddit.hasMany(Post, {
     foreignKey: 'fk_subreaddit_id'
 });
@@ -239,6 +237,14 @@ const Media = sequelize.define('Media', {
         type: DataTypes.INTEGER,
         allowNull: false
     }
+})
+
+Media.belongsTo(Post, {
+    foreignKey: 'fk_post_id'
+})
+
+Post.hasMany(Media, {
+    foreignKey: 'fk_post_id'
 })
 
 const Flair = sequelize.define('Flair', {
