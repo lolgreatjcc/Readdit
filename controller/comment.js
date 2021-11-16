@@ -31,4 +31,16 @@ router.get('/:post_id', (req, res) => {
     })
 })
 
+//getCommentsbyOneUser
+router.get('/user/:user_id', function (req,res) {
+    var user_id = req.params.user_id;
+    comment.getCommentsByUser(user_id, function (result,err) {
+        if(!err) {
+            res.status(200).send(result);
+        } else {
+            res.status(500).send(err);
+        }
+    })
+})
+
 module.exports = router;

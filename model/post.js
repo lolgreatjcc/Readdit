@@ -349,6 +349,28 @@ var post = {
             return callback(error,null);
         })
     },
+
+    getPostsByUser: function (user_id, callback) {
+        Post.findAll({
+            attributes: ['post_id', 'title', 'content', 'pinned', 'created_at'],
+            include: [
+                {
+                    model: User,
+                    attributes: ['user_id'],
+                    where: { user_id: user_id }
+                },
+                {
+                    model: Subreaddit,
+                    attributes: ['subreaddit_name']
+                }
+            ],
+        }).then(function (result) {
+            callback(result, null)
+        }).catch(function (err) {
+            console.log(err)
+            callback(null, err)
+        })
+    },
 }
 
 module.exports = post;

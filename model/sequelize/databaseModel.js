@@ -5,7 +5,7 @@ const { Sequelize, Model, DataTypes, BOOLEAN } = require('sequelize');
 
 const database = "readdit";
 const user = "root";
-const password = "FrozenLava123"
+const password = "password"
 const host = 'localhost'
 
 // heroku credentials, comment as neccessary. ensure database has data
