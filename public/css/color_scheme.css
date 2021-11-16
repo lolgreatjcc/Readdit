@@ -177,3 +177,16 @@ body {
 .comment-line {
     border-right: 2px solid #734f96;
 }
+
+.smaller {
+    font-size: 0.8em;
+}
+
+#home_div {
+    background-image: url("../assets/home.png");
+    background-size: contain;
+}
+
+#trending_community_div {
+    background-image: url("../assets/trending.png");
+}

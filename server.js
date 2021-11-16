@@ -18,6 +18,9 @@ app.use(function(req,res,next){
     }
 });
 
+app.get('/', function (req,res) {
+    res.status(200).sendFile('home.html', {root: __dirname + '/public/'});
+})
 app.get('/createSub', function (req,res) {
     res.status(200).sendFile('create.html', {root: __dirname + '/public/r/'});
 })

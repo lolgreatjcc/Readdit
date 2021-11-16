@@ -1,5 +1,5 @@
-//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
+const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+// const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
 function addImage(post_id) {
     //retrives media for post
@@ -248,18 +248,18 @@ $(document).ready(function () {
                 var flair_html = "";
                 // Displays Post Flair
                 if (data[i].Flair) {
-                    flair_html = `<div class="ms-2 btn rounded-pill py-0 px-2" style="background-color:${data[i].Flair.flair_colour}"><span class="fw-bold text-white">${data[i].Flair.flair_name}</sp></div>`
+                    flair_html = `<div class="ms-2 btn rounded-pill py-0 px-2" style="background-color:${data[i].Flair.flair_colour}"><span class="fw-bold text-white">${data[i].Flair.flair_name}</span></div>`
                 }
 
                 var pinnedStr = "";
-                if(data[i].pinned == 1){
-                    pinnedStr =  `<p class="fw-light text-secondary mx-1">•</p>
+                if (data[i].pinned == 1) {
+                    pinnedStr = `<p class="fw-light text-secondary mx-1">•</p>
                                 <p class="text-secondary">Pinned By Moderators</p>
                     `
                 }
 
                 var report_delete = "";
-                if (owner||moderator){
+                if (owner || moderator) {
                     report_delete = `
                     <button style="border-width : 0px; background-color:white;" type="button" class="delete" id="delete_${data[i].post_id}_${data[i].Subreaddit.subreaddit_id}">
                         <div class="d-flex flex-row text-secondary me-4">
@@ -268,7 +268,7 @@ $(document).ready(function () {
                         </div>
                     </button>`
                 }
-                else{
+                else {
                     report_delete = `
                     <button style="border-width : 0px; background-color:white;" type="button" onclick="report(${data[i].post_id})" id="report">
                         <div class="d-flex flex-row text-secondary me-4">
@@ -299,11 +299,13 @@ $(document).ready(function () {
                         <p class="text-secondary" id="post_${data[i].post_id}_time">${post_date_output}</p>
                         ${pinnedStr}
                     </div>
-                        <a style="text-decoration:none" href="/r/${data[i].Subreaddit.subreaddit_name}/${data[i].post_id}">
-                        <h5 style="color : black;" id="post_${data[i].post_id}_content">${data[i].title}</h5>
-                        ${flair_html}
-                        </a>
-                        <p>${data[i].content}<p>
+                    <a style="text-decoration:none" href="/r/${data[i].Subreaddit.subreaddit_name}/${data[i].post_id}" class="d-flex flex-row">
+                    <h5 style="color : black;" id="post_${data[i].post_id}_content" class="mb-0">${data[i].title}</h5>
+                    <div class="d-flex flex-row">
+                    ${flair_html}
+                    </div>
+                    </a>
+                        <p class="mt-2">${data[i].content}<p>
                         <div id="post_media${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark"> ${addImage(data[i].post_id)} </div>
                         <div class="toolbar d-flex flex-row align-items-center mt-2">
                                 <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
@@ -329,15 +331,15 @@ $(document).ready(function () {
 
 
                 $('#post_div').append(append_str)
-            
-            
-            if (owner || moderator){
-                $(`#post_${data[i].post_id}`).append(`
+
+
+                if (owner || moderator) {
+                    $(`#post_${data[i].post_id}`).append(`
                 <div class="pin" id="pin_${data[i].post_id}_${data[i].Subreaddit.subreaddit_id}">
                     <span class="material-icons md-24 ms-0 mx-1">push_pin</span>
                 </div>  
             `)
-            }
+                }
             }
 
 
@@ -346,7 +348,7 @@ $(document).ready(function () {
                 e.stopPropagation();
                 var save_button = $(this);
                 var post_id = $(this).attr('id').split('_')[2];
-                if (user_id == false){
+                if (user_id == false) {
                     window.location.href = "/login.html"
                 }
 
@@ -418,74 +420,74 @@ $(document).ready(function () {
                 console.log("clicked upvote")
                 e.stopPropagation();
 
-                if (user_id == false){
+                if (user_id == false) {
                     window.location.href = "/login.html"
-                } 
-                else{
-                    var post_id = $(this).attr('id').split('_')[1];
-                var upvote_button = $(this);
-                var downvote_button = $(`#post_${post_id}_downvote`);
-
-                var popularity = $(`#post_${post_id}_popularity`);
-                var rating = popularity.text();
-
-                var data;
-                if (upvote_button.hasClass('upvoted')) {
-                    // Remove Upvote
-                    data = {
-                        post_id: post_id,
-                        user_id: user_id,
-                    }
-
-                    popularity.text(parseInt(rating) - 1);
-                    upvote_button.removeClass('upvoted');
-                    $.ajax({
-                        method: "DELETE",
-                        url: "http://localhost:3000/vote/post_rating",
-                        data: JSON.stringify({ data }),
-                        contentType: "application/json",
-                        success: function (data, status, xhr) {
-                            console.log(data);
-                        }
-                    })
                 }
                 else {
-                    rating = parseInt(rating) + 1;
-                    if (downvote_button.hasClass('downvoted')) {
-                        rating = parseInt(rating) + 1;
-                        downvote_button.removeClass('downvoted');
-                    }
-                    popularity.text(rating);
+                    var post_id = $(this).attr('id').split('_')[1];
+                    var upvote_button = $(this);
+                    var downvote_button = $(`#post_${post_id}_downvote`);
 
-                    upvote_button.addClass('upvoted');
-                    // Update change in vote OR Create Vote
-                    $.ajax({
-                        method: "POST",
-                        url: "http://localhost:3000/vote/post_rating",
-                        data: JSON.stringify({
+                    var popularity = $(`#post_${post_id}_popularity`);
+                    var rating = popularity.text();
+
+                    var data;
+                    if (upvote_button.hasClass('upvoted')) {
+                        // Remove Upvote
+                        data = {
                             post_id: post_id,
                             user_id: user_id,
-                            vote_type: 1,
-                        }),
-                        contentType: "application/json; charset=utf-8",
-                        success: function (data, status, xhr) {
-                            console.log(data);
                         }
-                    })
-                }
+
+                        popularity.text(parseInt(rating) - 1);
+                        upvote_button.removeClass('upvoted');
+                        $.ajax({
+                            method: "DELETE",
+                            url: "http://localhost:3000/vote/post_rating",
+                            data: JSON.stringify({ data }),
+                            contentType: "application/json",
+                            success: function (data, status, xhr) {
+                                console.log(data);
+                            }
+                        })
+                    }
+                    else {
+                        rating = parseInt(rating) + 1;
+                        if (downvote_button.hasClass('downvoted')) {
+                            rating = parseInt(rating) + 1;
+                            downvote_button.removeClass('downvoted');
+                        }
+                        popularity.text(rating);
+
+                        upvote_button.addClass('upvoted');
+                        // Update change in vote OR Create Vote
+                        $.ajax({
+                            method: "POST",
+                            url: "http://localhost:3000/vote/post_rating",
+                            data: JSON.stringify({
+                                post_id: post_id,
+                                user_id: user_id,
+                                vote_type: 1,
+                            }),
+                            contentType: "application/json; charset=utf-8",
+                            success: function (data, status, xhr) {
+                                console.log(data);
+                            }
+                        })
+                    }
                 }
 
-                
+
             })
 
             // Handles upvoting/downvoting a post
             $('.post-downvote').on('click', function (e) {
                 e.stopPropagation();
 
-                if (user_id == false){
+                if (user_id == false) {
                     window.location.href = "/login.html"
-                } 
-                else{
+                }
+                else {
                     var post_id = $(this).attr('id').split('_')[1];
                     var downvote_button = $(this);
                     var upvote_button = $(`#post_${post_id}_upvote`);
@@ -540,12 +542,12 @@ $(document).ready(function () {
                             }
                         })
                     }
-                } 
+                }
             })
 
             // Handles clicking on a post
             $('.post').on('click', function (e) {
-                var post =  $(this);
+                var post = $(this);
                 var post_id = post.attr('id').split('_')[1];
                 var subreaddit = pathname;
                 location.href = `${subreaddit}/${post_id}`;
@@ -564,27 +566,27 @@ $(document).ready(function () {
                 deletePost(delete_id);
             })
 
-        
-        // Block of code shows user's upvotes and downvotes on posts
-        // temp user_id
-        if (user_id) {
-            var data = getUsersVotes(pathname, user_id);
-            for(var i = 0 ; i<data.length; i++) {
-                var upvote_button = $(`#post_${data[i].fk_post_id}_upvote`);
-                var downvote_button = $(`#post_${data[i].fk_post_id}_downvote`);
-                if(data[i].vote_type == true) {
-                    upvote_button.addClass('upvoted');
-                }else {
-                    downvote_button.addClass('downvoted');
+
+            // Block of code shows user's upvotes and downvotes on posts
+            // temp user_id
+            if (user_id) {
+                var data = getUsersVotes(pathname, user_id);
+                for (var i = 0; i < data.length; i++) {
+                    var upvote_button = $(`#post_${data[i].fk_post_id}_upvote`);
+                    var downvote_button = $(`#post_${data[i].fk_post_id}_downvote`);
+                    if (data[i].vote_type == true) {
+                        upvote_button.addClass('upvoted');
+                    } else {
+                        downvote_button.addClass('downvoted');
+                    }
                 }
             }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
         }
-    },
-    error: function (xhr, status, error) {
-        console.log(xhr);
-    }
-})
-orderBy();
+    })
+    orderBy();
 })
 
 function orderBy() {
@@ -597,7 +599,7 @@ function orderBy() {
 }
 
 function checkOwner(subreadditName) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/r/checkOwner/` + subreadditName,
@@ -605,7 +607,7 @@ function checkOwner(subreadditName) {
             contentType: "application/json; charset=utf-8",
             headers: { authorization: "Bearer " + token },
             success: function (data, status, xhr) {
-              $("#moderator").html(`
+                $("#moderator").html(`
               <div id="about_community_header" class="p-2 py-3 rounded-top">
                   <h6 class="fw-bold text-white mb-0 ms-2">Moderators</h6>
               </div>
@@ -629,7 +631,7 @@ function checkOwner(subreadditName) {
 }
 
 function checkModerator(subreadditName) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/moderator/checkModerator/` + subreadditName,
@@ -658,21 +660,21 @@ function copy(copyStr) {
     /* Copy the text inside the text field */
     navigator.clipboard.writeText(copyStr);
 
-  /* Alert the copied text */
-  alert("Copied to clipboard!");
+    /* Alert the copied text */
+    alert("Copied to clipboard!");
 }
 
-function pin(post_subreaddit_id){
+function pin(post_subreaddit_id) {
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
     var post_id = post_subreaddit_id_arr[1]
     var fk_subreaddit_id = post_subreaddit_id_arr[2]
-    var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
+    var data = JSON.stringify({ post_id: post_id, fk_subreaddit_id: fk_subreaddit_id });
     var token = localStorage.getItem("token");
     $.ajax({
         url: `${baseUrl[0]}/post/pin`,
         method: 'PUT',
         contentType: "application/json; charset=utf-8",
-        headers:{'authorization': "Bearer " + token},
+        headers: { 'authorization': "Bearer " + token },
         data: data,
         success: function (data, status, xhr) {
             window.location.reload()
@@ -695,17 +697,17 @@ function report(post_id) {
     window.location.assign(baseUrl[1] + '/report.html?post_id=' + post_id);
 }
 
-function deletePost(post_subreaddit_id){
+function deletePost(post_subreaddit_id) {
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
     var post_id = post_subreaddit_id_arr[1]
     var fk_subreaddit_id = post_subreaddit_id_arr[2]
-    var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
+    var data = JSON.stringify({ post_id: post_id, fk_subreaddit_id: fk_subreaddit_id });
     var token = localStorage.getItem("token");
     $.ajax({
         url: `${baseUrl[0]}/post`,
         method: 'DELETE',
         contentType: "application/json; charset=utf-8",
-        headers:{'authorization': "Bearer " + token},
+        headers: { 'authorization': "Bearer " + token },
         data: data,
         success: function (data, status, xhr) {
             window.location.reload()
@@ -716,14 +718,14 @@ function deletePost(post_subreaddit_id){
     });
 }
 
-function getUserId(){
-    return new Promise(function(resolve, reject) {
+function getUserId() {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/getUserId`,
             method: 'GET',
             contentType: "application/json; charset=utf-8",
-            headers:{'authorization': "Bearer " + token},
+            headers: { 'authorization': "Bearer " + token },
             success: function (data, status, xhr) {
                 resolve(data.user_id)
             },
