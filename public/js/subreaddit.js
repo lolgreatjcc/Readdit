@@ -1,5 +1,5 @@
-//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
+const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+// const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
 function addImage(subreaddit_id) {
     //retrives media for post
@@ -254,7 +254,7 @@ $(document).ready(function () {
                 var flair_html = "";
                 // Displays Post Flair
                 if (data[i].Flair) {
-                    flair_html = `<div class="ms-2 btn rounded-pill py-0 px-2" style="background-color:${data[i].Flair.flair_colour}"><span class="fw-bold text-white">${data[i].Flair.flair_name}</sp></div>`
+                    flair_html = `<div class="ms-2 btn rounded-pill py-0 px-2" style="background-color:${data[i].Flair.flair_colour}"><span class="fw-bold text-white">${data[i].Flair.flair_name}</span></div>`
                 }
 
                 var pinnedStr = "";
@@ -305,12 +305,14 @@ $(document).ready(function () {
                         <p class="text-secondary" id="post_${data[i].post_id}_time">${post_date_output}</p>
                         ${pinnedStr}
                     </div>
-                        <a style="text-decoration:none" href="/r/${data[i].Subreaddit.subreaddit_name}/${data[i].post_id}">
-                        <h5 style="color : black;" id="post_${data[i].post_id}_content">${data[i].title}</h5>
-                        ${flair_html}
-                        </a>
-                        <p>${data[i].content}<p>
-                        <div id="post_media_${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark"> </div>
+                    <a style="text-decoration:none" href="/r/${data[i].Subreaddit.subreaddit_name}/${data[i].post_id}" class="d-flex flex-row">
+                    <h5 style="color : black;" id="post_${data[i].post_id}_content" class="mb-0">${data[i].title}</h5>
+                    <div class="d-flex flex-row">
+                    ${flair_html}
+                    </div>
+                    </a>
+                        <p class="mt-2">${data[i].content}<p>
+                                                <div id="post_media_${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark"> </div>
                         <div class="toolbar d-flex flex-row align-items-center mt-2">
                                 <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
                                     <span class="material-icons md-24 ms-0 me-1">chat_bubble_outline</span>
@@ -549,12 +551,12 @@ $(document).ready(function () {
             })
 
             // Handles clicking on a post
-            // $('.post').on('click', function (e) {
-            //     var post = $(this);
-            //     var post_id = post.attr('id').split('_')[1];
-            //     var subreaddit = pathname;
-            //     location.href = `${subreaddit}/${post_id}`;
-            // })
+            $('.post').on('click', function (e) {
+                var post = $(this);
+                var post_id = post.attr('id').split('_')[1];
+                var subreaddit = pathname;
+                location.href = `${subreaddit}/${post_id}`;
+            })
 
             // Handles clicking on pin button
             $('.pin').on('click', function (e) {
