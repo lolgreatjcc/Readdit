@@ -1,5 +1,5 @@
-//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
+const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+//const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
         function addUser(username, email, profile_pic, password, two_fa, image) {
             console.log("Username: " + username);

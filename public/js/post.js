@@ -1,5 +1,5 @@
-//const baseUrl = ["http://localhost:3000","http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
+const baseUrl = ["http://localhost:3000","http://localhost:3001"]
+//const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 $(document).ready(function () {
     var pathname = window.location.pathname;
     var subreaddit_path = pathname.split('/')[2];
@@ -145,10 +145,10 @@ $(document).ready(function () {
                         <ol class="carousel-indicators">`
                 for (var i = 0; i < media.length; i++) {
                     if (i == 0) {
-                        appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${i}" class="active"></li>`;
+                        appendStringStart += `<li data-target=".item" data-slide-to="${i}" class="active"></li>`;
                     }
                     else {
-                        appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${i}"></li>`;
+                        appendStringStart += `<li data-target=".item" data-slide-to="${i}"></li>`;
                     }
                 }
                 appendStringStart += `</ol> <div class="carousel-inner">`;
@@ -175,19 +175,19 @@ $(document).ready(function () {
                         var item = 'carousel-item';
                     }
                     if (media[i].fk_content_type == "1") {
-                        appendStringStart += `<div class="${item}">
-                                <img style="height: 600px; width: 500px; object-fit: cover;" src="${media[i].media_url}" alt="Image not available"> 
+                        appendStringStart += `<div class="${item} item">
+                                <img style="height:400px; max-width: 700px; object-fit: cover;" src="${media[i].media_url}" alt="Image not available"> 
                             </div>`;
                     }
                     else if (media[i].fk_content_type == "2") {
-                        appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted loop>
+                        appendStringStart += `<div class="${item} item"> <video height="400" controls autoplay muted loop>
                                             <source src="${media[i].media_url}" type="video/mp4">
                                             Your browser does not support the video tag.
                                     </video> </div>`;
                     }
                     else {
-                        appendStringStart += `<div class="${item}">
-                                <img style="height: 600px; width: 500px; object-fit: cover;" src="${media[i].media_url}" alt="GIF not available"> 
+                        appendStringStart += `<div class="${item} item">
+                                <img style="height:400px; max-width: 700px; object-fit: cover;" src="${media[i].media_url}" alt="GIF not available"> 
                             </div>`;
                     }
                 }
