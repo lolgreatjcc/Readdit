@@ -15,6 +15,14 @@ const baseUrl = "http://localhost:3000"
       evt.currentTarget.className += " tabColour";
     }
         $(document).ready(function () {
+            var queryParams = new URLSearchParams(window.location.search);
+            console.log("---------Query Parameters---------");
+            console.log("Query Param (source): " + window.location.search);
+            console.log("Query Param (extracted): " + queryParams);
+
+            var input = queryParams.get("query");
+
+            $(`#resultheader`).html(`<h4> Displaying Search Results for ${input} </h4>`)
             searchSubreaddits();
             searchPosts();
         })
@@ -28,24 +36,28 @@ const baseUrl = "http://localhost:3000"
                 contentType: "application/json; charset=utf-8",
                 success: function (data, status, xhr) {
                     var subreaddits = data.Result;
-                    console.log(subreaddits)
-                    for (var i=0;i<subreaddits.length;i++){
-                        console.log(i)
-                        $("#subreaddits").append(`
-                            <div class="post rounded">
-                                <div class="row g-0">
-                                    <div class="col-12 bg-white p-2">
-                                        <div class="d-flex flex-row align-items-baseline">
-                                            <a href="/r/${subreaddits[i].subreaddit_name}"><h6 class="d-inline fw-bold clickable-link">r/${subreaddits[i].subreaddit_name}</h6></a>
-                                            <p class="fw-light text-secondary mx-1">•</p>
-                                            <p class="fw-light text-secondary mx-1">•</p>
+                    if (subreaddits.length == 0) {
+                        $(`#subreaddits`).append("No results found");
+                    }
+                    else {
+                        for (var i=0;i<subreaddits.length;i++){
+                            console.log(i)
+                            $("#subreaddits").append(`
+                                <div class="post rounded">
+                                    <div class="row g-0">
+                                        <div class="col-12 bg-white p-2">
+                                            <div class="d-flex flex-row align-items-baseline">
+                                                <a href="/r/${subreaddits[i].subreaddit_name}"><h6 class="d-inline fw-bold clickable-link">r/${subreaddits[i].subreaddit_name}</h6></a>
+                                                <p class="fw-light text-secondary mx-1">•</p>
+                                                <p class="fw-light text-secondary mx-1">•</p>
+                                            </div>
+    
+                                            <h5>${subreaddits[i].subreaddit_description}</h5>
                                         </div>
-
-                                        <h5>${subreaddits[i].subreaddit_description}</h5>
                                     </div>
                                 </div>
-                            </div>
-                            `)
+                                `)
+                        }
                     }
                  
                 },
@@ -56,18 +68,57 @@ const baseUrl = "http://localhost:3000"
         }
 
         function searchPosts(){
-            var query = window.location.search;
-            console.log(query)
+            var queryParams = new URLSearchParams(window.location.search);
+            console.log("---------Query Parameters---------");
+            console.log("Query Param (source): " + window.location.search);
+            console.log("Query Param (extracted): " + queryParams);
+
+            var input = queryParams.get("query");
+
             $.ajax({
-                url: `${baseUrl}/post/search` + query,
+                url: `${baseUrl}/post/search` + window.location.search,
                 method: 'GET',
                 contentType: "application/json; charset=utf-8",
                 success: function (data, status, xhr) {
                     var posts = data.Result;
-                    console.log(posts)
-                    for (var i=0;i<posts.length;i++){
+                    if (posts.length == 0) {
+                        $(`#posts`).append("No results found");
+                    }
+                    else {
+                        for (var i=0;i<posts.length;i++){
+                            console.log(i)
+                            $("#posts").append(`
+                                <div class="post rounded">
+                                    <div class="row g-0">
+                                        <div class="col-12 bg-white p-2">
+                                            <div class="d-flex flex-row align-items-baseline">
+                                                <a href="/r/${posts[i].Subreaddit.subreaddit_name}/${posts[i].post_id}"><h6 class="d-inline fw-bold clickable-link">${posts[i].title}</h6></a>
+                                                <p class="fw-light text-secondary mx-1">•</p>
+                                                <p class="fw-light text-secondary mx-1">•</p>
+                                            </div>
+    
+                                            <h5>${posts[i].content}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                `)
+                        }
+                    }
+                 
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error)
+                }
+            })
+            $.ajax({
+                url: `${baseUrl}/post/post/search/` + input,
+                method: 'GET',
+                contentType: "application/json; charset=utf-8",
+                success: function (data, status, xhr) {
+                    var posts = data;
+                    for (var i = 0;i < posts.length;i++){
                         console.log(i)
-                        $("#posts").append(`
+                        $("#similar").append(`
                             <div class="post rounded">
                                 <div class="row g-0">
                                     <div class="col-12 bg-white p-2">

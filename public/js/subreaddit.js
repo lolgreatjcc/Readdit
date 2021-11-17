@@ -75,7 +75,7 @@ function displayMedia(subreaddit_id) {
                 else if (media.length == 0) {
                     console.log("Running no media");
                     appendString = ``;
-                    $(`#post_media_` + post_id).html(``);
+                    $(`#post_media_` + post_id).remove();
                 }
                 else {
                     console.log("Running single item");
@@ -109,7 +109,24 @@ function displayMedia(subreaddit_id) {
 
 async function mediaCall() {
     console.log("Me Second!!");
-    const result = await displayMedia(1);
+    var pathname = window.location.pathname;
+    $.ajax({
+        //headers: { 'authorization': 'Bearer ' + tmpToken },
+        url: `${baseUrl[0]}` + pathname,
+        type: 'GET',
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json',
+        success: function (data, textStatus, xhr) {
+            displayMedia(data.subreaddit_id);
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.log('Error in Operation');
+            console.log(xhr)
+            console.log(textStatus);
+            console.log(errorThrown);
+            console.log(xhr.status);
+        }
+    });
 }
 
 function getUsersVotes(subreaddit_id, user_id) {
