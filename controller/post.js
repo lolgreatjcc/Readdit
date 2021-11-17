@@ -199,6 +199,17 @@ router.post('/create', upload.array("media", 8), (req, res) => {
     })
 })
 
+router.get('/recent', function (req, res) {
+    post.getRecentPosts(function (result, err) {
+        if (!err) {
+            res.status(200).send(result);
+        }
+        else {
+            res.status(500).send(err);
+        }
+    })
+}) 
+
 //get posts from one subreaddit
 router.get('/get/r/:subreaddit', function (req, res) {
     req_subreaddit = req.params.subreaddit;
