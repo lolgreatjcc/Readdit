@@ -1,7 +1,7 @@
-//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
+const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+//const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
-function addImage(subreaddit_id) {
+function displayMedia(subreaddit_id) {
     //retrives media for post
     $.ajax({
         //headers: { 'authorization': 'Bearer ' + tmpToken },
@@ -18,13 +18,15 @@ function addImage(subreaddit_id) {
 
                 if (media.length > 1) {
                     console.log("Running carousel");
-                    var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                    var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
                             <ol class="carousel-indicators">`
-                    if (i == 0) {
-                        appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${i}" class="active"></li>`;
-                    }
-                    else {
-                        appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${i}"></li>`;
+                    for (var j = 0; j < media.length; j++) {
+                        if (j == 0) {
+                            appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" style="color: #00ff00"></li>`;
+                        }
+                        else {
+                            appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" class="active"></li>`;
+                        }
                     }
                     appendStringStart += `</ol> <div class="carousel-inner">`;
 
@@ -50,7 +52,7 @@ function addImage(subreaddit_id) {
                         }
                         if (media[count].fk_content_type == "1") {
                             appendStringStart += `<div class="${item}">
-                                    <img style="height:500px; width: 400px; object-fit: cover;" src="${media[count].media_url}" alt="Image not available"> 
+                                    <img style="height:400px; max-width: 700px; object-fit: cover;" src="${media[count].media_url}" alt="Image not available"> 
                                 </div>`;
                         }
                         else if (media[count].fk_content_type == "2") {
@@ -61,7 +63,7 @@ function addImage(subreaddit_id) {
                         }
                         else {
                             appendStringStart += `<div class="${item}">
-                                    <img style="height: 600px; width: 500px; object-fit: cover;" src="${media[count].media_url}" alt="GIF not available"> 
+                                    <img style="height: 400px; max-width: 600px; object-fit: cover;" src="${media[count].media_url}" alt="GIF not available"> 
                                 </div>`;
                         }
                     }
@@ -72,13 +74,14 @@ function addImage(subreaddit_id) {
                 }
                 else if (media.length == 0) {
                     console.log("Running no media");
+                    appendString = ``;
                     $(`#post_media_` + post_id).html(``);
                 }
                 else {
                     console.log("Running single item");
                     //run single file display
                     if (media[0].fk_content_type == "1") {
-                        $(`#post_media_` + post_id).html(`<img style="max-height: 500px; max-width: 400px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
+                        $(`#post_media_` + post_id).html(`<img style="max-height: 500px; max-width: 700px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
                     }
                     else if (media[0].fk_content_type == "2") {
                         $(`#post_media_` + post_id).html(`<video height="400" controls autoplay muted loop>
@@ -87,7 +90,7 @@ function addImage(subreaddit_id) {
                                         </video>`)
                     }
                     else {
-                        $(`#post_media_` + post_id).html(`<img style="max-height: 600px; max-width: 500px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
+                        $(`#post_media_` + post_id).html(`<img style="max-height: 500px; max-width: 700px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
                     }
                 }
 
@@ -102,6 +105,11 @@ function addImage(subreaddit_id) {
             console.log(xhr.status);
         }
     });
+}
+
+async function mediaCall() {
+    console.log("Me Second!!");
+    const result = await displayMedia(1);
 }
 
 function getUsersVotes(subreaddit_id, user_id) {
@@ -312,7 +320,7 @@ $(document).ready(function () {
                     </div>
                     </a>
                         <p class="mt-2">${data[i].content}<p>
-                                                <div id="post_media_${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark"> </div>
+                        <div id="post_media_${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark" style="min-height:400px"> </div>
                         <div class="toolbar d-flex flex-row align-items-center mt-2">
                                 <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
                                     <span class="material-icons md-24 ms-0 me-1">chat_bubble_outline</span>
@@ -586,7 +594,7 @@ $(document).ready(function () {
                     }
                 }
             }
-            addImage(subreaddit_id);
+            mediaCall();
             $(`#load`).html(``);
         },
         error: function (xhr, status, error) {

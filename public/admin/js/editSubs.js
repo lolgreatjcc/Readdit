@@ -1,5 +1,5 @@
-//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
+const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+//const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
         function loadSubreadditInfo(subreaddit_id) {
             $('#load').html("Loading Info...");
