@@ -6,19 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>SP Games</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/create_form.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="./includeHTMLs/head.js"></script>
     <script src="./includeHTMLs/header.js"></script>
+    <link rel="stylesheet" href="css/create_form.css">
 
     <script>
 
@@ -110,13 +102,9 @@
     <div class="container-xxl my-md-2">
         <div class="row">
 
-            <div class="col-lg-2">
-
-            </div>
+            <div class="col-lg-2"></div>
 
             <div class="col-lg-8">
-
-
                 <div class=" container-fluid">
                     <div class="row rounded shadow" id="createUserImage">
                         <div class="col-2">
@@ -126,8 +114,8 @@
 
 
                             <h5 class="fw-bold">Sign Up</h5>
-                            <p class="smaller">By continuing, you are agreeing to Readdit's <a href="#">User
-                                    Agreement</a> <br> and <a href="#">Privacy Policy</a>. </p>
+                            <p class="smaller">By continuing, you are agreeing to Readdit's <a class="text-decoration-none" href="#">User
+                                    Agreement</a> <br> and <a class="text-decoration-none" href="#">Privacy Policy</a>. </p>
                             <div id="img">
 
                             </div>
@@ -150,21 +138,17 @@
                                     placeholder="Enter password"></input>
                                 <label class="text-secondary">Password</label>
                             </div>
-                            <p class="d-inline">2 Factor Authentication</p>
-                            <label class="switch float-right">
-                                <input type="checkbox" id="two_fa">
-                                <span class="slider round "></span>
-                            </label>
+                            <div class="mb-3 form-check">
 
+                                <label class="form-check-label">2 Factor Authentication</label>
+                                <input type="checkbox" id="two_fa" class="form-check-input">
+                            </div>
                             <p><span id="msg"></span></p>
                             <p><input class="btn invert-scheme fw-bold rounded-pill w-100" type="button" id="Add"
                                     value="Sign up" /></p>
                             <div>
                                 <p class="smaller">
-
-                                    Already have an account? <a href="http://localhost:3001/login.html">Log in</a>
-
-
+                                    Already have an account? <a class="text-decoration-none" href="http://localhost:3001/login.html">Log in</a>
                                 </p>
                             </div>
                         </div>
@@ -173,9 +157,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2">
-
-            </div>
+            <div class="col-lg-2"></div>
         </div>
     </div>
 

@@ -33,7 +33,7 @@ $(document).ready(() => {
                     <a class="nav-link" href="#">Link</a>
                 </li>
             </ul>
-            <form class="flex-grow-1 me-5 ms-5" action="javascript:runSearch()">
+            <form class="flex-grow-1 me-5 ms-5 mb-0" action="javascript:runSearch()">
                 <div class="input-group">
                     <input class="form-control bg-light h-100" type="text" placeholder="Search for Post / Subreadit"
                         aria-label="Search" id="Search">
