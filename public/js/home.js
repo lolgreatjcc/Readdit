@@ -258,7 +258,7 @@ $(document).ready(function () {
                         upvote_button.removeClass('upvoted');
                         $.ajax({
                             method: "DELETE",
-                            url: "http://localhost:3000/vote/post_rating",
+                            url: `${baseUrl[0]}/vote/post_rating`,
                             data: JSON.stringify({ data }),
                             contentType: "application/json",
                             success: function (data, status, xhr) {
@@ -278,7 +278,7 @@ $(document).ready(function () {
                         // Update change in vote OR Create Vote
                         $.ajax({
                             method: "POST",
-                            url: "http://localhost:3000/vote/post_rating",
+                            url: `${baseUrl[0]}/vote/post_rating`,
                             data: JSON.stringify({
                                 post_id: post_id,
                                 user_id: user_id,
@@ -324,7 +324,7 @@ $(document).ready(function () {
 
                         $.ajax({
                             method: "DELETE",
-                            url: "http://localhost:3000/vote/post_rating",
+                            url: `${baseUrl[0]}/vote/post_rating`,
                             data: JSON.stringify({ data }),
                             contentType: "application/json",
                             success: function (data, status, xhr) {
@@ -344,7 +344,7 @@ $(document).ready(function () {
                         // Update change in vote OR Create Vote
                         $.ajax({
                             method: "POST",
-                            url: "http://localhost:3000/vote/post_rating",
+                            url: `${baseUrl[0]}/vote/post_rating`,
                             data: JSON.stringify({
                                 post_id: post_id,
                                 user_id: user_id,
