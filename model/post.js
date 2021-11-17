@@ -67,7 +67,7 @@ var post = {
                 result[i].confidence_rating = confidence_rating;
             }
         
-            // Note: The code is sorted in the frontend as it didn't feel appropriate to add *design/formatting* code in the model and controller. 
+            // Note: The posts are sorted in the frontend as it didn't feel appropriate to add *design/formatting* code in the model and controller. 
 
             callback(result, null)
         }).catch(function (err) {
