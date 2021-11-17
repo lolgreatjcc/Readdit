@@ -41,7 +41,7 @@ var post = {
                 }
             ],
         }).then(function (result) {
-
+            var init_date = new Date();
             // This block of code calculates the post's popularity
             for (var i = 0; i < result.length; i++) {
                 result[i] = result[i].dataValues;
@@ -56,7 +56,19 @@ var post = {
                     }
                 }
                 result[i].Post_Votes = popularity_rating;
+
+                // Calculates Post's Confidence Rating
+                var confidence_rating = 0;
+                var post_votes = result[i].Post_Votes;
+                var post_date = new Date(result[i].created_at);
+                var post_hour_difference = (init_date - post_date.getTime()) / (1000 * 60 * 60);
+
+                confidence_rating = (post_votes) / Math.pow((post_hour_difference), 1.8);
+                result[i].confidence_rating = confidence_rating;
             }
+        
+            // Note: The code is sorted in the frontend as it didn't feel appropriate to add *design/formatting* code in the model and controller. 
+
             callback(result, null)
         }).catch(function (err) {
             console.log(err)
@@ -187,7 +199,7 @@ var post = {
             return callback(null, err);
         })
     },
-    
+
     getSavedPosts: function (user_id, callback) {
         Saved.findAll({
             where: { fk_user_id: user_id },
@@ -383,16 +395,18 @@ var post = {
                 return callback(err, null);
             })
     },
-    deletePost : function (post_id, fk_subreaddit_id, callback) {
+    deletePost: function (post_id, fk_subreaddit_id, callback) {
         Post.destroy({
-            where: {[Op.and]: [
-                { fk_subreaddit_id: fk_subreaddit_id },
-                { post_id: post_id }
-            ]}
+            where: {
+                [Op.and]: [
+                    { fk_subreaddit_id: fk_subreaddit_id },
+                    { post_id: post_id }
+                ]
+            }
         }).then(function (result) {
             return callback(null, result);
-        }).catch(function(error){
-            return callback(error,null);
+        }).catch(function (error) {
+            return callback(error, null);
         })
     },
 
