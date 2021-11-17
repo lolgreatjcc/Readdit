@@ -17,7 +17,6 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="./includeHTMLs/head.js"></script>
     <script src="./includeHTMLs/header.js"></script>
 
@@ -46,7 +45,8 @@
             axios.post(`http://localhost:3000/users`, webFormData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
-                }})
+                }
+            })
                 .then(response => {
                     $('#msg').html('User added successfully!');
                 })
@@ -107,44 +107,77 @@
 </head>
 
 <body>
-    <div class="container">
-    </div>
-    <div class="container">
+    <div class="container-xxl my-md-2">
+        <div class="row">
 
-        <div style="margin-top: 2rem;">
-            <h1>Sign Up</h1>
+            <div class="col-lg-2">
 
-            <div style="padding: 30px;" class="card">
-                <div id="img">
+            </div>
 
+            <div class="col-lg-8">
+
+
+                <div class=" container-fluid">
+                    <div class="row rounded shadow" id="createUserImage">
+                        <div class="col-2">
+
+                        </div>
+                        <div class="col-7 bg-white p-5">
+
+
+                            <h5 class="fw-bold">Sign Up</h5>
+                            <p class="smaller">By continuing, you are agreeing to Readdit's <a href="#">User
+                                    Agreement</a> <br> and <a href="#">Privacy Policy</a>. </p>
+                            <div id="img">
+
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="username" rows="1" placeholder="Enter username"></input>
+                                <label class="text-secondary">Username</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+
+                                <input class="form-control" id="email" rows="1" placeholder="Enter email"></input>
+                                <label class="text-secondary">Email</label>
+                            </div>
+
+                            <label for="img_url">Select Image for Profile Picture (Optional):</label>
+                            <input type="file" class="form-control" id="img_url" name="img_url" /><br>
+
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" rows="1"
+                                    placeholder="Enter password"></input>
+                                <label class="text-secondary">Password</label>
+                            </div>
+                            <p class="d-inline">2 Factor Authentication</p>
+                            <label class="switch float-right">
+                                <input type="checkbox" id="two_fa">
+                                <span class="slider round "></span>
+                            </label>
+
+                            <p><span id="msg"></span></p>
+                            <p><input class="btn invert-scheme fw-bold rounded-pill w-100" type="button" id="Add"
+                                    value="Sign up" /></p>
+                            <div>
+                                <p class="smaller">
+
+                                    Already have an account? <a href="http://localhost:3001/login.html">Log in</a>
+
+
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-3 bg-white rounded-end">
+                        </div>
+                    </div>
                 </div>
-                <label>Username: </label>
-                <textarea class="form-control" id="username" rows="1" placeholder="Enter username"></textarea>
+            </div>
+            <div class="col-lg-2">
 
-                <label>Email: </label>
-                <textarea class="form-control" id="email" rows="1" placeholder="Enter email"></textarea>
-
-                <br>
-                <label for="img_url">Select Image for Profile Picture (Optional):</label>
-                <input type="file" id="img_url" name="img_url" /><br>
-
-                <label>Password: </label>
-                <input type="password" class="form-control" id="password" rows="1" placeholder="Enter password"></input>
-
-                <br>
-                <p class="d-inline">2 Factor Authentication</p>
-                <label class="switch float-right">
-                    <input type="checkbox" id="two_fa">
-                    <span class="slider round "></span>
-                </label>
-
-                <p><span id="msg"></span></p>
-                <p><input class="formButton" type="button" id="Add" value="Sign up" /></p>
-                <p><input class="formButton" type="button" id="Return" value="Return to Login" /></p>
             </div>
         </div>
     </div>
-
 
 
 </body>

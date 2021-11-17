@@ -100,6 +100,7 @@ input:checked + .slider:before {
 
 html > body {
   height: 100%;
+  background-color: rgba(0,0,0,.4);
 }
 
 .formButton {
@@ -109,4 +110,14 @@ html > body {
   width: 200px;
   border-width: 0px;
   border-radius: 5px;
+}
+
+#createUserImage {
+  background-image: url("../assets/addUser.jpg");
+  background-size: cover;
+}
+
+#shadow-createUserImage {
+  -webkit-box-shadow: -7px 0px 15px -10px #000000; 
+  box-shadow: -7px 0px 15px -10px #000000;
 }
