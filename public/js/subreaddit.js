@@ -152,6 +152,14 @@ $(document).ready(function () {
         }
     })
 
+    var searchParams = new URLSearchParams(window.location.search)
+    var orderBy = searchParams.get('orderBy');
+    console.log(orderBy);
+    if (orderBy == null) {
+        orderBy = "Hot";
+    }
+    console.log(orderBy)
+
     $.ajax({
         url: `${baseUrl[0]}/post/get` + pathname,
         method: 'GET',
@@ -162,9 +170,6 @@ $(document).ready(function () {
             var moderator = await checkModerator(current_subreaddit_name);
             var owner = await checkOwner(current_subreaddit_name);
             var user_id = await getUserId();
-
-            var searchParams = new URLSearchParams(window.location.search)
-            var orderBy = searchParams.get('orderBy')
 
             var pinnedData = [];
             var otherData = [];
@@ -178,53 +183,65 @@ $(document).ready(function () {
                 }
             }
 
-            if (orderBy != null) {
-                if (orderBy == "Popular") {
-                    $("#Popular").addClass("invert-scheme");
+            console.log(orderBy);
+            if (orderBy == "Popular") {
+                $("#Popular").addClass("invert-scheme");
 
-                    for (var i = 0; i < otherData.length; i++) {
-                        console.log(i)
-                        if (i == otherData.length - 1) {
-                            break;
-                        }
-                        console.log(otherData[i].votes < otherData[i + 1].Post_Votes);
-                        if (otherData[i].Post_Votes < otherData[i + 1].Post_Votes) {
-                            var tmp = otherData[i];
-                            otherData[i] = otherData[i + 1];
-                            otherData[i + 1] = tmp;
-
-                            i = -1;
-                        }
-
-
+                for (var i = 0; i < otherData.length; i++) {
+                    if (i == otherData.length - 1) {
+                        break;
                     }
-                }
-                else if (orderBy == "Newest") {
-                    $("#Newest").addClass("invert-scheme");
-                    for (let i = 0; i < otherData.length; i++) {
+                    if (otherData[i].Post_Votes < otherData[i + 1].Post_Votes) {
+                        var tmp = otherData[i];
+                        otherData[i] = otherData[i + 1];
+                        otherData[i + 1] = tmp;
 
-                        if (i == otherData.length - 1) {
-                            break;
-                        }
-
-                        var date1 = new Date(otherData[i].created_at);
-                        var date2 = new Date(otherData[i + 1].created_at);
-                        console.log(date1.getTime());
-                        console.log(date2.getTime());
-                        if (date2.getTime() > date1.getTime()) {
-                            console.log("swapping")
-                            var tmp = otherData[i];
-                            otherData[i] = otherData[i + 1];
-                            otherData[i + 1] = tmp;
-
-                            i = -1;
-                        }
+                        i = -1;
                     }
-                }
-                else {
-                    $("#Oldest").addClass("invert-scheme");
+
+
                 }
             }
+            else if (orderBy == "Newest") {
+                $("#Newest").addClass("invert-scheme");
+                for (let i = 0; i < otherData.length; i++) {
+
+                    if (i == otherData.length - 1) {
+                        break;
+                    }
+
+                    var date1 = new Date(otherData[i].created_at);
+                    var date2 = new Date(otherData[i + 1].created_at);
+                    console.log(date1.getTime());
+                    console.log(date2.getTime());
+                    if (date2.getTime() > date1.getTime()) {
+                        console.log("swapping")
+                        var tmp = otherData[i];
+                        otherData[i] = otherData[i + 1];
+                        otherData[i + 1] = tmp;
+
+                        i = -1;
+                    }
+                }
+            }
+            else if(orderBy == "Oldest") {
+                $("#Oldest").addClass("invert-scheme");
+            }
+            else if (orderBy == "Hot") {
+                $('#Hot').addClass("invert-scheme");
+                for (var i = 0; i < otherData.length; i++) {
+                    if (i == otherData.length - 1) {
+                        break;
+                    }
+                    if (otherData[i].confidence_rating < otherData[i + 1].confidence_rating) {
+                        var tmp = otherData[i];
+                        otherData[i] = otherData[i + 1];
+                        otherData[i + 1] = tmp;
+                        i = -1;
+                    }
+                }
+            }
+
 
             sortedData = pinnedData.concat(otherData);
             data = sortedData;
@@ -601,15 +618,14 @@ $(document).ready(function () {
             console.log(xhr);
         }
     })
-    orderBy();
+    orderByButton();
 })
 
-function orderBy() {
+function orderByButton() {
     $('.orderby').on('click', function (e) {
         console.log("clicked orderby")
         var orderby = $(this).attr('id');
         location.href = `?orderBy=${orderby}`;
-
     })
 }
 
