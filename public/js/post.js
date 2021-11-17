@@ -1,5 +1,5 @@
-const baseUrl = ["http://localhost:3000","http://localhost:3001"]
-// const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
+//const baseUrl = ["http://localhost:3000","http://localhost:3001"]
+const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 $(document).ready(function () {
     var pathname = window.location.pathname;
     var subreaddit_path = pathname.split('/')[2];
