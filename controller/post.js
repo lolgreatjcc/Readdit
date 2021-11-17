@@ -23,6 +23,7 @@ const mediaUpload = require("./mediaUpload");
 const app = require('./app');
 const verify = require('./verify');
 
+// functions
 function checkModerator(req, res, next) {
     var fk_subreaddit_id = req.body.fk_subreaddit_id;
     var fk_user_id = req.body.token_user_id;
@@ -48,6 +49,72 @@ function checkModerator(req, res, next) {
         }
 
     })
+}
+
+function similarity(string, string2) {
+    var arr2 = string2.split(" ");
+    var checklst = [];
+    var returnNum;
+    for (var i = 0; i < arr2.length; i++) {
+        var longer = string;
+        var shorter = arr2[i];
+        if (string.length < arr2[i].length) {
+            longer = arr2[i];
+            shorter = string;
+        }
+        var longerLength = longer.length; 
+        var num = (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+        if (num > 0.5) {
+            checklst.push(num);
+        }
+    }
+    longer = string;
+    shorter = string2;
+    if (string.length < string2.length) {
+        longer = string2;
+        shorter = string;
+    }
+    var longerLength = longer.length; 
+
+    var num = (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+    if (num > 0.5) {
+        checklst.push(num);
+    }
+
+    var result = 0;
+    for (var i = 0; i < checklst.length; i++) {
+        result += checklst[i];
+    }
+
+    return (result/checklst.length);
+}
+
+//Levenshtein Distance
+function editDistance(string, string2) {
+    string = string.toLowerCase();
+    string2 = string2.toLowerCase();
+
+    var costs = new Array();
+    for (var i = 0; i <= string.length; i++) {
+        var lastValue = i;
+        for (var j = 0; j <= string2.length; j++) {
+            if (i == 0)
+                costs[j] = j;
+            else {
+                if (j > 0) {
+                    var newValue = costs[j - 1];
+                    if (string.charAt(i - 1) != string2.charAt(j - 1))
+                        newValue = Math.min(Math.min(newValue, lastValue),
+                            costs[j]) + 1;
+                    costs[j - 1] = lastValue;
+                    lastValue = newValue;
+                }
+            }
+        }
+        if (i > 0)
+            costs[string2.length] = lastValue;
+    }
+    return costs[string2.length];
 }
 
 //uploading post images
@@ -230,5 +297,24 @@ router.get('/user/:user_id', function (req,res) {
     })
 })
 
+//get posts from one subreaddit
+router.get('/post/search/:word', function (req, res) {
+    var word = req.params.word;
+    
+    post.getAllPosts(function (result, err) {
+        if (!err) {
+            var newarr = [];
+            for (var i = 0; i < result.length; i++) {
+                if (similarity(word,result[i].title) > 0.5) {
+                    result[i].dataValues.similar = parseFloat(similarity(word,result[i].title));
+                    newarr.push(result[i]);
+                }
+            }
+            res.status(200).send(newarr);
+        } else {
+            res.status(500).send(err);
+        }
+    })
+})
 
 module.exports = router

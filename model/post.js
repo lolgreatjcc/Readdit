@@ -431,6 +431,24 @@ var post = {
             callback(null, err)
         })
     },
+
+    getAllPosts: function (callback) {
+        // find multiple entries
+        Post.findAll({
+            attributes: ['post_id', 'title', 'content', 'pinned', 'created_at'],
+            include: [
+                {
+                    model: Subreaddit,
+                    attributes: ['subreaddit_name']
+                }
+            ],
+        }).then(function (result) {
+            callback(result, null)
+        }).catch(function (err) {
+            console.log(err)
+            callback(null, err)
+        })
+    },
 }
 
 module.exports = post;
