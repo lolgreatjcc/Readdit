@@ -149,13 +149,13 @@ function editDistance(string, string2) {
 }
 
 //uploading post images
-router.post('/create', upload.array("media", 8), (req, res) => {
+router.post('/create', upload.array("media", 8), verify.extractUserId, (req, res) => {
 
     //data from front-end
     var title = req.body.title;
     var content = req.body.content;
     var fk_subreaddit_id = req.body.subreaddit_id;
-    var fk_user_id = req.body.user_id;
+    var fk_user_id = req.body.token_user_id;
     var fk_flair_id = req.body.fk_flair_id;
     var file = req.files;
 
