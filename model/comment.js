@@ -37,15 +37,22 @@ var comment = {
             include: [
                 {
                     model: User,
-                    attributes: ['user_id'],
+                    attributes: ['user_id', 'username'],
                     where: { user_id: user_id }
                 },
                 {
                     model: Post,
-                    attributes: ['title']
+                    attributes: ['title'],
+                    include: [
+                        {
+                            model: User,
+                            attributes: ['username']
+                        }
+                    ]
                 },
             ],
         }).then(function (result) {
+            console.log(result)
             callback(result, null)
         }).catch(function (err) {
             console.log(err)
