@@ -416,15 +416,34 @@ var post = {
             include: [
                 {
                     model: User,
-                    attributes: ['user_id'],
+                    attributes: ['user_id', 'username'],
                     where: { user_id: user_id }
                 },
                 {
                     model: Subreaddit,
                     attributes: ['subreaddit_name']
+                },
+                {
+                    model: Post_Vote,
+                    attributes: ['vote_type'],
                 }
             ],
         }).then(function (result) {
+            for (var i = 0; i < result.length; i++) {
+                result[i] = result[i].dataValues;
+                var popularity_rating = 0;
+
+                for (var x = 0; x < result[i].Post_Votes.length; x++) {
+                    if (result[i].Post_Votes[x].vote_type == true) {
+                        popularity_rating += 1;
+                    }
+                    else {
+                        popularity_rating -= 1;
+                    }
+                }
+                result[i].Post_Votes = popularity_rating;
+            }
+            
             callback(result, null)
         }).catch(function (err) {
             console.log(err)
