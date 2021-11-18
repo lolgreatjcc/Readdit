@@ -14,9 +14,9 @@ const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
                 success: function (data, textStatus, xhr) {
                     var user = data.Result;
                     // compile the data that the card needs for it's creation
-                    if (user.fk_user_type_id == 3) {
-                        console.log("developer");
-                        $("#role").val("3");
+                    if (user.fk_user_type_id == 2) {
+                        console.log("admin");
+                        $("#role").val("2");
                     }
                     else {
                         console.log("user");
