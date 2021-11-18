@@ -149,7 +149,7 @@ function editDistance(string, string2) {
 }
 
 //uploading post images
-router.post('/create', upload.array("media", 8), verify.extractUserId, (req, res) => {
+router.post('/create', upload.array("media", 8), verify.extractUserId, async (req, res) => {
 
     //data from front-end
     var title = req.body.title;
@@ -174,14 +174,18 @@ router.post('/create', upload.array("media", 8), verify.extractUserId, (req, res
                 break;
             }
             //uploading media to cloudinary
-            mediaUpload(file[i], async function (err, result) {
+            await mediaUpload(file[i], async function (err, result) {
                 try {
                     var result = await result;
                     if (result) {
                         //saving record to media table 
                         var { media_url, content_type } = await result;
+                        progress--
                         console.log("Media Url: " + media_url);
                         mediaUploadLinks.push({"media_url":media_url,"content_type":content_type})
+                        if (progress == 0){
+                            createPost();
+                        }
                     }
                     else {
                         success = false;
@@ -203,25 +207,38 @@ router.post('/create', upload.array("media", 8), verify.extractUserId, (req, res
             });
         }
     }
-    if (success && progress == 0){
+    else{
+        createPost();
+    }
+
+    function createPost(){
         post.createPost(title, content, fk_subreaddit_id, fk_user_id, fk_flair_id, async function (err, result) {
             if (!err) {
                 var fk_post_id = result.post_id
-            }
-            for (var j=0;j<mediaUploadLinks.length;j++){
-                media.createMedia(media_url, content_type, fk_post_id, function (err, result) {
-                    if (err) {
-                        res.status(500).send({"Error":"Error saving media_url to database"})
+                if (mediaUploadLinks.length > 0){
+                    for (var j=0;j<mediaUploadLinks.length;j++){
+                        media.createMedia(mediaUploadLinks[j].media_url, mediaUploadLinks[j].content_type, fk_post_id, function (err, result) {
+                            if (err) {
+                                res.status(500).send({"Error":"Error saving media_url to database"})
+                            }
+                            else if (result) {
+                                if (progress == 0) {
+                                    res.status(201).send({ "Result": "Post created successfully." });
+                                }
+                            }
+                        });
+                        
                     }
-                    else if (result) {
-                        progress--;
-                        if (progress == 0) {
-                            res.status(201).send({ "Result": "Post created successfully." });
-                        }
-                    }
-                });
-                
+                }
+                else{
+                    res.status(201).send({ "Result": "Post created successfully." });    
+                }
             }
+            else{   
+                res.status(500).send({"Error":"Error creating post."})
+            }
+            
+            
         })
     }
 
