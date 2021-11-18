@@ -1,5 +1,5 @@
-//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
+const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+//const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
         function loadUserInfo(user_id, token) {
             $('#load').html("Loading Info...");
@@ -14,9 +14,9 @@ const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.her
                 success: function (data, textStatus, xhr) {
                     var user = data.Result;
                     // compile the data that the card needs for it's creation
-                    if (user.fk_user_type_id == 3) {
-                        console.log("developer");
-                        $("#role").val("3");
+                    if (user.fk_user_type_id == 2) {
+                        console.log("admin");
+                        $("#role").val("2");
                     }
                     else {
                         console.log("user");
