@@ -74,6 +74,16 @@ body {
     background-color: #f8f9fa;
 }
 
+.post:hover{
+    border: 1px solid #6a5acd;
+}
+
+.comment {
+    border: 1px solid #6a5acd35;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+    background-color: #f8f9fa;
+}
+
 .post-upvote:hover {
     background-color: #6a5acd35;
 }
@@ -189,4 +199,19 @@ body {
 
 #trending_community_div {
     background-image: url("../assets/trending.png");
+}
+
+#profile_background {
+    background-color: #33a8ff;
+}
+
+#user_img {
+    background-size: contain;
+    width: 5rem;
+    height: 5rem;
+    border: white solid 5px;
+}
+
+.inline-icon {
+    vertical-align: bottom;
 }
