@@ -52,9 +52,40 @@ function checkModerator(req, res, next) {
 }
 
 function similarity(string, string2) {
+    var arr = string.split(" ");
     var arr2 = string2.split(" ");
     var checklst = [];
-    var returnNum;
+    //loop for number of words in input string2
+    for (var count = 0; count < arr.length; count ++) {
+        //loop for number of words in database string
+        for (var i = 0; i < arr2.length; i++) {
+            var longer = arr[count];
+            var shorter = arr2[i];
+            if (arr[count].length < arr2[i].length) {
+                longer = arr2[i];
+                shorter = arr[count];
+            }
+            var longerLength = longer.length; 
+            var num = (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+            if (num > 0.4) {
+                checklst.push(num);
+            }
+        }
+        //run one check with the whole string intact
+        longer = arr[count];
+        shorter = string2;
+        if (arr[count].length < string2.length) {
+            longer = string2;
+            shorter = string;
+        }
+        var longerLength = longer.length; 
+    
+        var num = (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
+        if (num > 0.4) {
+            checklst.push(num);
+        }
+    }
+    //run one check with the whole string2 intact
     for (var i = 0; i < arr2.length; i++) {
         var longer = string;
         var shorter = arr2[i];
@@ -64,7 +95,7 @@ function similarity(string, string2) {
         }
         var longerLength = longer.length; 
         var num = (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
-        if (num > 0.5) {
+        if (num > 0.4) {
             checklst.push(num);
         }
     }
@@ -77,7 +108,7 @@ function similarity(string, string2) {
     var longerLength = longer.length; 
 
     var num = (longerLength - editDistance(longer, shorter)) / parseFloat(longerLength);
-    if (num > 0.5) {
+    if (num > 0.4) {
         checklst.push(num);
     }
 
@@ -305,7 +336,7 @@ router.get('/post/search/:word', function (req, res) {
         if (!err) {
             var newarr = [];
             for (var i = 0; i < result.length; i++) {
-                if (similarity(word,result[i].title) > 0.5) {
+                if (similarity(word,result[i].title) > 0.4) {
                     result[i].dataValues.similar = parseFloat(similarity(word,result[i].title));
                     newarr.push(result[i]);
                 }
