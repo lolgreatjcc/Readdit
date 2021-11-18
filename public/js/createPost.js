@@ -44,12 +44,11 @@ $(document).ready(function () {
         var content = $('#create_post_content').val();
         var fk_flair_id = document.getElementById("create_post_flair").value;
         // Temporary User id
-        var user_id = 2
+        var token = localStorage.getItem("token")
         let webFormData = new FormData();
         webFormData.append('title', title);
         webFormData.append('content', content);
         webFormData.append('subreaddit_id', subreaddit_id);
-        webFormData.append('user_id', user_id);
         webFormData.append('fk_flair_id', fk_flair_id);
         var media = document.getElementsByClassName('media');
         console.log("Media length: " + media.length);
@@ -66,6 +65,9 @@ $(document).ready(function () {
             contentType: false,
             cache: false,
             enctype: 'multipart/form-data',
+            headers:{   
+                authorization: "Bearer " + token
+            },
             success: function (data, status, xhr) {
                 alert(data.Result);
             },
