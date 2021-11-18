@@ -12,28 +12,36 @@ async function mediaUpload(file,callback){
     var fileName = path.basename(file.path);
     var contentResults = typeOfContent(fileName);
     var {validFileType,content_type} = contentResults;
-
+    var fileSizePass = fileSizeChecker(file.path, content_type);
     if(validFileType){
-        cloudinary.uploadFile(file, async function (error,result){
-            try{
-                console.log('check error variable in fileDataManager.upload code block\n', error);
-                console.log('check result variable in fileDataManager.upload code block\n', result);                        
-                var media_url = await result.imageURL;
-                console.log("Media Url: " + media_url);
-                await unlinkAsync(file.path);
-                var data =  {success: true, media_url: media_url, content_type: content_type};
-                console.log("returning callback");
-                return callback(null, data);
-            }
-            catch(error){
-                let message = "File Submission Failed";
-                // Generic Error Message
-                var data =  {success:false,message: message};
-                return callback(data,null)
-            }
-        }) 
+        if(fileSizePass){
+            cloudinary.uploadFile(file, async function (error,result){
+                try{
+                    console.log('check error variable in fileDataManager.upload code block\n', error);
+                    console.log('check result variable in fileDataManager.upload code block\n', result);                        
+                    var media_url = await result.imageURL;
+                    console.log("Media Url: " + media_url);
+                    await unlinkAsync(file.path);
+                    var data =  {success: true, media_url: media_url, content_type: content_type};
+                    console.log("returning callback");
+                    return callback(null, data);
+                }
+                catch(error){
+                    let message = "File Submission Failed";
+                    // Generic Error Message
+                    await unlinkAsync(file.path);
+                    var data =  {success:false,message: message};
+                    return callback(data,null)
+                }
+            })
+        }
+        else{
+            await unlinkAsync(file.path);
+            return callback({message:"File too big!"},null)
+        }     
     }
     else{
+        await unlinkAsync(file.path);
         return callback({message:"Invalid File Type"},null)
     }
    
@@ -79,6 +87,29 @@ function typeOfContent(fileName){
     }
 
   return {validFileType:validFileType,content_type:content_type}
+}
+
+function fileSizeChecker(filePath,content_type){
+  var stats = fs.statSync(filePath);
+  var fileSizeInBytes = stats.size;
+  var fileSizeMB = fileSizeInBytes / 1000000;
+  console.log("File Size: " + fileSizeMB + "MB");
+  if (content_type == 1 || content_type == 3){
+      if (fileSizeMB < 10){
+          return true;
+      }
+      else{
+          return false;
+      }
+  }
+  else if (content_type == 2){
+    if (fileSizeMB < 100){
+        return true;
+    }
+    else{
+        return false;
+    }
+  }
 }
 
 
