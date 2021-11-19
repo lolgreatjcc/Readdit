@@ -57,58 +57,13 @@ function loadUserInfo(user_id, token) {
                 $('#user_img').attr("src", "https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png");
             }
         },
-
-
         error: function (xhr, textStatus, errorThrown) {
             console.log('Error in Operation');
             $('#loadingText').html("<h6 class='text-danger'>ERROR LOADING!</h6>");
-            if (xhr.status == 403) {
-
-                // this guys thinks he's cool
-                $('#msg').html('F̵̤̈ò̵̬r̶͙̃b̴͖͛i̶̲͒d̸̞̓d̵̮́e̷̬̐n̵̻̄');
-            }
+            alert(xhr.responseJSON.message);
         }
     });
 };
-
-// function loadPosts(user_id, token) {
-//     var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
-//     var token = localStorage.getItem("token")
-//     // call the web service endpoint
-//     $.ajax({
-//         //headers: { 'authorization': 'Bearer ' + tmpToken },
-//         url: baseUrl[0] + '/post/user/' + user_id,
-//         type: 'GET',
-//         contentType: "application/json; charset=utf-8",
-//         dataType: 'json',
-//         success: function (data, textStatus, xhr) {
-//             var appendString = "";
-//             for (var i = 0; i < data.length; i++) {
-//                 var post = data[i];
-//                 appendString += `<tr>
-//                                                 <th scope="row">${i + 1}</th>
-//                                                 <td>${post.title}</td>
-//                                                 <td>${post.Subreaddit.subreaddit_name}</td>
-//                                                 <td>${post.created_at}</td>
-//                                                 <td> <button type="submit" onclick="window.location.href='${baseUrl[1] + "/r/" + post.Subreaddit.subreaddit_name + "/" + post.post_id + "'"}" class="ViewCall" style="background-color:#6a5acd; color:white; border-width: 0px;">View Post</button> </td>
-//                                             </tr>`;
-//             }
-//             $("#load").html("");
-//             $("#table_data").append(appendString);
-
-//         },
-//         error: function (xhr, textStatus, errorThrown) {
-//             console.log('Error in Operation');
-//             console.log(xhr)
-//             console.log(textStatus);
-//             console.log(errorThrown);
-//             console.log(xhr.status);
-//             //if (xhr.status == 401) {
-//             //    $('$msg').html('Unauthorised User');
-//             //}
-//         }
-//     });
-// };
 
 function displayPosts() {
     var { user_id } = JSON.parse(localStorage.getItem("userInfo"));
@@ -193,9 +148,7 @@ function displayPosts() {
             console.log(textStatus);
             console.log(errorThrown);
             console.log(xhr.status);
-            //if (xhr.status == 401) {
-            //    $('$msg').html('Unauthorised User');
-            //}
+            alert(xhr.responseJSON.message);
         }
     });
 }
@@ -246,9 +199,7 @@ function displayComments() {
             console.log(textStatus);
             console.log(errorThrown);
             console.log(xhr.status);
-            //if (xhr.status == 401) {
-            //    $('$msg').html('Unauthorised User');
-            //}
+            alert(xhr.responseJSON.message);
         }
     });
 }
@@ -372,7 +323,7 @@ function displaySavedPosts() {
                         displaySavedPosts()
                     },
                     error: function (xhr, status, error) {
-
+                        alert(xhr.responseJSON.message);
                     }
                 })
             })

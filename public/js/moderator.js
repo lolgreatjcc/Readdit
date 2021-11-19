@@ -36,7 +36,7 @@ function getLikeUsername(){
                 filterUsers(data.Result);
             },
             error: function (xhr, status, error) {
-
+                alert(xhr.responseJSON.message);
             }
         })
     }
@@ -86,7 +86,7 @@ function filterUsers(searchResults){
 
         },
         error: function (xhr, status, error) {
-            success = false;
+            alert(xhr.responseJSON.message);
         }
     });
 };
@@ -128,13 +128,7 @@ function getCurrentMods(){
             
         },
         error: function (xhr, status, error) {
-            $("#currentModerators").html(`
-                <div class="row g-0 border-top">
-                <div class="col-12 bg-white p-2 text-center d-flex justify-content-center align-items-center">
-                    <h5>Error loading moderators</h5>
-                </div>
-            </div>
-                `);
+            alert(xhr.responseJSON.message);
         }
     })
 }
@@ -152,7 +146,7 @@ function getSubreadditId(){
             getCurrentMods();
         },
         error: function (xhr, status, error) {
-            success = false;
+            alert(xhr.responseJSON.message);
         }
     });
 
@@ -171,7 +165,7 @@ function addModerator(user_id){
             getLikeUsername();
         },
         error: function (xhr, status, error) {
-            success = false;
+            alert(xhr.responseJSON.message);
         }
     })
 }
@@ -189,7 +183,7 @@ function deleteModerator(moderator_id){
             getLikeUsername();
         },
         error: function (xhr, status, error) {
-            success = false;
+            alert(xhr.responseJSON.message);
         }
     })
 }

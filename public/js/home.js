@@ -396,6 +396,9 @@ $(document).ready(function () {
                 }
             }
         },
+        error: function (xhr, status, error){
+            alert(xhr.responseJSON.message);
+        }
     })
     
 });
@@ -510,7 +513,7 @@ function addImage(post_id) {
         },
         
         error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
+            alert(xhr.responseJSON.message);
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);

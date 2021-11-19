@@ -124,6 +124,9 @@ $(document).ready(function () {
                     }
                 })
             }
+        },
+        error: function (xhr, status, error){
+            alert(xhr.responseJSON.message);
         }
     });
 
@@ -225,14 +228,11 @@ $(document).ready(function () {
                 }
         },
         error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
             console.log(xhr.status);
-            //if (xhr.status == 401) {
-            //    $('$msg').html('Unauthorised User');
-            //}
+            alert(xhr.responseJSON.message);
         }
     });
 
@@ -307,6 +307,9 @@ $(document).ready(function () {
             }
 
             $(`#comment_as`).append(`<p class="mb-0">Comment as u/<span class="text-secondary">${username}</span></p>`)
+        },
+        error: function (xhr, status, error){
+            alert(xhr.responseJSON.message);
         }
     });
 
@@ -332,7 +335,7 @@ $(document).ready(function () {
                 location.reload();
             },
             error: function (xhr, status, error) {
-                console.log(xhr)
+                alert(xhr.responseJSON.message);
             }
         })
     })
@@ -410,7 +413,7 @@ function pin(post_subreaddit_id){
             window.location.reload();
         },
         error: function (xhr, status, error) {
-            alert("Error updating pins")
+            alert(xhr.responseJSON.message);
         }
     })
 }
@@ -433,7 +436,7 @@ function deletePost(post_subreaddit_id){
             window.location.href = `/r/${subreaddit_name}`;
         },
         error: function (xhr, status, error) {
-            alert("Error deleting post")
+            alert(xhr.responseJSON.message);
         }
     });
 }

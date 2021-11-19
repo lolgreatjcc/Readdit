@@ -57,14 +57,12 @@ function displayUsers(user_id) {
 
         },
         error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
+            alert(xhr.responseJSON.message);
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
             console.log(xhr.status);
-            //if (xhr.status == 401) {
-            //    $('$msg').html('Unauthorised User');
-            //}
+      
         }
     });
 

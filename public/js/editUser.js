@@ -65,10 +65,7 @@ function loadUserInfo() {
             console.log(xhr);
             console.log(textStatus);
             console.log(errorThrown);
-            $('#loadingText').html("<h6 class='text-danger'>ERROR LOADING!</h6>");
-            if (xhr.status == 403) {
-                $('#msg').html('F̵̤̈ò̵̬r̶͙̃b̴͖͛i̶̲͒d̸̞̓d̵̮́e̷̬̐n̵̻̄');
-            }
+            alert(xhr.responseJSON.message);
         }
     });
 };
@@ -131,7 +128,7 @@ function editUser() {
             console.log("textStatus: " + textStatus);
             console.log("errorThrown: " + errorThrown);
             console.log('Error in Operation');
-
+            alert(xhr.responseJSON.message);
             $(`#messages`).html("<p class='text-center text-danger pt-2'>Failed To Save Changes</p>");
         }
     });

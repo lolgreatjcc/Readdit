@@ -104,7 +104,7 @@ function displayMedia(subreaddit_id) {
             }
         },
         error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
+            alert(xhr.responseJSON.message);
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
@@ -126,7 +126,7 @@ async function mediaCall() {
             displayMedia(data.subreaddit_id);
         },
         error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
+            alert(xhr.responseJSON.message);
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
@@ -172,6 +172,7 @@ $(document).ready(function () {
             $('#community_create_year').html(date.getFullYear());
         },
         error: function (xhr, status, error) {
+            alert(xhr.responseJSON.message);
         }
     })
 
@@ -641,7 +642,7 @@ $(document).ready(function () {
             $(`#load`).html(``);
         },
         error: function (xhr, status, error) {
-            console.log(xhr);
+            alert(xhr.responseJSON.message);
         }
     })
     orderByButton();
@@ -737,7 +738,7 @@ function pin(post_subreaddit_id) {
             window.location.reload()
         },
         error: function (xhr, status, error) {
-            alert("Error updating pins")
+            alert(xhr.responseJSON.message);
         }
     });
 }
@@ -770,7 +771,7 @@ function deletePost(post_subreaddit_id) {
             window.location.reload()
         },
         error: function (xhr, status, error) {
-            alert("Error deleting post")
+            alert(xhr.responseJSON.message);
         }
     });
 }

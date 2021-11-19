@@ -28,7 +28,7 @@ const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    console.log('Error in Operation');
+                    alert(xhr.responseJSON.message);
                     console.log(xhr)
                     console.log(textStatus);
                     console.log(errorThrown);

@@ -41,22 +41,6 @@ function checkModerator(subreadditName) {
     
 }
 
-function checkModerator(subreadditName) {
-    var token = localStorage.getItem("token");
-    $.ajax({
-        url: `${baseUrl}/moderator/checkModerator/` + subreadditName,
-        method: 'GET',
-        contentType: "application/json; charset=utf-8",
-        headers: { authorization: "Bearer " + token },
-        success: function (data, status, xhr) {
-            getSubreadditId();
-        },
-        error: function (xhr, status, error) {
-            window.location.href = "/home.html";
-        }
-    });
-}
-
 function getFlairs(){
     var subreaddit_id = localStorage.getItem('subreaddit_id');
     $.ajax({
@@ -93,13 +77,7 @@ function getFlairs(){
             
         },
         error: function (xhr, status, error) {
-            $("#currentModerators").html(`
-                <div class="row g-0 border-top">
-                <div class="col-12 bg-white p-2 text-center d-flex justify-content-center align-items-center">
-                    <h5>Error loading moderators</h5>
-                </div>
-            </div>
-                `);
+            alert(xhr.responseJSON.message);
         }
     })
 }
@@ -117,6 +95,7 @@ function getSubreadditId(){
             getFlairs();
         },
         error: function (xhr, status, error) {
+            alert(xhr.responseJSON.message);
         }
     });
 
@@ -140,7 +119,7 @@ function createFlair(){
             getFlairs();
         },
         error: function (xhr, status, error) {
-            alert("Error Adding Flair!");
+            alert(xhr.responseJSON.message);
             console.log(error);
         }
     })
@@ -158,7 +137,7 @@ function deleteFlair(flair_id){
             getFlairs();
         },
         error: function (xhr, status, error) {
-            success = false;
+            alert(xhr.responseJSON.message);
         }
     })
 }

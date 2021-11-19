@@ -27,7 +27,7 @@ function displayReports(subreaddit_name, subreaddit_id) {
 
         },
         error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
+            alert(xhr.responseJSON.message);
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
@@ -75,7 +75,7 @@ $(document).ready(function () {
             displayReports(subreaddit_name, subreaddit_id);
         },
         error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
+            alert(xhr.responseJSON.message);
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
@@ -106,7 +106,7 @@ function deleteReport(report_id) {
                 location.reload();
             },
             error: function (xhr, textStatus, errorThrown) {
-                console.log('Error in Operation');
+                alert(xhr.responseJSON.message);
                 console.log(xhr)
                 console.log(textStatus);
                 console.log(errorThrown);

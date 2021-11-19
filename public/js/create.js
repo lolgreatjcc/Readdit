@@ -37,7 +37,7 @@ $(document).ready(() => {
                 $('#create_community_cancel').prop('disabled', false);
                 $('#community_name').prop('disabled', false);
                 $('#community_description').prop('disabled', false);
-                alert(xhr.responseJSON.ErrorMsg)
+                alert(xhr.responseJSON.message);
             }
 
         })

@@ -20,6 +20,7 @@ $(document).ready(function () {
         },
         error: function (xhr, status, err) {
             console.log(xhr)
+            alert(xhr.responseJSON.message);
         }
     })
 
@@ -72,7 +73,7 @@ $(document).ready(function () {
                 alert(data.Result);
             },
             error: function (xhr, status, err) {
-                alert("Something went wrong");
+                alert(xhr.responseJSON.message);
             }
         })
     })
@@ -110,13 +111,7 @@ function showFlairs(subreaddit_id) {
 
         },
         error: function (xhr, status, error) {
-            $("#currentModerators").html(`
-                <div class="row g-0 border-top">
-                <div class="col-12 bg-white p-2 text-center d-flex justify-content-center align-items-center">
-                    <h5>Error loading moderators</h5>
-                </div>
-            </div>
-                `);
+            alert(xhr.responseJSON.message);
         }
     })
 }

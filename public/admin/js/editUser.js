@@ -52,9 +52,6 @@ const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
                     console.log(textStatus);
                     console.log(errorThrown);
                     $('#loadingText').html("<h6 class='text-danger'>ERROR LOADING!</h6>");
-                    if (xhr.status == 403) {
-                        $('#msg').html('F̵̤̈ò̵̬r̶͙̃b̴͖͛i̶̲͒d̸̞̓d̵̮́e̷̬̐n̵̻̄');
-                    }
                 }
             });
         };

@@ -29,11 +29,11 @@ $(document).ready(function () {
                     }
             },
             error: function (xhr, textStatus, errorThrown) {
-                console.log("Xhr: " + xhr);
+                console.log("Xhr: " + JSON.stringify(xhr));
                 console.log("textStatus: " + textStatus);
                 console.log("errorThrown: " + errorThrown);
                 console.log('Error in Operation');
-                
+                alert(xhr.responseJSON.message);
                 $(`#messages`).html("Login unsuccessful");
             }
         });
