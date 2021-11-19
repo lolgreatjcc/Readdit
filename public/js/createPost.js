@@ -39,42 +39,54 @@ $(document).ready(function () {
 
     // Submits the post
     $('#create_post_submit').on('click', () => {
+        $(`#msg`).html(``);
+        //extract values
         var subreaddit_id = $('#create_post_community').val();
         var title = $('#create_post_title').val();
         var content = $('#create_post_content').val();
         var fk_flair_id = document.getElementById("create_post_flair").value;
+
         // Temporary User id
         var token = localStorage.getItem("token")
-        let webFormData = new FormData();
-        webFormData.append('title', title);
-        webFormData.append('content', content);
-        webFormData.append('subreaddit_id', subreaddit_id);
-        webFormData.append('fk_flair_id', fk_flair_id);
-        var media = document.getElementsByClassName('media');
-        console.log("Media length: " + media.length);
-        for (var i = 0; i < media.length; i++) {
-            console.log("Append Information: " + media[i].files[0])
-            webFormData.append("media", media[i].files[0]);
-        };
 
-        $.ajax({
-            url: `${baseUrl}/post/create`,
-            method: "POST",
-            data: webFormData,
-            processData: false,
-            contentType: false,
-            cache: false,
-            enctype: 'multipart/form-data',
-            headers:{   
-                authorization: "Bearer " + token
-            },
-            success: function (data, status, xhr) {
-                alert(data.Result);
-            },
-            error: function (xhr, status, err) {
-                alert("Something went wrong");
-            }
-        })
+        if (subreaddit_id == null) {
+            $(`#msg`).html(`<p class="text-danger"> Please select a subreaddit to post in! </p>`);
+        }
+        else if (title.trim() == "") {
+            $(`#msg`).html(`<p class="text-danger"> Post title cannot be blank! </p>`);
+        }
+        else {
+            let webFormData = new FormData();
+            webFormData.append('title', title);
+            webFormData.append('content', content);
+            webFormData.append('subreaddit_id', subreaddit_id);
+            webFormData.append('fk_flair_id', fk_flair_id);
+            var media = document.getElementsByClassName('media');
+            console.log("Media length: " + media.length);
+            for (var i = 0; i < media.length; i++) {
+                console.log("Append Information: " + media[i].files[0])
+                webFormData.append("media", media[i].files[0]);
+            };
+    
+            $.ajax({
+                url: `${baseUrl}/post/create`,
+                method: "POST",
+                data: webFormData,
+                processData: false,
+                contentType: false,
+                cache: false,
+                enctype: 'multipart/form-data',
+                headers: {
+                    authorization: "Bearer " + token
+                },
+                success: function (data, status, xhr) {
+                    alert(data.Result);
+                },
+                error: function (xhr, status, err) {
+                    $(`#msg`).html(`<h5 class="text-danger"> An error has occured while creating your post. </h5>`);
+                }
+            })
+        }
     })
 
 
