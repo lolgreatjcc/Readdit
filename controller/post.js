@@ -230,5 +230,24 @@ router.get('/user/:user_id', function (req,res) {
     })
 })
 
+//get posts from one subreaddit
+router.get('/search/similar/:word', function (req, res) {
+    var word = req.params.word;
+    
+    post.getAllPosts(function (result, err) {
+        if (!err) {
+            var newarr = [];
+            for (var i = 0; i < result.length; i++) {
+                if (similarity(word,result[i].title) > 0.4) {
+                    result[i].dataValues.similar = parseFloat(similarity(word,result[i].title));
+                    newarr.push(result[i]);
+                }
+            }
+            res.status(200).send(newarr);
+        } else {
+            res.status(500).send(err);
+        }
+    })
+})
 
 module.exports = router
