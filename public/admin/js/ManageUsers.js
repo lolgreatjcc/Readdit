@@ -13,6 +13,7 @@ function displayUsers(user_id) {
             var appendString = "";
             for (var i = 0; i < data.Result.length; i++) {
                 var user = data.Result[i];
+                console.log(user);
                 if (user.two_fa == 1) {
                     var twofa = "On"
                 }
@@ -26,6 +27,11 @@ function displayUsers(user_id) {
                 else if (user.fk_user_type_id == 2) {
                     var type = "Admin"
                 }
+
+                if(user.profile_pic == null){
+                    user.profile_pic = 'https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png';
+                }
+
                 var pfp = (user.profile_pic).replace("http://res.cloudinary.com/readditmedia/image/upload/", "");
                 if (user_id == user.user_id) {
                     appendString += `<tr>
@@ -35,8 +41,8 @@ function displayUsers(user_id) {
                                         <td>${pfp}</td>
                                         <td>${twofa}</td>
                                         <td>${type}</td>
-                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="EditCall rounded" style="background-color:#dcd8f3; color:white; border-width: 0px;" disabled>Edit</button> </td>
-                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="DeleteCall rounded" style="background-color:#dcd8f3; color:white; border-width: 0px;" disabled>Delete</button> </td>
+                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="EditCall rounded p-2" style="background-color:#dcd8f3; color:white; border-width: 0px;" disabled>Edit</button> </td>
+                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="DeleteCall rounded p-2" style="background-color:#dcd8f3; color:white; border-width: 0px;" disabled>Delete</button> </td>
                                     </tr>`;
                 }
                 else {
@@ -47,8 +53,8 @@ function displayUsers(user_id) {
                                         <td>${pfp}</td>
                                         <td>${twofa}</td>
                                         <td>${type}</td>
-                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="EditCall rounded" style="background-color:#6a5acd; color:white; border-width: 0px;">Edit</button> </td>
-                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="DeleteCall rounded" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
+                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="EditCall rounded p-2" style="background-color:#6a5acd; color:white; border-width: 0px;">Edit</button> </td>
+                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="DeleteCall rounded p-2" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
                                     </tr>`;
                 }
             }
