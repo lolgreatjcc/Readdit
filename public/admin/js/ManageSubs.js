@@ -19,8 +19,8 @@ const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
                                                 <td>${subreaddits.subreaddit_description}</td>
                                                 <td>${subreaddits["User.creator"]}</td>
                                                 <td>${subreaddits.created_at}</td>
-                                                <td> <button type="submit" name="${subreaddits.subreaddit_name}" id = "${subreaddits.subreaddit_id}" class="EditCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Edit</button> </td>
-                                                <td> <button type="submit" id = "${subreaddits.subreaddit_id}" name="${subreaddits.subreaddit_name}" class="DeleteCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
+                                                <td> <button type="submit" name="${subreaddits.subreaddit_name}" id = "${subreaddits.subreaddit_id}" class="EditCall rounded p-2" style="background-color:#6a5acd; color:white; border-width: 0px;">Edit</button> </td>
+                                                <td> <button type="submit" id = "${subreaddits.subreaddit_id}" name="${subreaddits.subreaddit_name}" class="DeleteCall rounded p-2" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
                                             </tr>`;
                     }
                     $("#load").html("");
