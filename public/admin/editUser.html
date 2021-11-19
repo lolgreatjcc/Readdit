@@ -5,38 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Readdit</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="../includeHTMLs/head.js"></script>
     <script src="../includeHTMLs/header.js"></script>
     <script src="./js/editUser.js"></script>
 </head>
 
 <body>
-    <div>
-        <h1 style="margin: 10px;" id="title">Edit...</h1>
-        <div style="margin: 10px;">
-            <div id="pfpImg"></div>
-            <div id="profileurl"></div>
-            <input type="submit" id="image" name="image" value="Delete Profile Picture"/><br><br>
+    <div class="container my-md-2">
 
-            <label style="font-weight: bold;" for="role">User Role:</label><br>
-            <select name="role" id="role">
-                <option value="1">User</option>
-                <option value="2">Admin</option>
-            </select>
+
+        <div class="bg-white shadow rounded p-3 body-borders">
+            <h1 style="margin: 10px;" id="title">Edit User</h1>
+            <div>
+                <div id="pfpImg"></div>
+                <div id="profileurl"></div>
+                <input type="submit" class="btn invert-scheme" id="image" name="image" value="Delete Profile Picture" /><br><br>
+
+                <label style="font-weight: bold;" for="role">User Role:</label><br>
+                <select class="form-select" name="role" id="role">
+                    <option value="1">User</option>
+                    <option value="2">Admin</option>
+                </select>
+            </div>
+
+            <div id="load" class="my-2"></div>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <input class="btn invert-scheme fw-bold w-100" type="button" id="update" value="Update" />
+
+                </div>
+                <div class="col-6">
+                    <input class="btn invert-scheme fw-bold w-100" type="button" id="Return" value="Return to Manage Users" />
+                </div>
+            </div>
+
         </div>
 
-        <p><input style="background-color: #6a5acd; color : white; margin: 10px; width: 500px;" type="button"
-                id="update" value="Update" /></p>
-        <p><input style="background-color: #6a5acd; color : white; margin: 10px; width: 500px;" type="button"
-                id="Return" value="Return to Manage Users" /></p>
-    </div>
-    <div id="load">
-
-    </div>
     </div>
 </body>
 

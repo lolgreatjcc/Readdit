@@ -39,6 +39,10 @@ $(document).ready(function () {
 
     // Submits the post
     $('#create_post_submit').on('click', () => {
+
+        // Adds the loading animation
+        $('#post_loading_div').removeClass('d-none');
+
         var subreaddit_id = $('#create_post_community').val();
         var title = $('#create_post_title').val();
         var content = $('#create_post_content').val();
@@ -69,6 +73,7 @@ $(document).ready(function () {
                 authorization: "Bearer " + token
             },
             success: function (data, status, xhr) {
+                $('#post_loading_div').addClass('d-none');
                 alert(data.Result);
             },
             error: function (xhr, status, err) {
