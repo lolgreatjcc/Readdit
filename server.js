@@ -3,6 +3,9 @@ const express=require('express');
 const serveStatic=require('serve-static');
 var app=express();
 
+
+const profile = require('./routes/profile');
+
 app.use(function(req,res,next){
     console.log(req.url);
     console.log(req.method);
@@ -41,7 +44,7 @@ app.get('/r/:subreaddit/:post_id', function (req,res) {
     res.status(200).sendFile('post.html', { root: __dirname + "/public/r/" } );
 })
 
-//app.use('/profile', profile)
+app.use('/profile', profile)
 
 app.use(serveStatic(__dirname + "/public"));
 
