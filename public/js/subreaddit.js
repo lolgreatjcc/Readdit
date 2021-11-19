@@ -248,7 +248,7 @@ $(document).ready(function () {
                     }
                 }
             }
-            else if(orderBy == "Oldest") {
+            else if (orderBy == "Oldest") {
                 $("#Oldest").addClass("invert-scheme");
             }
             else if (orderBy == "Hot") {
@@ -373,8 +373,8 @@ $(document).ready(function () {
                                     <p class="mb-0 fw-bold fs-6">Share</p>
                                 </div>
                                 <div class="save d-flex flex-row text-secondary me-4 p-1 rounded hoverable" id="post_bookmark_${data[i].post_id}">
-                                    <span class="material-icons ms-0">bookmark</span>
-                                    <p class="mb-0 fw-bold fs-6">Unsave</p>
+                                    <span class="material-icons ms-0">bookmark_border</span>
+                                    <p class="mb-0 fw-bold fs-6">Save</p>
                                 </div>
                                 ${report_delete}
                         </div>
@@ -601,13 +601,13 @@ $(document).ready(function () {
 
             // Handles clicking on a post
             $('.post').on('click', function (e) {
-                if (!(e.target.className.includes("video") || e.target.className.includes("carousel-control-next") || e.target.className.includes("carousel-control-prev") || e.target.className.includes("carousel-control-next-icon") || e.target.className.includes("carousel-control-prev-icon"))){
+                if (!(e.target.className.includes("video") || e.target.className.includes("carousel-control-next") || e.target.className.includes("carousel-control-prev") || e.target.className.includes("carousel-control-next-icon") || e.target.className.includes("carousel-control-prev-icon"))) {
                     var post = $(this);
                     var post_id = post.attr('id').split('_')[1];
                     var subreaddit = pathname;
                     location.href = `${subreaddit}/${post_id}`;
                 }
-                
+
             })
 
             // Handles clicking on pin button
@@ -637,6 +637,7 @@ $(document).ready(function () {
                         downvote_button.addClass('downvoted');
                     }
                 }
+                var saved_posts = getSavedPosts(user_id);
             }
             mediaCall();
             $(`#load`).html(``);
@@ -792,4 +793,30 @@ function getUserId() {
             }
         });
     })
+}
+
+function getSavedPosts(user_id) {
+    var output;
+    $.ajax({
+        url: baseUrl[0] + "/save/posts?user_id=" + user_id,
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        success: function (saved_posts_data, status, xhr) {
+            for (var x = 0; x < saved_posts_data.length; x++) {
+                var post_id = saved_posts_data[x].fk_post_id;
+                var saved_bookmark = $(`#post_bookmark_${post_id}`)
+                saved_bookmark.addClass('saved');
+                saved_bookmark.empty();
+                saved_bookmark.append(`
+                    <span class="material-icons md-24 ms-0">bookmark</span>
+                    <p class="mb-0 fw-bold fs-6">Unsave</p>
+                `);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("Error getting saved posts. Try refreshing the page.")
+        }
+    })
+    return output;
+
 }

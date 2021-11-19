@@ -18,8 +18,8 @@ function displayReports(subreaddit_name, subreaddit_id) {
                                         <td>${reports.Post.title}</td>
                                         <td>${reports.User.username}</td>
                                         <td>${reports.created_at}</td>
-                                        <td> <button type="submit" onclick="window.location.href='${baseUrl[1] + "/r/" + subreaddit_name + "/" + reports.Post.post_id + "'"}" name="${reports.report_id}" id = "${reports.report_id}" class="ViewCall" style="background-color:#6a5acd; color:white; border-width: 0px;">View Post</button> </td>
-                                        <td> <button type="submit" onclick="deleteReport(${reports.report_id})" name="${reports.report_id}" id = "${reports.report_id}" class="DeleteCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
+                                        <td> <button type="submit" onclick="window.location.href='${baseUrl[1] + "/r/" + subreaddit_name + "/" + reports.Post.post_id + "'"}" name="${reports.report_id}" id = "${reports.report_id}" class="ViewCall rounded" style="background-color:#6a5acd; color:white; border-width: 0px;">View Post</button> </td>
+                                        <td> <button type="submit" onclick="deleteReport(${reports.report_id})" name="${reports.report_id}" id = "${reports.report_id}" class="DeleteCall rounded" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
                                     </tr>`;
             }
             $("#load").html("");

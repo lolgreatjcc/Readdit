@@ -274,7 +274,7 @@ function displaySavedPosts() {
                                     <p class="fw-light text-secondary mx-1">•</p>
                                     <p class="text-secondary" id="post#_time">${post_date_output}</p>
                                 </div>
-                                <h5 class="mb-3">${post_data.content}</h5>
+                                <h5 class="mb-3">${post_data.title}</h5>
                                 <div class="toolbar d-flex flex-row align-items-center mt-2">
                                     <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
                                         <span class="material-icons md-24 ms-0 me-1">chat_bubble_outline</span>
@@ -299,6 +299,13 @@ function displaySavedPosts() {
                     </div>
 
                             `);
+                // postRedirection();
+                $('.post').on('click', function (e) {
+                    var post = $(this);
+                    var post_id = post.attr('id').split('_')[1];
+                    var subreaddit = post.attr('id').split('_')[2];
+                    location.href = `r/${subreaddit}/${post_id}`;
+                })
             }
 
             // This block of code enables the toolbars.

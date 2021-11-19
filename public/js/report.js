@@ -5,6 +5,7 @@ $(document).ready(function () {
 
     // Submits the post
     $('#report_post_submit').on('click', () => {
+        $('#post_loading_div').removeClass('d-none');
         var report_description = $(`#report_description`).val();
         var queryParams = new URLSearchParams(window.location.search);
         console.log("---------Query Parameters---------");
@@ -23,6 +24,7 @@ $(document).ready(function () {
         console.log("Report by: " + user_id);
 
         if (report_description.trim() == "") {
+            $('#post_loading_div').addClass('d-none');
             $(`#msg`).html(`<p class="text-danger m-3"> Description cannot be blank! </p>`);
         }
         else {
@@ -34,9 +36,11 @@ $(document).ready(function () {
 
             axios.post(baseUrl[0] + `/report/report`, jsonWebData)
                 .then(response => {
+                    $('#post_loading_div').addClass('d-none');
                     $('#msg').html('<p class="m-3"> Report submitted Successfully! </p>');
                 })
                 .catch(error => {
+                    $('#post_loading_div').addClass('d-none');
                     $('#msg').html('<p class="text-danger m-3"> Error Submitting Report! </p>');
                 })
         }

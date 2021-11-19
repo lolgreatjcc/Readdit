@@ -215,3 +215,43 @@ body {
 .inline-icon {
     vertical-align: bottom;
 }
+
+.anim {
+    border-radius: 3px;
+    background-image: linear-gradient(90deg, #e2e2e299 0px, #efefef99 100px, #e2e2e299 150px);
+    animation: refresh 1.2s infinite ease-out;
+    z-index: -10;
+}
+  
+/* Animation */
+@keyframes refresh {
+    0% {
+      background-position: -50rem;
+    }
+    60%, 100%{
+      background-position: 10%;
+    }
+    /* 100% {
+        background-position: calc(100%);
+    } */
+}
+
+#report_loading_div {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+
+#post_loading_div {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
