@@ -475,6 +475,10 @@ var post = {
             attributes: ['post_id', 'title', 'content', 'pinned', 'created_at'],
             include: [
                 {
+                    model: User,
+                    attributes: ['username']
+                },
+                {
                     model: Subreaddit,
                     attributes: ['subreaddit_name']
                 },
