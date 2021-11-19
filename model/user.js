@@ -119,8 +119,8 @@ var user = {
         .then(function (result) {
             console.log("Result: " + result)
             if (typeof result === "undefined" || result == null) {
-                var result = "Wrong Password";
-                return callback(true, null); 
+                var err = {message: "Wrong Password"};
+                return callback(err, null); 
             }
             else {
                 return callback(null,true);
@@ -146,8 +146,8 @@ var user = {
         .then(function (result) {
             console.log("Result: " + result)
             if (typeof result === "undefined" || result == null) {
-                var result = "Wrong Password";
-                return callback(true, null); 
+                var err = {message: "Wrong Password"};
+                return callback(err, null); 
             }
             else {
                 if (new_password != null && new_password.trim().length != 0){

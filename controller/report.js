@@ -15,12 +15,11 @@ router.post('/report', printDebugInfo, function (req, res) {
             res.status(201).send({"Result" : result})
         } 
         else {
-            res.status(500).send({"Result:":"Internal Server Error"});
+            res.status(500).send({message:"Error creating report."});
         }
     });   
 
 });
-
 
 //getallreports
 router.get('/report',printDebugInfo, function (req, res) {
@@ -29,7 +28,7 @@ router.get('/report',printDebugInfo, function (req, res) {
         if (!err) {
             res.status(200).send({"Result" : result});
         } else {
-            res.status(500).send({"Result:":"Internal Server Error"});
+            res.status(500).send({message:"Error getting reports"});
         }
     });
 
@@ -43,7 +42,7 @@ router.get('/report/:id',printDebugInfo, function (req, res) {
         if (!err) {
             res.status(200).send({"Result" : result});
         } else {
-            res.status(500).send({"Result:":"Internal Server Error"});
+            res.status(500).send({message:"Error fetching requested report."});
         }
     });
 
@@ -57,7 +56,7 @@ router.get('/reports/:subreaddit_id',printDebugInfo, function (req, res) {
         if (!err) {
             res.status(200).send({"Result" : result});
         } else {
-            res.status(500).send({"Result:":"Internal Server Error"});
+            res.status(500).send({message:"Error fetching reports in subreaddit."});
         }
     });
 
@@ -71,7 +70,7 @@ router.delete('/report/:id', printDebugInfo, function (req, res) {
         if (!err) {
             res.status(204).send({"Result" : result});
         } else {
-            res.status(500).send({ "Result:": "Internal Server Error" });
+            res.status(500).send({message:"Error deleting report."});
         }
     });
 

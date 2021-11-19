@@ -110,7 +110,7 @@ app.get('/users',printDebugInfo, function (req, res) {
         if (!err) {
             res.status(200).send({"Result" : result});
         } else {
-            res.status(500).send({"Result:":"Internal Server Error"});
+            res.status(500).send({message:"Error getting all users."});
         }
     });
 
@@ -124,7 +124,7 @@ app.get('/users/:user_id',printDebugInfo, verify.verifySameUserId, function (req
         if (!err) {
             res.status(200).send({"Result" : result});
         } else {
-            res.status(500).send({"Result:":"Internal Server Error"});
+            res.status(500).send({message:"Error getting user details"});
         }
     });
 
@@ -143,14 +143,14 @@ app.post('/users', upload.single("image"), printDebugInfo, function (req, res) {
         user.addUser(username, password, email, profile_pic, two_fa, fk_user_type_id, function (err, result) {
             if (!err) {
                 if (result == "duplicate") {
-                    res.status(422).send({ "Result:": "Unprocessable Entity" });
+                    res.status(422).send({ "message:": "User already exists!" });
                 }
                 else {
                     res.status(201).send({"Result" : result})
                 }
             } 
             else {
-                res.status(500).send({"Result:":"Internal Server Error"});
+                res.status(500).send({"message:":"Internal Server Error"});
             }
         }); 
     }
@@ -165,7 +165,12 @@ app.post('/users', upload.single("image"), printDebugInfo, function (req, res) {
                 submitEdit(profile_pic)
             }
             else{
-                res.status(500).json({message: err.message});
+                if (err.message == "File too big!" || err.message == "Invalid File Type"){
+                    res.status(400).send({message : err.message})
+                }
+                else{
+                    res.status(500).json({message: err.message});
+                }
             }
         })
     }
@@ -184,11 +189,39 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify.verify
     var two_fa = parseInt(req.body.two_fa);
 
     if (isNaN(user_id)) {
-        res.status(400).send("Blank ID");
+        res.status(400).send({message:"Blank ID"});
         return;
     }
-
-
+    else{
+        user.checkPassword(user_id, old_password, function (err, result) {
+            if (!err) {
+                var file = req.file;
+                if (file != null){
+                    console.log("Image Uploading...")
+    
+                    mediaUpload(file, function (err,result){
+                        if (result){
+                            var profile_pic = result.media_url;
+                            submitEdit(profile_pic)
+                        }
+                        else{
+                            res.status(500).json({message:err.message});
+                        }
+                    })
+                }
+                else{
+                    console.log("No Image");
+                    submitEdit(pfp);
+                }   
+            }
+            else {
+                if (err.message == "Wrong Password!"){
+                    res.status(401).send({message:err.message});
+                }
+                res.status(500).send({message:"Error checking password."});
+            }
+        });
+    }
 
     function submitEdit(profile_pic){
         var data = {
@@ -211,39 +244,13 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify.verify
                 res.status(200).send(output);
             }
             else {
-                res.status(500).send({"Result:":"Internal Server Error"});
+                if (err.message == "Wrong Password!"){
+                    res.status(401).send({message : err.message});
+                }
+                res.status(500).send({message:"Error editing user details."});
             }
         });
-    }
-    
-    user.checkPassword(user_id, old_password, function (err, result) {
-        if (!err) {
-
-            var file = req.file;
-            if (file != null){
-                console.log("Image Uploading...")
-
-                mediaUpload(file, function (err,result){
-                    if (result){
-                        var profile_pic = result.media_url;
-                        submitEdit(profile_pic)
-                    }
-                    else{
-                        res.status(500).json({message: err.message});
-                    }
-                })
-            }
-            else{
-                console.log("No Image");
-                submitEdit(pfp);
-            }   
-        }
-        else {
-            res.status(403).send({"Result:":"Unauthorised"});
-        }
-    });
-
-    
+    }    
 });
 
 //update user
@@ -252,31 +259,29 @@ app.put('/user/:user_id',  printDebugInfo, function (req, res) {
     var profile_pic = req.body.profile_pic;
 
     if (isNaN(user_id)) {
-        res.status(400).send("Blank ID");
+        res.status(400).send({message:"Blank ID"});
         return;
     }
-
-
-
-    var data = {
-        profile_pic: profile_pic,
-        fk_user_type_id: req.body.fk_user_type_id
-    };
-
-    user.update(user_id, data, function (err, result) {
-        if (!err) {
-            var output = {
-                "success": true,
-                "affected rows": result.affectedRows,
-                "changed rows": result.changedRows
-            };
-            res.status(200).send(output);
-        }
-        else {
-            res.status(500).send({"Result:":"Internal Server Error"});
-        }
-    });
-
+    else{
+        var data = {
+            profile_pic: profile_pic,
+            fk_user_type_id: req.body.fk_user_type_id
+        };
+    
+        user.update(user_id, data, function (err, result) {
+            if (!err) {
+                var output = {
+                    "success": true,
+                    "affected rows": result.affectedRows,
+                    "changed rows": result.changedRows
+                };
+                res.status(200).send(output);
+            }
+            else {
+                res.status(500).send({message:"Error updating user info."});
+            }
+        });
+    }
 });
 
 //delete user
@@ -287,20 +292,20 @@ app.delete('/users/:userid', printDebugInfo, function (req, res) {
         if (!err) {
             res.status(204).send({"Result" : result});
         } else {
-            res.status(500).send({ "Result:": "Internal Server Error" });
+            res.status(500).send({message:"Error deleting user." });
         }
     });
 
 });
 
-app.get('/usernameSearch/:username',printDebugInfo, function (req, res) {
+app.get('/usernameSearch/:username', printDebugInfo, function (req, res) {
     var username = req.params.username;
 
     user.getUserByUsername(username, function (err, result) {
         if (!err) {
             res.status(200).send({"Result" : result});
         } else {
-            res.status(500).send({"Result:":"Internal Server Error"});
+            res.status(500).send({message:"Error getting user info."});
         }
     });
 
@@ -316,13 +321,12 @@ app.post('/api/login', printDebugInfo, function (req, res) {
         if (!err) {
             if (!result) {
                 // this is matched to callback(null, null, null)
-                var message = { "Error": "Invalid Login" };
+                var message = {message:"Invalid Credentials"};
 
-                res.status(404).send(message);
+                res.status(401).send(message);
             }
             else {
                 // this is matched to callback(null, not null)
-
                 console.log("token: " + token);
                 
                 var message = {
@@ -334,8 +338,7 @@ app.post('/api/login', printDebugInfo, function (req, res) {
 
         } else {
             // this is matched to callaback(not null, null)
-            res.status(500);
-            res.send(err.statusCode);
+            res.status(500).send({message:"Error authenticating user."});
         }
 
     });

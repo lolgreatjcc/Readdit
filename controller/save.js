@@ -11,11 +11,10 @@ router.post('/post', function (req,res) {
         if(!err) {
             res.status(200).send(result);
         } else {
-            res.status(500).send(err);
+            res.status(500).send({message:"Error saving post."});
         }
     })
 })
-
 
 router.get('/posts', function (req,res) {
     var user_id = req.query.user_id;
@@ -23,7 +22,7 @@ router.get('/posts', function (req,res) {
         if(!err) {
             res.status(200).send(result);
         } else {
-            res.status(500).send(err);
+            res.status(500).send({message:"Error getting saved posts."});
         }
     })
 })
@@ -36,10 +35,10 @@ router.delete('/post', function (req,res) {
     post.unsavePost(post_id, user_id, function (result,err) {
         console.log("result: " + result);
         if(!err) {
-            res.sendStatus(200);
+            res.sendStatus(204);
         } else {
             console.log(err);
-            res.sendStatus(500)
+            res.status(500).send({message:"Error deleting report."})
         }
     })
 })

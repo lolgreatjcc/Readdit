@@ -20,8 +20,7 @@ function checkOwner(req, res, next){
             }
         }else {
             console.log(err);
-            // tbd
-            res.status(500).send(err);
+            res.status(500).send("Error checking if user is owner.");
         }
         
     })
@@ -39,13 +38,11 @@ router.get('/:subreaddit_id', printDebugInfo, (req,res) => {
             res.status(200).send({"Result": result});
         }else {
             console.log(err);
-            // tbd
-            res.status(500).send(err);
+            res.status(500).send({message:"Error while getting moderators."});
         }
         
     })
 })
-
 
 //Add a moderator
 router.post('/:subreaddit_id/:user_id', printDebugInfo, verify.extractUserId, checkOwner, (req,res) => {
@@ -57,8 +54,7 @@ router.post('/:subreaddit_id/:user_id', printDebugInfo, verify.extractUserId, ch
             res.status(200).send({"Result": result});
         }else {
             console.log(err);
-            // tbd
-            res.status(500).send(err);
+            res.status(500).send({message:"Error while adding a moderator."});
         }
         
     })
@@ -74,8 +70,7 @@ router.delete('/:moderator_id/:subreaddit_id', printDebugInfo, verify.extractUse
             res.status(200).send({"Result": result});
         }else {
             console.log(err);
-            // tbd
-            res.status(500).send(err);
+            res.status(500).send({message:"Error while deleting a moderator."});
         }
         
     })
@@ -94,15 +89,17 @@ router.get('/checkModerator/:subreaddit_name', verify.extractUserId, (req,res) =
                 if(!err) {
                     res.status(200).send({"Result":"Is Moderator"})
                 }
+                else if (err.message == "Not a moderator"){
+                    res.status(403).send({message:"Logged In user is not moderator"});
+                }
                 else{
-                    res.status(403).send({"Error":"Logged In user is not moderator"});
+                    res.status(500).send({message:"Error checking if user is moderator."});
                 }
                 
             })
         }else {
             console.log(err);
-            // tbd
-            res.status(500).send(err);
+            res.status(500).send({message:"Error getting subreaddit info."});
         }
     })
     
