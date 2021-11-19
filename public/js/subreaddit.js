@@ -18,7 +18,7 @@ function displayMedia(subreaddit_id) {
 
                 if (media.length > 1) {
                     console.log("Running carousel");
-                    var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
+                    var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide inheritMaxWidth" data-ride="carousel" data-interval="false">
                             <ol class="carousel-indicators">`
                     for (var j = 0; j < media.length; j++) {
                         if (j == 0) {
@@ -28,7 +28,7 @@ function displayMedia(subreaddit_id) {
                             appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" class="active"></li>`;
                         }
                     }
-                    appendStringStart += `</ol> <div class="carousel-inner">`;
+                    appendStringStart += `</ol> <div class="carousel-inner inheritMaxWidth">`;
 
                     var appendStringEnd = `
                             </div>
@@ -51,12 +51,12 @@ function displayMedia(subreaddit_id) {
                             var item = 'carousel-item';
                         }
                         if (media[count].fk_content_type == "1") {
-                            appendStringStart += `<div class="${item}">
-                                    <img style="height:400px; max-width: 700px; object-fit: cover;" src="${media[count].media_url}" alt="Image not available"> 
+                            appendStringStart += `<div class="${item} mediaDiv">
+                                    <img class="image";" src="${media[count].media_url}" alt="Image not available"> 
                                 </div>`;
                         }
                         else if (media[count].fk_content_type == "2") {
-                            appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted loop>
+                            appendStringStart += `<div class="${item} mediaDiv"> <video class="video" controls autoplay muted loop>
                                                 <source src="${media[count].media_url}" type="video/mp4">
                                                 Your browser does not support the video tag.
                                         </video> </div>`;
@@ -81,10 +81,10 @@ function displayMedia(subreaddit_id) {
                     console.log("Running single item");
                     //run single file display
                     if (media[0].fk_content_type == "1") {
-                        $(`#post_media_` + post_id).html(`<img style="max-height: 500px; max-width: 700px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
+                        $(`#post_media_` + post_id).html(`<img class="image" src="${media[0].media_url}" alt="Image not available"> `)
                     }
                     else if (media[0].fk_content_type == "2") {
-                        $(`#post_media_` + post_id).html(`<video height="400" controls autoplay muted loop>
+                        $(`#post_media_` + post_id).html(`<video class="video" controls autoplay muted loop>
                                                 <source src="${media[0].media_url}" type="video/mp4">
                                                 Your browser does not support the video tag.
                                         </video>`)
@@ -354,7 +354,7 @@ $(document).ready(function () {
                     </div>
                     </a>
                         <p class="mt-2">${data[i].content}<p>
-                        <div id="post_media_${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark" style="min-height:400px"> </div>
+                        <div id="post_media_${data[i].post_id}" class="d-flex flex-row justify-content-center mediaDiv"> </div>
                         <div class="toolbar d-flex flex-row align-items-center mt-2">
                                 <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
                                     <span class="material-icons md-24 ms-0 me-1">chat_bubble_outline</span>

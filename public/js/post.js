@@ -140,79 +140,84 @@ $(document).ready(function () {
         success: function (data, textStatus, xhr) {
             var media = data.Result;
             console.log(media.length);
+
             if (media.length > 1) {
-                var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
-                        <ol class="carousel-indicators">`
-                for (var i = 0; i < media.length; i++) {
-                    if (i == 0) {
-                        appendStringStart += `<li data-target=".item" data-slide-to="${i}" class="active"></li>`;
+                    console.log("Running carousel");
+                    var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide inheritMaxWidth" data-ride="carousel" data-interval="false">
+                            <ol class="carousel-indicators">`
+                    for (var j = 0; j < media.length; j++) {
+                        if (j == 0) {
+                            appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" style="color: #00ff00"></li>`;
+                        }
+                        else {
+                            appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" class="active"></li>`;
+                        }
                     }
-                    else {
-                        appendStringStart += `<li data-target=".item" data-slide-to="${i}"></li>`;
+                    appendStringStart += `</ol> <div class="carousel-inner inheritMaxWidth">`;
+
+                    var appendStringEnd = `
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="sr-only">Next</span>
+                            </a>
+                          </div>`;
+
+                    //run multiple file display
+                    for (var count = 0; count < media.length; count++) {
+                        if (count == 0) {
+                            var item = 'carousel-item active';
+                        }
+                        else {
+                            var item = 'carousel-item';
+                        }
+                        if (media[count].fk_content_type == "1") {
+                            appendStringStart += `<div class="${item} mediaDiv">
+                                    <img class="image";" src="${media[count].media_url}" alt="Image not available"> 
+                                </div>`;
+                        }
+                        else if (media[count].fk_content_type == "2") {
+                            appendStringStart += `<div class="${item} mediaDiv"> <video class="video" controls autoplay muted loop>
+                                                <source src="${media[count].media_url}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                        </video> </div>`;
+                        }
+                        else {
+                            appendStringStart += `<div class="${item}">
+                                    <img style="height: 400px; max-width: 600px; object-fit: cover;" src="${media[count].media_url}" alt="GIF not available"> 
+                                </div>`;
+                        }
                     }
+
+                    appendString = appendStringStart + appendStringEnd;
+                    $(`#post_media`).html(appendString);
+
                 }
-                appendStringStart += `</ol> <div class="carousel-inner">`;
-
-                var appendStringEnd = `
-                        </div>
-                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Next</span>
-                        </a>
-                      </div>`
-
-                //run multiple file display
-                for (var i = 0; i < media.length; i++) {
-                    console.log(media[i]);
-                    if (i == 0) {
-                        var item = 'carousel-item active';
-                    }
-                    else {
-                        var item = 'carousel-item';
-                    }
-                    if (media[i].fk_content_type == "1") {
-                        appendStringStart += `<div class="${item} item">
-                                <img style="height:400px; max-width: 700px; object-fit: cover;" src="${media[i].media_url}" alt="Image not available"> 
-                            </div>`;
-                    }
-                    else if (media[i].fk_content_type == "2") {
-                        appendStringStart += `<div class="${item} item"> <video height="400" controls autoplay muted loop>
-                                            <source src="${media[i].media_url}" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                    </video> </div>`;
-                    }
-                    else {
-                        appendStringStart += `<div class="${item} item">
-                                <img style="height:400px; max-width: 700px; object-fit: cover;" src="${media[i].media_url}" alt="GIF not available"> 
-                            </div>`;
-                    }
-                }
-
-                var appendString = appendStringStart + appendStringEnd;
-                $(`#post_media`).html(appendString);
-
-            }
-            else {
-                console.log(media[0].fk_content_type)
-                //run single file display
-                if (media[0].fk_content_type == "1") {
-                    $(`#post_media`).html(`<img style="max-height: 600px; max-width: 500px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
-                }
-                else if (media[0].fk_content_type == "2") {
-                    $(`#post_media`).html(`<video height="400" controls autoplay muted loop>
-                                            <source src="${media[0].media_url}" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                    </video>`)
+                else if (media.length == 0) {
+                    console.log("Running no media");
+                    appendString = ``;
+                    $(`#post_media`).remove();
                 }
                 else {
-                    $(`#post_media`).html(`<img style="max-height: 600px; max-width: 500px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
+                    console.log("Running single item");
+                    //run single file display
+                    if (media[0].fk_content_type == "1") {
+                        $(`#post_media`).html(`<img class="image" src="${media[0].media_url}" alt="Image not available"> `)
+                    }
+                    else if (media[0].fk_content_type == "2") {
+                        $(`#post_media`).html(`<video class="video" controls autoplay muted loop>
+                                                <source src="${media[0].media_url}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                        </video>`)
+                    }
+                    else {
+                        $(`#post_media`).html(`<img style="max-height: 500px; max-width: 700px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
+                    }
                 }
-            }
-
         },
         error: function (xhr, textStatus, errorThrown) {
             console.log('Error in Operation');

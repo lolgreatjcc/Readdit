@@ -14,3 +14,31 @@ Admission Number: P2004147 */
     right:0.1em;
     cursor: pointer;
 }
+
+.videoPlayer {
+    width: 90vw; /* 90% of viewport vidth */
+    height: 50.625vw; /* ratio = 9/16 * 90 = 50.625 */
+    background: black;
+    max-height: 90vh;
+    max-width: 160vh; /* 16/9 * 90 = 160 */
+    margin: auto;
+    position: absolute;
+    top:0;bottom:0;
+    left:0;right:0;
+}
+
+.mediaDiv {
+    max-width: inherit;
+    background-color: black;
+    min-height: auto;
+}
+
+.inheritMaxWidth{
+    max-width: inherit;
+}
+
+.image, .video{
+    max-width: inherit;
+    max-height: fit-content;
+    object-fit: contain;
+}
