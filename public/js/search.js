@@ -7,12 +7,14 @@ function switchTab(evt, tabName) {
     for (i = 0; i < x.length; i++) {
         x[i].style.display = "none";
     }
-    tablinks = document.getElementsByClassName("tablink");
-    for (i = 0; i < x.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" tabColour", "");
+    var tablinks = $('.tablink');
+    // tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < tablinks.length; i++) {
+        console.log("removing active")
+        tablinks[i].className = tablinks[i].className.replace("active", "");
     }
     document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " tabColour";
+    evt.currentTarget.className += " active";
 }
 
 $(document).ready(function () {
@@ -23,7 +25,7 @@ $(document).ready(function () {
 
     var input = queryParams.get("query");
 
-    $(`#resultheader`).html(`<h4> Displaying Search Results for ${input} </h4>`)
+    $(`#resultheader`).html(`<h5 class="mb-2"> Displaying Search Results for ${input} </h5>`)
     searchSubreaddits();
     searchPosts();
 })
@@ -43,7 +45,7 @@ function arrangeSimilars(arr) {
 
 
     }
-    
+
     return arr;
 }
 
@@ -61,29 +63,49 @@ function searchSubreaddits() {
             }
             else {
                 for (var i = 0; i < subreaddits.length; i++) {
-                    console.log(i)
+                    console.log(subreaddits[i]);
+                    var round = ""
+                    if (i == 0) {
+                        round = "rounded-top"
+                    }
+                    if (i == subreaddits.length - 1) {
+                        round = "rounded-bottom"
+                    }
                     $("#subreaddits").append(`
                                 <div class="post rounded">
-                                    <div class="row g-0">
-                                        <div class="col-12 bg-white p-2">
+                                    <div class="row g-0 ">
+                                        <div class="col-12 bg-white py-2 px-3 ${round} subreaddit" id="subreaddit_${subreaddits[i].subreaddit_name}">
                                             <div class="d-flex flex-row align-items-baseline">
-                                                <a href="/r/${subreaddits[i].subreaddit_name}"><h6 class="d-inline fw-bold clickable-link">r/${subreaddits[i].subreaddit_name}</h6></a>
-                                                <p class="fw-light text-secondary mx-1">•</p>
-                                                <p class="fw-light text-secondary mx-1">•</p>
+                                                <a href="/r/${subreaddits[i].subreaddit_name}" class="text-dark text-decoration-none"><h6 class="d-inline fw-bold clickable-link">r/${subreaddits[i].subreaddit_name}</h6></a>
                                             </div>
     
-                                            <h5>${subreaddits[i].subreaddit_description}</h5>
+                                            <h5 class="smaller text-secondary">${subreaddits[i].subreaddit_description}</h5>
                                         </div>
                                     </div>
                                 </div>
                                 `)
                 }
             }
+            clickableSubreaddits();
 
         },
         error: function (xhr, status, error) {
             console.log("Error: " + error)
         }
+    })
+}
+
+function clickableSubreaddits() {
+    $(".subreaddit").click(function () {
+        var subreaddit_id = $(this).attr("id").split("_")[1];
+        window.location.href = `/r/${subreaddit_id}`;
+    })
+}
+
+function clickablePosts() {
+    $(".post").click(function () {
+        var post_id = $(this).attr("id").split("_")[1];
+        window.location.href = `/r/0/${post_id}`;
     })
 }
 
@@ -101,32 +123,72 @@ function searchPosts() {
         contentType: "application/json; charset=utf-8",
         success: function (data, status, xhr) {
             var posts = data.Result;
+            console.log(posts);
             if (posts.length == 0) {
                 $(`#posts`).append("No results found");
             }
             else {
+
+
+
                 for (var i = 0; i < posts.length; i++) {
-                    console.log(i)
-                    $("#posts").append(`
-                                <div class="post rounded">
-                                    <div class="row g-0">
-                                        <div class="col-12 bg-white p-2">
-                                            <div class="d-flex flex-row align-items-baseline">
-                                                <a href="/r/${posts[i].Subreaddit.subreaddit_name}/${posts[i].post_id}"><h6 class="d-inline fw-bold clickable-link">${posts[i].title}</h6></a>
-                                                <p class="fw-light text-secondary mx-1">•</p>
-                                                <p class="fw-light text-secondary mx-1">•</p>
-                                            </div>
-    
-                                            <h5>${posts[i].content}</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                `)
+
+                    // Calculates Time
+                    var date = new Date(posts[i].created_at);
+                    var date_now = new Date();
+
+                    var seconds_between_dates = Math.floor((date_now - date) / 1000);
+                    var minutes_between_dates = Math.floor((date_now - date) / (60 * 1000));
+                    var hours_between_dates = Math.floor((date_now - date) / (60 * 60 * 1000));
+                    var days_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 1000))
+                    var weeks_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 7 * 1000))
+
+                    var post_date_output;
+                    if (seconds_between_dates < 60) {
+                        post_date_output = `${seconds_between_dates} seconds ago`
+                    } else if (minutes_between_dates < 60) {
+                        post_date_output = `${minutes_between_dates} minutes ago`
+                    }
+                    else if (hours_between_dates < 24) {
+                        post_date_output = `${hours_between_dates} hours ago`
+                    } else if (days_between_dates <= 7) {
+                        post_date_output = `${days_between_dates} days ago`
+                    } else {
+                        post_date_output = `${weeks_between_dates} weeks ago`
+                    }
+
+                    $(`#posts`).append(`
+                <div class="post rounded mb-2" id="post_${posts[i].post_id}">
+                    <div class="row g-0 rounded">
+                        <div class="col-1 upvote-section py-2 justify-content-center">
+                            <a class="text-center d-block py-1" id="post1-upvote"><i
+                                    class="fas fa-arrow-up text-dark"></i></a>
+                            <p id="post#-val" class="text-center mb-0">${posts[i].Post_Votes}</p>
+                            <a class="text-center d-block py-1" id="post1-downvote"><i
+                                    class="fas fa-arrow-down text-dark"></i></a>
+                        </div>
+                        <div class="col-11 bg-white rounded p-2">
+                            <div class="d-flex flex-row align-items-baseline">
+                                <h6 class="d-inline fw-bold clickable-link">r/${posts[i].Subreaddit.subreaddit_name}</h6>
+                                <p class="fw-light text-secondary mx-1">•</p>
+                                <p class="d-inline text-secondary me-1">Posted by</p>
+                                <p class="d-inline text-secondary clickable-link" id="post#_user"> u/${posts[i].User.username}</p>
+                                <p class="fw-light text-secondary mx-1">•</p>
+                                <p class="text-secondary" id="post#_time">${post_date_output}</p>
+                            </div>
+                            <h5>${posts[i].title}</h5>
+                            
+                        </div>
+                    </div>
+                </div>
+                    `)
+
+                    clickablePosts();
                 }
             }
 
             $.ajax({
-                url: `${baseUrl}/post/post/search/` + input,
+                url: `${baseUrl}/post/search/similar/` + input,
                 method: 'GET',
                 contentType: "application/json; charset=utf-8",
                 success: function (data, status, xhr) {
@@ -139,21 +201,56 @@ function searchPosts() {
                             }
                         }
                         if (duplicate == false) {
+
+                            // Calculates Time
+                            var date = new Date(posts[i].created_at);
+                            var date_now = new Date();
+
+                            var seconds_between_dates = Math.floor((date_now - date) / 1000);
+                            var minutes_between_dates = Math.floor((date_now - date) / (60 * 1000));
+                            var hours_between_dates = Math.floor((date_now - date) / (60 * 60 * 1000));
+                            var days_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 1000))
+                            var weeks_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 7 * 1000))
+
+                            var post_date_output;
+                            if (seconds_between_dates < 60) {
+                                post_date_output = `${seconds_between_dates} seconds ago`
+                            } else if (minutes_between_dates < 60) {
+                                post_date_output = `${minutes_between_dates} minutes ago`
+                            }
+                            else if (hours_between_dates < 24) {
+                                post_date_output = `${hours_between_dates} hours ago`
+                            } else if (days_between_dates <= 7) {
+                                post_date_output = `${days_between_dates} days ago`
+                            } else {
+                                post_date_output = `${weeks_between_dates} weeks ago`
+                            }
+                            
                             $("#similar").append(`
-                                    <div class="post rounded">
-                                        <div class="row g-0">
-                                            <div class="col-12 bg-white p-2">
-                                                <div class="d-flex flex-row align-items-baseline">
-                                                    <a href="/r/${similars[i].Subreaddit.subreaddit_name}/${similars[i].post_id}"><h6 class="d-inline fw-bold clickable-link">${similars[i].title}</h6></a>
-                                                    <p class="fw-light text-secondary mx-1">•</p>
-                                                    <p class="fw-light text-secondary mx-1">•</p>
-                                                </div>
-        
-                                                <h5>${similars[i].content}</h5>
-                                            </div>
-                                        </div>
+                        <div class="post rounded mb-2">
+                            <div class="row g-0 rounded">
+                                <div class="col-1 upvote-section py-2 justify-content-center">
+                                    <a class="text-center d-block py-1" id="post1-upvote"><i
+                                            class="fas fa-arrow-up text-dark"></i></a>
+                                    <p id="post#-val" class="text-center mb-0">6920</p>
+                                    <a class="text-center d-block py-1" id="post1-downvote"><i
+                                            class="fas fa-arrow-down text-dark"></i></a>
+                                </div>
+                                <div class="col-11 bg-white rounded p-2">
+                                    <div class="d-flex flex-row align-items-baseline">
+                                        <h6 class="d-inline fw-bold clickable-link">r/${similars[i].Subreaddit.subreaddit_name}</h6>
+                                        <p class="fw-light text-secondary mx-1">•</p>
+                                        <p class="d-inline text-secondary me-1">Posted by</p>
+                                        <p class="d-inline text-secondary clickable-link" id="post#_user"> u/${similars[i].User.username}</p>
+                                        <p class="fw-light text-secondary mx-1">•</p>
+                                        <p class="text-secondary" id="post#_time">${post_date_output}</p>
                                     </div>
-                                    `)
+                                    <h5>${similars[i].title}</h5>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                            `)
                         }
                     }
 
