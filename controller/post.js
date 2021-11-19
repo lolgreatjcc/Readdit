@@ -405,6 +405,7 @@ router.get('/user/:user_id', function (req,res) {
 })
 
 //get posts from one subreaddit
+
 router.get('/post/search/:word', function (req, res) {
     var word = req.params.word;
     
