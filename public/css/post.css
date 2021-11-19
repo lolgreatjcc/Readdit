@@ -31,6 +31,8 @@ Admission Number: P2004147 */
     max-width: inherit;
     background-color: black;
     min-height: auto;
+    text-align: center;
+    position: relative;
 }
 
 .inheritMaxWidth{
@@ -41,4 +43,8 @@ Admission Number: P2004147 */
     max-width: inherit;
     max-height: fit-content;
     object-fit: contain;
+    
+}
+.carousel-control-next, .carousel-control-prev {
+    width: 5vw;
 }

@@ -18,29 +18,35 @@ function displayMedia(subreaddit_id) {
 
                 if (media.length > 1) {
                     console.log("Running carousel");
-                    var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide inheritMaxWidth" data-ride="carousel" data-interval="false">
+                    var appendStringStart = `   
+                    <div class="col-1">
+                        <a class="carousel-control-prev" href="#carouselExampleIndicators_${post_id}" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </div>
+                    <div id="carouselExampleIndicators_${post_id}" class="carousel slide inheritMaxWidth col-10" data-ride="carousel" data-interval="false">
                             <ol class="carousel-indicators">`
                     for (var j = 0; j < media.length; j++) {
                         if (j == 0) {
-                            appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" style="color: #00ff00"></li>`;
+                            appendStringStart += `<li data-target="#carouselExampleIndicators_${post_id}" data-slide-to="${j}" style="color: #00ff00"></li>`;
                         }
                         else {
-                            appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" class="active"></li>`;
+                            appendStringStart += `<li data-target="#carouselExampleIndicators_${post_id}" data-slide-to="${j}" class="active"></li>`;
                         }
                     }
                     appendStringStart += `</ol> <div class="carousel-inner inheritMaxWidth">`;
 
                     var appendStringEnd = `
                             </div>
-                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                              <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                              <span class="sr-only">Next</span>
-                            </a>
-                          </div>`;
+                          </div>
+                          <div class="col-1">
+                                <a class="carousel-control-next" href="#carouselExampleIndicators_${post_id}" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                            `;
 
                     //run multiple file display
                     for (var count = 0; count < media.length; count++) {
@@ -52,7 +58,7 @@ function displayMedia(subreaddit_id) {
                         }
                         if (media[count].fk_content_type == "1") {
                             appendStringStart += `<div class="${item} mediaDiv">
-                                    <img class="image";" src="${media[count].media_url}" alt="Image not available"> 
+                                    <img class="image" src="${media[count].media_url}" alt="Image not available"> 
                                 </div>`;
                         }
                         else if (media[count].fk_content_type == "2") {
@@ -63,7 +69,7 @@ function displayMedia(subreaddit_id) {
                         }
                         else {
                             appendStringStart += `<div class="${item}">
-                                    <img style="height: 400px; max-width: 600px; object-fit: cover;" src="${media[count].media_url}" alt="GIF not available"> 
+                                    <img class="image" src="${media[count].media_url}" alt="GIF not available"> 
                                 </div>`;
                         }
                     }
@@ -90,7 +96,7 @@ function displayMedia(subreaddit_id) {
                                         </video>`)
                     }
                     else {
-                        $(`#post_media_` + post_id).html(`<img style="max-height: 500px; max-width: 700px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
+                        $(`#post_media_` + post_id).html(`<img class="image" src="${media[0].media_url}" alt="GIF not available"> `)
                     }
                 }
 
@@ -336,7 +342,7 @@ $(document).ready(function () {
                     <a class="text-center d-block py-1 post-downvote" id="post_${data[i].post_id}_downvote"><i
                             class="fas fa-arrow-down text-dark"></i></a>
                 </div>
-                <div class="col-11 bg-white p-2">
+                <div class="col-11 bg-white p-2 position-relative">
                     
                     <div class="d-flex flex-row align-items-baseline">
                         <h6 class="d-inline fw-bold clickable-link">r/<a>${data[i].Subreaddit.subreaddit_name}</a></h6>
@@ -594,10 +600,13 @@ $(document).ready(function () {
 
             // Handles clicking on a post
             $('.post').on('click', function (e) {
-                var post = $(this);
-                var post_id = post.attr('id').split('_')[1];
-                var subreaddit = pathname;
-                location.href = `${subreaddit}/${post_id}`;
+                if (!(e.target.className.includes("video") || e.target.className.includes("carousel-control-next") || e.target.className.includes("carousel-control-prev") || e.target.className.includes("carousel-control-next-icon") || e.target.className.includes("carousel-control-prev-icon"))){
+                    var post = $(this);
+                    var post_id = post.attr('id').split('_')[1];
+                    var subreaddit = pathname;
+                    location.href = `${subreaddit}/${post_id}`;
+                }
+                
             })
 
             // Handles clicking on pin button

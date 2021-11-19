@@ -143,7 +143,14 @@ $(document).ready(function () {
 
             if (media.length > 1) {
                     console.log("Running carousel");
-                    var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide inheritMaxWidth" data-ride="carousel" data-interval="false">
+                    var appendStringStart = `
+                    <div class="col-1">
+                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </div>
+                    <div id="carouselExampleIndicators" class="carousel slide inheritMaxWidth col-10" data-ride="carousel" data-interval="false">
                             <ol class="carousel-indicators">`
                     for (var j = 0; j < media.length; j++) {
                         if (j == 0) {
@@ -156,16 +163,14 @@ $(document).ready(function () {
                     appendStringStart += `</ol> <div class="carousel-inner inheritMaxWidth">`;
 
                     var appendStringEnd = `
-                            </div>
-                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                              <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                              <span class="sr-only">Next</span>
-                            </a>
-                          </div>`;
+                    </div>
+                    </div>
+                    <div class="col-1">
+                          <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                          </a>
+                      </div>`;
 
                     //run multiple file display
                     for (var count = 0; count < media.length; count++) {
