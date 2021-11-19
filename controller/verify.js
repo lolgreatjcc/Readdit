@@ -46,9 +46,6 @@ const verify = {
   },
 
   extractUserId : function (req, res, next){
-    var user_id = req.body.user_id || req.params.user_id;
-    console.log("user_id: " + user_id);
-
     if (typeof req.headers.authorization !== "undefined") {
       // Retrieve the authorization header and parse out the
       // JWT using the split function
@@ -71,6 +68,38 @@ const verify = {
       res.status(401).send({ message: "Unauthorized access" });
     }
   },
+
+  checkAdmin : function (req, res, next){
+    if (typeof req.headers.authorization !== "undefined") {
+      // Retrieve the authorization header and parse out the
+      // JWT using the split function
+
+      let token = req.headers.authorization.split(" ")[1];
+      //console.log('Check for received token from frontend : \n');
+      //console.log(token);
+
+      jwt.verify(token, config, (err, data) => {
+        console.log("data extracted from token \n", data);
+        if (err) {
+          console.log(err);
+          return res.status(403).send({ message: "Unauthorized access", errCode: 1 });
+        } else {
+          if (data.type != 2){
+            console.log("Not an admin!");
+            return res.status(403).send({ message: "Unauthorized access", errCode: 2 });
+          }
+          else{
+              req.body.token_fk_user_type_id = data.type;
+              next();
+          }
+          }
+      });
+    } else {
+      res.status(401).send({ message: "Unauthorized access" });
+    }
+  },
+
+
 }
 
 
