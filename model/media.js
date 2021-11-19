@@ -33,25 +33,6 @@ var media = {
     },
 
     getAllMediaBySubreaddit: function (subreaddit_id, callback) {
-        
-        // Media.findAll({
-        //     include: [
-        //         {
-        //             model: Post,
-        //             attributes: ['post_id'],
-        //             include: [{
-        //                 model: Subreaddit,
-        //                 attributes: ['subreaddit_id'],
-        //                 where: { subreaddit_id: subreaddit_id }
-        //             }]
-        //         }
-        //     ],
-        // }).then(function (result) {
-        //     callback(null, result)
-        // }).catch(function (err) {
-        //     console.log(err)
-        //     callback(err, null)
-        // })
 
         Post.findAll({
             attributes: ['post_id'],
