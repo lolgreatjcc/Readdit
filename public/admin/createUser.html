@@ -6,56 +6,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Readdit</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/create_form.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
     <script src="../includeHTMLs/head.js"></script>
     <script src="../includeHTMLs/header.js"></script>
     <script src="./js/createUser.js"></script>
 </head>
 
 <body>
-    <div class="container">
-    </div>
-    <div class="container">
+    <div class="container-xxl my-md-2">
 
-        <div style="margin-top: 2rem;">
-            <h1>Create New User</h1>
-
-            <div style="padding: 30px;" class="card">
+        <div class="bg-white shadow body-borders rounded p-3">
+            <h4 class="fw-bold text-scheme">Create New User</h4>
+            <hr>
+            <div class="">
                 <div id="img">
 
                 </div>
-                <label>Username: </label>
-                <textarea class="form-control" id="username" rows="1" placeholder="Enter username"></textarea>
+                <div class="mb-3">
+                    <label class="form-label">Username: </label>
+                    <input type="text" class="form-control" id="username" rows="1" placeholder="Enter username"></input>
+                </div>
 
-                <label>Email: </label>
-                <textarea class="form-control" id="email" rows="1" placeholder="Enter email"></textarea>
+                <div class="mb-3">
+                    <label class="form-label">Email: </label>
+                    <input type="text" class="form-control" id="email" rows="1" placeholder="Enter email"></input>
+                </div>
 
-                <br>
-                <label for="img_url">Select Image for Profile Picture (Optional):</label>
-                <input type="file" id="img_url" name="img_url" /><br>
+                <div class="mb-3">
+                    <label for="img_url" class="form-label">Select Image for Profile Picture (Optional):</label>
+                    <input class="form-control" type="file" id="img_url" name="img_url" />
+                </div>
 
-                <label>Password: </label>
-                <input type="password" class="form-control" id="password" rows="1" placeholder="Enter password"></input>
+                <div class="mb-3">
+                    <label class="form-label">Password: </label>
+                    <input type="password" class="form-control" id="password" rows="1"
+                        placeholder="Enter password"></input>
+                </div>
 
-                <br>
-                <p class="d-inline">2 Factor Authentication</p>
-                <label class="switch float-right">
-                    <input type="checkbox" id="two_fa">
-                    <span class="slider round "></span>
-                </label>
-
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="two_fa">
+                        <label class="form-check-label">2 Factor Authentication</label>
+                    </div>
+                </div>
                 <p><span id="msg"></span></p>
-                <p><input class="formButton"  type="button" id="Add" value="Create" /></p>
-                <p><input class="formButton"  type="button" id="Return" value="Return to Manage Users" /></p>
+
+                <div class="row">
+                    <div class="col-6">
+                        <input class="formButton btn invert-scheme w-100" type="button" id="Add" value="Create" />
+                    </div>
+                    <div class="col-6">
+                        <input class="formButton btn invert-scheme w-100" type="button" id="Return" value="Return to Manage Users" />
+                    </div>
+
+                </div>
+
             </div>
         </div>
     </div>
