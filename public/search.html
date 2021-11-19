@@ -10,49 +10,47 @@
     <script src="../includeHTMLs/head.js"></script>
     <script src="../includeHTMLs/header.js"></script>
     <script src="./js/search.js"></script>
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 
     <title>Community</title>
 </head>
 
 <body>
-    <div class="container-xxl">
-        <div class="row">
-
-
-            <div class="col-1">
-                start
-            </div>
-            <div class="col-11">
-                end
-            </div>
-        </div>
-    </div>
     <div class="container-xxl my-md-4">
         <div class="row">
             <div class="col-lg-1"></div>
             <div class="col-lg-10">
-                <div class="w3-bar w3-black">
-                    <button class="w3-bar-item w3-button tablink tabColour" onclick="switchTab(event,'subreaddits')">Subreaddits</button>
-                    <button class="w3-bar-item w3-button tablink" onclick="switchTab(event,'posts')">Posts</button>
-                  </div>
-                  <div id="resultheader"></div>
-                  <div id="subreaddits" class="w3-container w3-border tab">
-                    
-                  </div>
-                
-                  <div id="posts" class="w3-container w3-border tab" style="display:none">
-                    
-                  </div>
-                  <h4>Similar results</h4>
-                  <div id="similar">
+                <div>
+                    <ul class="nav nav-pills">
+                        <li class="nav-item rounded-pill">
+                            <a onclick="switchTab(event,'subreaddits')" class="nav-link tablink active"
+                                href="#">Subreaddits</a>
+                        <li class="nav-item rounded-pill">
+                            <a onclick="switchTab(event,'posts')" class="nav-link tablink" href="#">Posts</a>
+                        </li>
+                    </ul>
+                </div>
+                <hr>
+                <div id="resultheader"></div>
+                <div id="subreaddits" class="w3-container w3-border tab">
+                    <div id="subreaddit_content"></div>
+                    <h5 class="mt-3" id="similar_header">Similar results</h5>
+                    <div id="subreaddit_similar">
+    
+                    </div>
+                </div>
 
-                  </div>
+                <div id="posts" class="w3-container w3-border tab" style="display:none">
+                    <div id="posts_content"></div>
+                    <h5 class="mt-3" id="similar_header">Similar results</h5>
+                    <div id="posts_similar">
+    
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-1"></div>
         </div>
+        <div class="col-lg-1"></div>
+    </div>
     </div>
 </body>
 
