@@ -35,8 +35,8 @@ function displayUsers(user_id) {
                                         <td>${pfp}</td>
                                         <td>${twofa}</td>
                                         <td>${type}</td>
-                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="EditCall" style="background-color:#dcd8f3; color:white; border-width: 0px;" disabled>Edit</button> </td>
-                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="DeleteCall" style="background-color:#dcd8f3; color:white; border-width: 0px;" disabled>Delete</button> </td>
+                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="EditCall rounded" style="background-color:#dcd8f3; color:white; border-width: 0px;" disabled>Edit</button> </td>
+                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="DeleteCall rounded" style="background-color:#dcd8f3; color:white; border-width: 0px;" disabled>Delete</button> </td>
                                     </tr>`;
                 }
                 else {
@@ -47,8 +47,8 @@ function displayUsers(user_id) {
                                         <td>${pfp}</td>
                                         <td>${twofa}</td>
                                         <td>${type}</td>
-                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="EditCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Edit</button> </td>
-                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="DeleteCall" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
+                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="EditCall rounded" style="background-color:#6a5acd; color:white; border-width: 0px;">Edit</button> </td>
+                                        <td> <button type="submit" name="${user.username}" id = "${user.user_id}" class="DeleteCall rounded" style="background-color:#6a5acd; color:white; border-width: 0px;">Delete</button> </td>
                                     </tr>`;
                 }
             }
