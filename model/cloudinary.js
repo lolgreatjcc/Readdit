@@ -20,7 +20,6 @@ module.exports.uploadFile = (file, callback) => {
                 return;
 
             }).catch((error) => {
-
                 let message = 'fail';
                 callback(error, null);
                 return;
