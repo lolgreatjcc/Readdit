@@ -201,6 +201,7 @@ $(document).ready(function () {
                             user_id: user_id
                         }),
                         contentType: "application/json",
+                        headers: {'authorization': "Bearer " + token},
                         success: function (data, status, xhr) {
                             console.log(data);
                             // do modal
@@ -226,9 +227,9 @@ $(document).ready(function () {
                             user_id: user_id
                         }),
                         contentType: "application/json",
+                        headers: {'authorization': "Bearer " + token},
                         success: function (data, status, xhr) {
                             console.log(data)
-                            // do modal
                         },
                         error: function (xhr, status, error) {
                             console.log(xhr);

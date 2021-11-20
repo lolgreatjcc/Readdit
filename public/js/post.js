@@ -134,6 +134,7 @@ $(document).ready(function () {
                     }
                 })
                 if (user_id) {
+                    var token = localStorage.getItem("token")
                     var vote_data = getUsersVotes(subreaddit_path, user_id, post_data.post_id);
                     handleVoting(user_id);
                     var saved_posts = getSavedPosts(user_id, post_data.post_id, () => {
@@ -166,6 +167,7 @@ $(document).ready(function () {
                                     user_id: user_id
                                 }),
                                 contentType: "application/json",
+                                headers: {'authorization': "Bearer " + token},
                                 success: function (data, status, xhr) {
                                     console.log(data);
                                     // do modal
@@ -191,6 +193,7 @@ $(document).ready(function () {
                                     user_id: user_id
                                 }),
                                 contentType: "application/json",
+                                headers: {'authorization': "Bearer " + token},
                                 success: function (data, status, xhr) {
                                     console.log(data)
                                     // do modal
@@ -738,6 +741,7 @@ function handleSaving() {
                     user_id: user_id
                 }),
                 contentType: "application/json",
+                headers: {'authorization': "Bearer " + token},
                 success: function (data, status, xhr) {
                     console.log(data);
                     // do modal
@@ -763,6 +767,7 @@ function handleSaving() {
                     user_id: user_id
                 }),
                 contentType: "application/json",
+                headers: {'authorization': "Bearer " + token},
                 success: function (data, status, xhr) {
                     console.log(data)
                     // do modal
