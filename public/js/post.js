@@ -132,7 +132,7 @@ $(document).ready(function () {
 
                     },
                     error: function (xhr, status, error) {
-                        // TBD
+                        notifier.alert(xhr.responseJSON.message);
                     }
                 })
                 if (user_id) {
@@ -151,6 +151,7 @@ $(document).ready(function () {
                         }
 
                         if (save_button.hasClass('saved')) {
+                            notifier.info("Removing post from saved posts...");
                             save_button.removeClass('saved');
                             save_button.empty();
                             save_button.append(`
@@ -169,11 +170,12 @@ $(document).ready(function () {
                                 }),
                                 contentType: "application/json",
                                 success: function (data, status, xhr) {
+                                    notifier.success("Removed post from saved posts.");
                                     console.log(data);
                                     // do modal
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr)
+                                    notifier.alert(xhr.responseJSON.message);
                                 }
                             })
 
@@ -184,6 +186,7 @@ $(document).ready(function () {
                                         <span class="material-icons md-24 ms-0">bookmark</span>
                                         <p class="mb-0 fw-bold fs-6">Unsave</p>
                                     `);
+                            notifier.info("Adding post to saved posts...");
                             $.ajax({
 
                                 url: `${baseUrl[0]}/save/post`,
@@ -194,11 +197,12 @@ $(document).ready(function () {
                                 }),
                                 contentType: "application/json",
                                 success: function (data, status, xhr) {
+                                    notifier.success("Added post to saved posts.");
                                     console.log(data)
                                     // do modal
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr);
+                                    notifier.alert(xhr.responseJSON.message);
                                 }
                             })
                         }
@@ -212,7 +216,7 @@ $(document).ready(function () {
             }
         },
         error: function (xhr, status, error){
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 
@@ -320,7 +324,7 @@ $(document).ready(function () {
             console.log(textStatus);
             console.log(errorThrown);
             console.log(xhr.status);
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 
@@ -397,12 +401,13 @@ $(document).ready(function () {
             $(`#comment_as`).append(`<p class="mb-0">Comment as u/<span class="text-secondary">${username}</span></p>`)
         },
         error: function (xhr, status, error){
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 
     // Parse Comments
     $('#comment_submit').on('click', function () {
+        notifier.info("Adding comment...")
         var comment_content = $('#comment_content').val();
 
         // User_id
@@ -423,7 +428,7 @@ $(document).ready(function () {
                 location.reload();
             },
             error: function (xhr, status, error) {
-                alert(xhr.responseJSON.message);
+                notifier.alert(xhr.responseJSON.message);
             }
         })
     })
@@ -438,14 +443,12 @@ function copy() {
     navigator.clipboard.writeText(copiedText);
 
     /* Alert the copied text */
-    alert("Copied the text: " + copiedText);
+    notifier.info("Link copied to clipboard!");
 }
 
 function report() {
     var pathname = window.location.pathname;
     var post_id = pathname.split('/')[3];
-    console.log("REPORT POST: " + post_id);
-
     window.location.assign(baseUrl[1] + '/report.html?post_id=' + post_id);
 }
 
@@ -486,6 +489,7 @@ function checkModerator(subreadditName) {
 }
 
 function pin(post_subreaddit_id) {
+    notifier.info("Pinning post...")
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
     var post_id = post_subreaddit_id_arr[0]
     var fk_subreaddit_id = post_subreaddit_id_arr[1]
@@ -501,12 +505,13 @@ function pin(post_subreaddit_id) {
             window.location.reload();
         },
         error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 }
 
 function deletePost(post_subreaddit_id) {
+    notifier.info("Deleting post...")
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
     var post_id = post_subreaddit_id_arr[1]
     var fk_subreaddit_id = post_subreaddit_id_arr[2]
@@ -524,7 +529,7 @@ function deletePost(post_subreaddit_id) {
             window.location.href = `/r/${subreaddit_name}`;
         },
         error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 }
@@ -709,72 +714,6 @@ function getUsersVotes(subreaddit_id, user_id, post_id) {
     return results;
 }
 
-
-function handleSaving() {
-    // Handle Saving of Posts
-    $('.save').on('click', function (e) {
-        e.stopPropagation();
-        var save_button = $(this);
-        var post_id = $(this).attr('id').split('_')[2];
-        if (user_id == false) {
-            window.location.href = "/login.html"
-        }
-
-        if (save_button.hasClass('saved')) {
-            save_button.removeClass('saved');
-            save_button.empty();
-            save_button.append(`
-                        <span class="material-icons md-24 ms-0">bookmark_border</span>
-                        <p class="mb-0 fw-bold fs-6">Save</p>
-                    `);
-
-
-
-            $.ajax({
-                url: `${baseUrl[0]}/save/post`,
-                type: "DELETE",
-                data: JSON.stringify({
-                    post_id: post_id,
-                    user_id: user_id
-                }),
-                contentType: "application/json",
-                success: function (data, status, xhr) {
-                    console.log(data);
-                    // do modal
-                },
-                error: function (xhr, status, error) {
-                    console.log(xhr)
-                }
-            })
-
-        } else {
-            save_button.addClass('saved');
-            save_button.empty();
-            save_button.append(`
-                        <span class="material-icons md-24 ms-0">bookmark</span>
-                        <p class="mb-0 fw-bold fs-6">Unsave</p>
-                    `);
-            $.ajax({
-
-                url: `${baseUrl[0]}/save/post`,
-                method: 'POST',
-                data: JSON.stringify({
-                    post_id: post_id,
-                    user_id: user_id
-                }),
-                contentType: "application/json",
-                success: function (data, status, xhr) {
-                    console.log(data)
-                    // do modal
-                },
-                error: function (xhr, status, error) {
-                    console.log(xhr);
-                }
-            })
-        }
-    })
-}
-
 function getSavedPosts(user_id, current_post_id, callback) {
     var output;
     $.ajax({
@@ -798,7 +737,7 @@ function getSavedPosts(user_id, current_post_id, callback) {
             callback();
         },
         error: function (xhr, status, error) {
-            alert("Error getting saved posts. Try refreshing the page.")
+            notifier.alert("Error getting saved posts. Try refreshing the page.")
         }
     })
     return output;

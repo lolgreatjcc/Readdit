@@ -5,6 +5,7 @@ let notifier = new AWN({icons:{enabled:false}})
 
 $(document).ready(function () {
     $("#Login").click(function () {
+        notifier.info("Logging you in...")
         // data extraction
         var email = $('#email').val();
         var pwd = $('#pwd').val();
@@ -27,16 +28,15 @@ $(document).ready(function () {
                     // window.location.assign("https://readdit-sp.herokuapp.comhome.html");
                     window.location.href = `/home.html`;
                 } else {
-                    console.log("Error");
-                    }
+                    notifier.alert("Unknown error occured!")
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log("Xhr: " + JSON.stringify(xhr));
                 console.log("textStatus: " + textStatus);
                 console.log("errorThrown: " + errorThrown);
                 console.log('Error in Operation');
-                notifier.alert("Failed to login!")
-                $(`#messages`).html("Login unsuccessful");
+                notifier.alert(xhr.responseJSON.message)
             }
         });
         return false;

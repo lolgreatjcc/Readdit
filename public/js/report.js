@@ -27,7 +27,7 @@ $(document).ready(function () {
 
         if (report_description.trim() == "") {
             $('#post_loading_div').addClass('d-none');
-            $(`#msg`).html(`<p class="text-danger m-3"> Description cannot be blank! </p>`);
+            notifier.warning(`Description cannot be blank!`);
         }
         else {
             const jsonWebData = {
@@ -39,11 +39,11 @@ $(document).ready(function () {
             axios.post(baseUrl[0] + `/report/report`, jsonWebData)
                 .then(response => {
                     $('#post_loading_div').addClass('d-none');
-                    $('#msg').html('<p class="m-3"> Report submitted Successfully! </p>');
+                    notifier.success('Report submitted Successfully!');
                 })
                 .catch(error => {
                     $('#post_loading_div').addClass('d-none');
-                    $('#msg').html('<p class="text-danger m-3"> Error Submitting Report! </p>');
+                    notifier.alert(error.response.data.message);
                 })
         }
     })

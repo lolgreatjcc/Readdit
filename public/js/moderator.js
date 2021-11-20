@@ -38,7 +38,7 @@ function getLikeUsername(){
                 filterUsers(data.Result);
             },
             error: function (xhr, status, error) {
-                alert(xhr.responseJSON.message);
+                notifier.alert(xhr.responseJSON.message);
             }
         })
     }
@@ -88,7 +88,7 @@ function filterUsers(searchResults){
 
         },
         error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 };
@@ -130,7 +130,7 @@ function getCurrentMods(){
             
         },
         error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 }
@@ -148,7 +148,7 @@ function getSubreadditId(){
             getCurrentMods();
         },
         error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 
@@ -157,17 +157,19 @@ function getSubreadditId(){
 function addModerator(user_id){
     var subreaddit_id = localStorage.getItem("subreaddit_id");
     var token = localStorage.getItem("token");
+    notifier.info("Adding Moderator...");
     $.ajax({
         url: `${baseUrl}/moderator/${subreaddit_id}/${user_id}`,
         method: 'post',
         contentType: "application/json; charset=utf-8",
         headers:{authorization:"Bearer " + token},
         success: function (data, status, xhr) { 
+            notifier.success("Successfully added Moderator.")
             getCurrentMods();
             getLikeUsername();
         },
         error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 }
@@ -175,17 +177,19 @@ function addModerator(user_id){
 function deleteModerator(moderator_id){
     var subreaddit_id = localStorage.getItem("subreaddit_id");
     var token = localStorage.getItem("token");
+    notifier.info("Deleting Moderator...");
     $.ajax({
         url: `${baseUrl}/moderator/${moderator_id}/${subreaddit_id}`,
         method: 'DELETE',
         contentType: "application/json; charset=utf-8",
         headers: {authorization:"Bearer " + token},
         success: function (data, status, xhr) { 
+            notifier.success("Successfully deleted Moderator.")
             getCurrentMods();
             getLikeUsername();
         },
         error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 }

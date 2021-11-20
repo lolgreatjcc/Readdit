@@ -79,7 +79,7 @@ function getFlairs(){
             
         },
         error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 }
@@ -97,7 +97,7 @@ function getSubreadditId(){
             getFlairs();
         },
         error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 
@@ -110,7 +110,7 @@ function createFlair(){
     var flair_colour = $('#flair_colour').val();
     var data = JSON.stringify({"flair_name":flair_name,"flair_colour":flair_colour,"fk_subreaddit_id":fk_subreaddit_id});
     console.log(data);
-
+    notifier.info("Creating Flair...")
     $.ajax({
         url: `${baseUrl}/flair`,
         method: 'POST',
@@ -118,10 +118,11 @@ function createFlair(){
         data: data,
         headers:{authorization:"Bearer " + token},
         success: function (data, status, xhr) { 
+            notifier.success("Flair added successfully.")
             getFlairs();
         },
         error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
             console.log(error);
         }
     })
@@ -129,6 +130,7 @@ function createFlair(){
 
 function deleteFlair(flair_id){
     //var subreaddit_id = localStorage.getItem("subreaddit_id");
+    notifier.info("Deleting Flair...")
     var token = localStorage.getItem("token");
     $.ajax({
         url: `${baseUrl}/flair/${flair_id}`,
@@ -136,10 +138,11 @@ function deleteFlair(flair_id){
         contentType: "application/json; charset=utf-8",
         headers: {authorization:"Bearer " + token},
         success: function (data, status, xhr) { 
+            notifier.success("Flair deleted successfully.")
             getFlairs();
         },
         error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 }

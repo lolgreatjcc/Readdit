@@ -62,7 +62,7 @@ function loadUserInfo(user_id, token) {
         error: function (xhr, textStatus, errorThrown) {
             console.log('Error in Operation');
             $('#loadingText').html("<h6 class='text-danger'>ERROR LOADING!</h6>");
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 };
@@ -150,7 +150,7 @@ function displayPosts() {
             console.log(textStatus);
             console.log(errorThrown);
             console.log(xhr.status);
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 }
@@ -201,7 +201,7 @@ function displayComments() {
             console.log(textStatus);
             console.log(errorThrown);
             console.log(xhr.status);
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 }
@@ -312,15 +312,15 @@ function displaySavedPosts() {
 
             // This block of code enables the toolbars.
             $('.save').on('click', function (e) {
+                notifier.info("Removing post from saved posts...")
                 e.stopPropagation();
                 var id = $(this).attr('id');
                 var post_id = id.split('_')[2];
 
                 // Temporary user_id
-                var user_id = 2;
+                var token = localStorage.getItem("token");
 
                 var data = {
-                    user_id: user_id,
                     post_id: post_id
                 }
                 $.ajax({
@@ -328,11 +328,13 @@ function displaySavedPosts() {
                     type: "DELETE",
                     data: JSON.stringify(data),
                     contentType: "application/json",
+                    headers:{authorization:"Bearer "+token},
                     success: function (data, status, xhr) {
+                        notifier.success("Removed posts from saved posts.")
                         displaySavedPosts()
                     },
                     error: function (xhr, status, error) {
-                        alert(xhr.responseJSON.message);
+                        notifier.alert(xhr.responseJSON.message);
                     }
                 })
             })

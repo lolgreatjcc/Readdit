@@ -30,7 +30,7 @@ function displayReports(subreaddit_name, subreaddit_id) {
 
         },
         error: function (xhr, textStatus, errorThrown) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
@@ -53,10 +53,7 @@ $(document).ready(function () {
         var userJsonData = JSON.parse(userData);
         var role = userJsonData.fk_user_type_id;
 
-        var tmpToken = localStorage.getItem('token');
-
     } catch (error) {
-        alert("Unauthenticated User!");
         window.location.assign("http://localhost:3001/login.html");
     }
 
@@ -78,7 +75,7 @@ $(document).ready(function () {
             displayReports(subreaddit_name, subreaddit_id);
         },
         error: function (xhr, textStatus, errorThrown) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
@@ -99,6 +96,7 @@ $(document).ready(function () {
 function deleteReport(report_id) {
     var check = confirm("Delete Report No. " + report_id + "?");
     if (check) {
+        notifier.info("Deleting Report...")
         $.ajax({
             //headers: { 'authorization': 'Bearer ' + tmpToken },
             url: baseUrl[0] + '/report/report/' + report_id,
@@ -109,7 +107,7 @@ function deleteReport(report_id) {
                 location.reload();
             },
             error: function (xhr, textStatus, errorThrown) {
-                alert(xhr.responseJSON.message);
+                notifier.alert(xhr.responseJSON.message);
                 console.log(xhr)
                 console.log(textStatus);
                 console.log(errorThrown);

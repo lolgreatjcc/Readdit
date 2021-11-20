@@ -43,9 +43,6 @@ $(document).ready(function () {
     // Submits the post
     $('#create_post_submit').on('click', () => {
 
-        // Adds the loading animation
-        $('#post_loading_div').removeClass('d-none');
-
         var subreaddit_id = $('#create_post_community').val();
         var title = $('#create_post_title').val();
         var content = $('#create_post_content').val();
@@ -60,6 +57,9 @@ $(document).ready(function () {
             notifier.warning("Post title cannot be blank!");
         }
         else {
+            // Adds the loading animation
+            $('#post_loading_div').removeClass('d-none');
+
             let webFormData = new FormData();
             webFormData.append('title', title);
             webFormData.append('content', content);
@@ -85,10 +85,11 @@ $(document).ready(function () {
                 },
                 success: function (data, status, xhr) {
                     $('#post_loading_div').addClass('d-none');
-                    alert(data.Result);
+                    notifier.success(data.Result);
                 },
                 error: function (xhr, status, err) {
-                    $(`#msg`).html(`<h5 class="text-danger"> An error has occured while creating your post. ${xhr.responseJSON.message}</h5>`);
+                    $('#post_loading_div').addClass('d-none');
+                    notifier.alert(xhr.responseJSON.message);
                 }
             })
         }
@@ -127,7 +128,7 @@ function showFlairs(subreaddit_id) {
 
         },
         error: function (xhr, status, error) {
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 }
