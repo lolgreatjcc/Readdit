@@ -15,7 +15,7 @@ router.get('/subreaddit', (req,res) => {
     })
 })
 
-router.post('/post_rating', (req,res) => {
+router.post('/post_rating',verifySameUserId, (req,res) => {
     var user_id = req.body.user_id;
     var post_id = req.body.post_id;
     var vote_type = req.body.vote_type;
@@ -68,7 +68,7 @@ router.post('/post_rating', (req,res) => {
 
 })
 
-router.delete('/post_rating', (req,res) => {
+router.delete('/post_rating',verifySameUserId, (req,res) => {
     if(!req.body.data) {
         res.sendStatus(400);
     }
