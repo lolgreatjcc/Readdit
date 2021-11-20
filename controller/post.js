@@ -235,7 +235,7 @@ router.post('/create', upload.array("media", 8), verify.extractUserId, async (re
                 }
             }
             else{   
-                res.status(500).send({"message":"Error creating post."})
+                res.status(500).send({'message':"Error creating post."})
             }
             
             
@@ -250,7 +250,7 @@ router.get('/recent', function (req, res) {
             res.status(200).send(result);
         }
         else {
-            res.status(500).send({"message":"Error while getting recent posts."});
+            res.status(500).send({'message':"Error while getting recent posts."});
         }
     })
 }) 
@@ -262,7 +262,7 @@ router.get('/get/r/:subreaddit', function (req, res) {
         if (!err) {
             res.status(200).send(result);
         } else {
-            res.status(500).send({"message":"Error while getting posts from a subreaddit."});
+            res.status(500).send({'message':"Error while getting posts from a subreaddit."});
         }
     })
 })
@@ -275,7 +275,7 @@ router.get('/search', printDebugInfo, function (req, res) {
         if (!err) {
             res.status(200).send({ "Result": result });
         } else {
-            res.status(500).send({"message":"Error while searching for post"});
+            res.status(500).send({'message':"Error while searching for post"});
         }
     });
 
@@ -289,11 +289,11 @@ router.get('/get/r/:subreaddit/:post_id', function (req, res) {
     post.getOnePostInSubreaddit(req_subreaddit, post_id, function (result, err) {
         if (!err) {
             if (result == null) {
-                res.status(404).send({"message":"Unable to find requested post." })
+                res.status(404).send({'message':"Unable to find requested post." })
             }
             res.status(200).send(result);
         } else {
-            res.status(500).send({"message":"Error loading requested post."});
+            res.status(500).send({'message':"Error loading requested post."});
         }
     })
 })
@@ -302,9 +302,14 @@ router.get('/:post_id', function (req,res) {
     req_post_id = req.params.post_id;
     post.getPost(req_post_id, function (result, err) {
         if (!err) {
-            res.status(200).send(result);
+            if( result.length == 0) {
+                res.status(400).send({'message':"Unable to find requested post."})
+            }
+            else {
+                res.status(200).send(result);
+            }   
         } else {
-            res.status(500).send({"message":"Error loading requested post."});
+            res.status(500).send({'message':"Error loading requested post."});
         }
     })
 })
@@ -315,7 +320,7 @@ router.put('/pin', verify.extractUserId, checkModerator, function (req, res) {
         if (!err) {
             res.status(204).send();
         } else {
-            res.status(500).send({"message":"Error pinning posts."});
+            res.status(500).send({'message':"Error pinning posts."});
         }
     })
 })
@@ -324,9 +329,9 @@ router.delete('/', verify.extractUserId, checkModerator, function (req,res) {
     var {post_id, fk_subreaddit_id} = req.body;
     post.deletePost(post_id, fk_subreaddit_id, function (err,result) {
         if(!err) {
-            res.status(204).send();
+            res.sendStatus(200);
         } else {
-            res.status(500).send(err);
+            res.status(500).send({'message': 'Error in deleting post.'});
         }
     })
 })
@@ -335,9 +340,14 @@ router.get('/user/:user_id', function (req,res) {
     var user_id = req.params.user_id;
     post.getPostsByUser(user_id, function (result,err) {
         if(!err) {
-            res.status(200).send(result);
+            if(result.length == 0) {
+                res.status(400).send({'message':'Unable to find requested user.'})
+            }
+            else {
+                res.status(200).send(result);
+            }
         } else {
-            res.status(500).send(err);
+            res.status(500).send({'message': "Internal Server Error"});
         }
     })
 })
@@ -357,7 +367,7 @@ router.get('/SimilarSearch/:word', function (req, res) {
             }
             res.status(200).send(newarr);
         } else {
-            res.status(500).send(err);
+            res.status(500).send({"message": "Error in retrieving similar posts."});
         }
     })
 });
