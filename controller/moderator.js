@@ -38,7 +38,7 @@ router.get('/:subreaddit_id', printDebugInfo, (req,res) => {
             res.status(200).send({"Result": result});
         }else {
             console.log(err);
-            res.status(500).send({message:"Error while getting moderators."});
+            res.status(500).send({"message":"Error while getting moderators."});
         }
         
     })
@@ -54,7 +54,7 @@ router.post('/:subreaddit_id/:user_id', printDebugInfo, verify.extractUserId, ch
             res.status(200).send({"Result": result});
         }else {
             console.log(err);
-            res.status(500).send({message:"Error while adding a moderator."});
+            res.status(500).send({"message":"Error while adding a moderator."});
         }
         
     })
@@ -70,7 +70,7 @@ router.delete('/:moderator_id/:subreaddit_id', printDebugInfo, verify.extractUse
             res.status(200).send({"Result": result});
         }else {
             console.log(err);
-            res.status(500).send({message:"Error while deleting a moderator."});
+            res.status(500).send({"message":"Error while deleting a moderator."});
         }
         
     })
@@ -90,16 +90,16 @@ router.get('/checkModerator/:subreaddit_name', verify.extractUserId, (req,res) =
                     res.status(200).send({"Result":"Is Moderator"})
                 }
                 else if (err.message == "Not a moderator"){
-                    res.status(403).send({message:"Logged In user is not moderator"});
+                    res.status(403).send({"message":"Logged In user is not moderator"});
                 }
                 else{
-                    res.status(500).send({message:"Error checking if user is moderator."});
+                    res.status(500).send({"message":"Error checking if user is moderator."});
                 }
                 
             })
         }else {
             console.log(err);
-            res.status(500).send({message:"Error getting subreaddit info."});
+            res.status(500).send({"message":"Error getting subreaddit info."});
         }
     })
     

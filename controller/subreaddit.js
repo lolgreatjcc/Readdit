@@ -118,19 +118,19 @@ router.post('/create', printDebugInfo, verify.extractUserId, (req,res) => {
         }else {
             console.log(err.name);
             if(err.name == "SequelizeUniqueConstraintError") {
-                res.status(409).send({message:"Duplicate Entry. Subreaddit already exists."})
+                res.status(409).send({"message":"Duplicate Entry. Subreaddit already exists."})
             }
             else if(err.name == "SequelizeValidationError") {
-                res.status(403).send({message:"Please ensure that all inputs are filled and correct."})
+                res.status(403).send({"message":"Please ensure that all inputs are filled and correct."})
             }
             else if(community_name.length > 45) {
-                res.status(400).send({message:"Subreaddit name too long. Max 45 characters."})
+                res.status(400).send({"message":"Subreaddit name too long. Max 45 characters."})
             }
             else if(description.length > 100) {
-                res.status(400).send({message:"Description is too long. Max 100 characters."})
+                res.status(400).send({"message":"Description is too long. Max 100 characters."})
             }
             else {
-                res.status(500).send({message:"Error while creating subreaddit."})
+                res.status(500).send({"message":"Error while creating subreaddit."})
             }
         }
     })
@@ -144,7 +144,7 @@ router.get('/subreaddits', printDebugInfo, (req,res) => {
             res.status(200).send({"Result" : result});
         } else {
             console.log("Error: " + err);
-            res.status(500).send({"message:":"Error getting all subreaddits."});
+            res.status(500).send({"message":"Error getting all subreaddits."});
         }
     });
 
@@ -168,7 +168,7 @@ router.get('/:subreaddit', (req,res) => {
             res.status(200).send(output);
         }else {
             console.log(err);
-            res.status(500).send({message:"Error getting subreaddit."});
+            res.status(500).send({"message":"Error getting subreaddit."});
         }
         
     })
@@ -186,7 +186,7 @@ router.get('/checkOwner/:subreaddit', verify.extractUserId, (req,res) => {
                 res.status(200).send({"Result":"Is Owner"})
             }
             else{
-                res.status(403).send({"Error":"Logged In user is not owner"});
+                res.status(403).send({"message":"Logged In user is not owner"});
             }
         }else {
             console.log(err);

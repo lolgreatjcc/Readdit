@@ -39,10 +39,10 @@ function checkModerator(req, res, next) {
                         next();
                     }
                     else{
-                        res.status(403).send({message:"Logged In user is not moderator"});
+                        res.status(403).send({"message":"Logged In user is not moderator"});
                     }
                 }else {
-                    res.status(500).send({message:"Error while getting subreaddit info."});
+                    res.status(500).send({"message":"Error while getting subreaddit info."});
                 }
                 
             })
@@ -196,11 +196,11 @@ router.post('/create', upload.array("media", 8), verify.extractUserId, async (re
                     console.log("Error: " + err);
                     if (err == "Invalid File Type" || err == "File too big!") {
                         success = false;
-                        res.status(400).send({message:err});
+                        res.status(400).send({"message":err});
                     }
                     else {
                         success = false;
-                        res.status(500).send({message:"Error while uploading media."});
+                        res.status(500).send({"message":"Error while uploading media."});
                     }
 
                 }
@@ -219,7 +219,7 @@ router.post('/create', upload.array("media", 8), verify.extractUserId, async (re
                     for (var j=0;j<mediaUploadLinks.length;j++){
                         media.createMedia(mediaUploadLinks[j].media_url, mediaUploadLinks[j].content_type, fk_post_id, function (err, result) {
                             if (err) {
-                                res.status(500).send({message:"Error saving media_url to database"});
+                                res.status(500).send({"message":"Error saving media_url to database"});
                             }
                             else if (result) {
                                 if (progress == 0) {
@@ -235,7 +235,7 @@ router.post('/create', upload.array("media", 8), verify.extractUserId, async (re
                 }
             }
             else{   
-                res.status(500).send({message:"Error creating post."})
+                res.status(500).send({"message":"Error creating post."})
             }
             
             
@@ -250,7 +250,7 @@ router.get('/recent', function (req, res) {
             res.status(200).send(result);
         }
         else {
-            res.status(500).send({message:"Error while getting recent posts."});
+            res.status(500).send({"message":"Error while getting recent posts."});
         }
     })
 }) 
@@ -262,7 +262,7 @@ router.get('/get/r/:subreaddit', function (req, res) {
         if (!err) {
             res.status(200).send(result);
         } else {
-            res.status(500).send({message:"Error while getting posts from a subreaddit."});
+            res.status(500).send({"message":"Error while getting posts from a subreaddit."});
         }
     })
 })
@@ -275,7 +275,7 @@ router.get('/search', printDebugInfo, function (req, res) {
         if (!err) {
             res.status(200).send({ "Result": result });
         } else {
-            res.status(500).send({message:"Error while searching for post"});
+            res.status(500).send({"message":"Error while searching for post"});
         }
     });
 
@@ -289,11 +289,11 @@ router.get('/get/r/:subreaddit/:post_id', function (req, res) {
     post.getOnePostInSubreaddit(req_subreaddit, post_id, function (result, err) {
         if (!err) {
             if (result == null) {
-                res.status(404).send({message:"Unable to find requested post." })
+                res.status(404).send({"message":"Unable to find requested post." })
             }
             res.status(200).send(result);
         } else {
-            res.status(500).send({message:"Error loading requested post."});
+            res.status(500).send({"message":"Error loading requested post."});
         }
     })
 })
@@ -304,7 +304,7 @@ router.get('/:post_id', function (req,res) {
         if (!err) {
             res.status(200).send(result);
         } else {
-            res.status(500).send({message:"Error loading requested post."});
+            res.status(500).send({"message":"Error loading requested post."});
         }
     })
 })
@@ -315,7 +315,7 @@ router.put('/pin', verify.extractUserId, checkModerator, function (req, res) {
         if (!err) {
             res.status(204).send();
         } else {
-            res.status(500).send({message:"Error pinning posts."});
+            res.status(500).send({"message":"Error pinning posts."});
         }
     })
 })

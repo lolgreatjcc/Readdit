@@ -18,7 +18,7 @@ router.get('/:fk_subreaddit_id', printDebugInfo, (req,res) => {
             res.status(200).send({"Result": result});
         }else {
             console.log(err);
-            res.status(500).send({message:"Error getting subreaddit flairs."});
+            res.status(500).send({"message":"Error getting subreaddit flairs."});
         }
         
     })
@@ -31,13 +31,13 @@ router.post('/', printDebugInfo, verify.extractUserId, (req,res) => {
     var {flair_name,flair_colour,fk_subreaddit_id} = req.body;
     
     if (flair_name == null || typeof flair_name == "undefined" || flair_name.trim().length == 0){
-        res.status(400).send({message:"No flair name given"});
+        res.status(400).send({"message":"No flair name given"});
     }
     else if (!hexRegex.test(flair_colour)){
-        res.status(400).send({message:"Invalid Flair Colour"});
+        res.status(400).send({"message":"Invalid Flair Colour"});
     }
     else if (fk_subreaddit_id == null || typeof fk_subreaddit_id == "undefined"){
-        res.status(400).send({message:"Subreaddit id not given"});
+        res.status(400).send({"message":"Subreaddit id not given"});
     }
     else{
         flair.addFlair(flair_name, flair_colour, fk_subreaddit_id, function (err, result) {
@@ -45,7 +45,7 @@ router.post('/', printDebugInfo, verify.extractUserId, (req,res) => {
                 res.status(200).send({"Result": result});
             }else {
                 console.log(err);
-                res.status(500).send({message:"Error while adding flair."});
+                res.status(500).send({"message":"Error while adding flair."});
             }
             
         })
@@ -62,7 +62,7 @@ router.delete('/:flair_id', printDebugInfo, verify.extractUserId, (req,res) => {
             res.status(200).send({"Result": result});
         }else {
             console.log(err);
-            res.status(500).send({message:"Error deleting flairs."});
+            res.status(500).send({"message":"Error deleting flairs."});
         }
         
     })

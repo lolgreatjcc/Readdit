@@ -4,14 +4,14 @@ const post = require('../model/post.js')
 const verify = require('./verify')
 
 // save a post
-router.post('/post', function (req,res) {
+router.post('/post', verify.extractUserId, function (req,res) {
     var post_id = req.body.post_id;
-    var user_id = req.body.user_id;
+    var user_id = req.body.token_user_id;
     post.savePost(post_id, user_id, function (result,err) {
         if(!err) {
             res.status(200).send(result);
         } else {
-            res.status(500).send({message:"Error saving post."});
+            res.status(500).send({"message":"Error saving post."});
         }
     })
 })
@@ -22,7 +22,7 @@ router.get('/posts', function (req,res) {
         if(!err) {
             res.status(200).send(result);
         } else {
-            res.status(500).send({message:"Error getting saved posts."});
+            res.status(500).send({"message":"Error getting saved posts."});
         }
     })
 })
@@ -38,7 +38,7 @@ router.delete('/post', function (req,res) {
             res.sendStatus(204);
         } else {
             console.log(err);
-            res.status(500).send({message:"Error deleting report."})
+            res.status(500).send({"message":"Error deleting report."})
         }
     })
 })

@@ -12,7 +12,7 @@ router.get('/media/:id',printDebugInfo, function (req, res) {
         if (!err) {
             res.status(200).send({"Result" : result});
         } else {
-            res.status(500).send({message:"Failed to get post media."});
+            res.status(500).send({"message":"Failed to get post media."});
         }
     });
 
@@ -26,7 +26,7 @@ router.get('/subreaddit/:id',printDebugInfo, function (req, res) {
         if (!err) {
             res.status(200).send({"Result" : result});
         } else {
-            res.status(500).send({message:"Failed to get subreaddit post media."});
+            res.status(500).send({"message":"Failed to get subreaddit post media."});
         }
     });
 
