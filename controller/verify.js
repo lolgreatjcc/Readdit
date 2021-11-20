@@ -6,7 +6,7 @@ const config = require('../config').key
 
 const verify = {
   verifySameUserId : function (req, res, next){
-    var user_id = req.body.user_id || req.params.user_id;
+    var user_id = req.body.user_id || req.params.user_id || req.query.user_id;
     console.log("user_id: " + user_id);
 
     if (typeof req.headers.authorization !== "undefined") {
