@@ -13,6 +13,7 @@ var vote = {
             callback(null, err);
         });
     },
+    // Retrieves all the votes for *all* posts.  
     getPostVotes: function (fk_post_id, callback) {
         Post_Vote.findAll({
             where: {
@@ -85,8 +86,17 @@ var vote = {
             callback(null, err);
         });
     },
-
-
+    getUserVotes: function (fk_user_id, callback) {
+        Post_Vote.findAll({
+            where: {
+                fk_user_id: fk_user_id
+            }
+        }).then(function (result) {
+            callback(result, null);
+        }).catch(function (err) {
+            callback(null, err);
+        });  
+    },
     createCommentVote: function (vote_type, fk_comment_id, fk_user_id, callback) {
         Comment_Vote.create({
             vote_type: vote_type,
