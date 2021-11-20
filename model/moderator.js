@@ -65,7 +65,7 @@ var moderator = {
                 return callback(null, result)
             }
             else {
-                var err = "Not a moderator";
+                var err = {message:"Not a moderator"};
                 return callback(err, null);
             }
         })
