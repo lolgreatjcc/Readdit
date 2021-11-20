@@ -1,6 +1,7 @@
 const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 //const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 $(document).ready(function () {
+
     var pathname = window.location.pathname;
     var subreaddit_path = pathname.split('/')[2];
     var post_id = pathname.split('/')[3];
@@ -133,6 +134,7 @@ $(document).ready(function () {
                     }
                 })
                 if (user_id) {
+                    var token = localStorage.getItem("token")
                     var vote_data = getUsersVotes(subreaddit_path, user_id, post_data.post_id);
                     handleVoting(user_id);
                     var saved_posts = getSavedPosts(user_id, post_data.post_id, () => {
@@ -165,6 +167,7 @@ $(document).ready(function () {
                                     user_id: user_id
                                 }),
                                 contentType: "application/json",
+                                headers: {'authorization': "Bearer " + token},
                                 success: function (data, status, xhr) {
                                     console.log(data);
                                     // do modal
@@ -190,6 +193,7 @@ $(document).ready(function () {
                                     user_id: user_id
                                 }),
                                 contentType: "application/json",
+                                headers: {'authorization': "Bearer " + token},
                                 success: function (data, status, xhr) {
                                     console.log(data)
                                     // do modal
@@ -526,6 +530,7 @@ function deletePost(post_subreaddit_id) {
 
 function handleVoting(user_id) {
     // Handles upvoting/downvoting a post
+    var token = localStorage.getItem("token")
     $('.post-upvote').on('click', function (e) {
         console.log("clicked upvote")
         e.stopPropagation();
@@ -556,6 +561,7 @@ function handleVoting(user_id) {
                     url: `${baseUrl[0]}/vote/post_rating`,
                     data: JSON.stringify({ data }),
                     contentType: "application/json",
+                    headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
                         console.log(data);
                     }
@@ -580,6 +586,7 @@ function handleVoting(user_id) {
                         vote_type: 1,
                     }),
                     contentType: "application/json; charset=utf-8",
+                    headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
                         console.log(data);
                     }
@@ -622,6 +629,7 @@ function handleVoting(user_id) {
                     url: `${baseUrl[0]}/vote/post_rating`,
                     data: JSON.stringify({ data }),
                     contentType: "application/json",
+                    headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
                         console.log(data);
                     }
@@ -647,6 +655,7 @@ function handleVoting(user_id) {
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
+                    headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
                         console.log(data);
                     }
@@ -732,6 +741,7 @@ function handleSaving() {
                     user_id: user_id
                 }),
                 contentType: "application/json",
+                headers: {'authorization': "Bearer " + token},
                 success: function (data, status, xhr) {
                     console.log(data);
                     // do modal
@@ -757,6 +767,7 @@ function handleSaving() {
                     user_id: user_id
                 }),
                 contentType: "application/json",
+                headers: {'authorization': "Bearer " + token},
                 success: function (data, status, xhr) {
                     console.log(data)
                     // do modal
