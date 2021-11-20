@@ -1,10 +1,10 @@
 const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 //const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
-function displayUsers(user_id) {
+function displayUsers(user_id, token) {
     // call the web service endpoint
     $.ajax({
-        //headers: { 'authorization': 'Bearer ' + tmpToken },
+        headers: { 'authorization': 'Bearer ' + token },
         url: `${baseUrl[0]}/users`,
         type: 'GET',
         contentType: "application/json; charset=utf-8",
@@ -87,8 +87,6 @@ $(document).ready(function () {
         var role = userJsonData.fk_user_type_id;
         var user_id = userJsonData.user_id;
 
-        var tmpToken = localStorage.getItem('token');
-
         if (role != 2) {
             alert("Unauthorized User!");
             window.location.assign(`${baseUrl[1]}/home.html`);
@@ -98,7 +96,7 @@ $(document).ready(function () {
         window.location.assign(`${baseUrl[1]}/login.html`);
     }
 
-    displayUsers(user_id);
+    displayUsers(user_id, token);
 
     $("#return").click(function () {
         window.location.assign(`${baseUrl[1]}/admin/admin_home.html`);
