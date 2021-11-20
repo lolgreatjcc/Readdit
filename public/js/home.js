@@ -1,4 +1,4 @@
-const baseUrl = ["http://localhost:3000","http://localhost:3001"]
+const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 //const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
 $(document).ready(function () {
@@ -47,7 +47,7 @@ $(document).ready(function () {
 
             var sorted_data = data;
             for (var i = 0; i < sorted_data.length; i++) {
-                console.log(i)
+
                 if (i == sorted_data.length - 1) {
                     break;
                 }
@@ -142,8 +142,8 @@ $(document).ready(function () {
                                     <p class="mb-0 fw-bold fs-6">Share</p>
                                 </div>
                                 <div class="save d-flex flex-row text-secondary me-4 p-1 rounded hoverable" id="post_bookmark_${data[i].post_id}">
-                                    <span class="material-icons ms-0">bookmark</span>
-                                    <p class="mb-0 fw-bold fs-6">Unsave</p>
+                                    <span class="material-icons ms-0">bookmark_border</span>
+                                    <p class="mb-0 fw-bold fs-6">Save</p>
                                 </div>
                         </div>
 
@@ -154,6 +154,23 @@ $(document).ready(function () {
 
 
                 $('#post_div').append(append_str)
+            }
+
+            // Block of code shows user's upvotes and downvotes on posts
+            // and also showing saved posts properly
+            if (user_id) {
+                var saved_posts = getSavedPosts(user_id);
+                var data = getUsersVotes(user_id);
+                for (var i = 0; i < data.length; i++) {
+                    var upvote_button = $(`#post_${data[i].fk_post_id}_upvote`);
+                    var downvote_button = $(`#post_${data[i].fk_post_id}_downvote`);
+                    if (data[i].vote_type == true) {
+                        upvote_button.addClass('upvoted');
+                    } else {
+                        downvote_button.addClass('downvoted');
+                    }
+                }
+
             }
 
 
@@ -363,8 +380,8 @@ $(document).ready(function () {
             $('.post').on('click', function (e) {
                 var post = $(this);
                 var post_id = post.attr('id').split('_')[1];
-                var subreaddit = pathname;
-                location.href = `${subreaddit}/${post_id}`;
+                var subreaddit = 0;
+                location.href = `r/${subreaddit}/${post_id}`;
             })
 
             // Handles clicking on pin button
@@ -381,33 +398,21 @@ $(document).ready(function () {
             })
 
 
-            // Block of code shows user's upvotes and downvotes on posts
-            // temp user_id
-            if (user_id) {
-                var data = getUsersVotes(pathname, user_id);
-                for (var i = 0; i < data.length; i++) {
-                    var upvote_button = $(`#post_${data[i].fk_post_id}_upvote`);
-                    var downvote_button = $(`#post_${data[i].fk_post_id}_downvote`);
-                    if (data[i].vote_type == true) {
-                        upvote_button.addClass('upvoted');
-                    } else {
-                        downvote_button.addClass('downvoted');
-                    }
-                }
-            }
+
+
         },
     })
-    
+
 });
 
-function getUserId(){
-    return new Promise(function(resolve, reject) {
+function getUserId() {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/getUserId`,
             method: 'GET',
             contentType: "application/json; charset=utf-8",
-            headers:{'authorization': "Bearer " + token},
+            headers: { 'authorization': "Bearer " + token },
             success: function (data, status, xhr) {
                 resolve(data.user_id)
             },
@@ -508,7 +513,7 @@ function addImage(post_id) {
             }
             $(`#load`).html(``);
         },
-        
+
         error: function (xhr, textStatus, errorThrown) {
             console.log('Error in Operation');
             console.log(xhr)
@@ -517,4 +522,46 @@ function addImage(post_id) {
             console.log(xhr.status);
         }
     });
+}
+
+function getUsersVotes(user_id) {
+    var results;
+    $.ajax({
+        //headers: { 'authorization': 'Bearer ' + tmpToken },
+        method: 'GET',
+        url: `${baseUrl[0]}/vote/all?user_id=${user_id}`,
+        async: false,
+        dataType: 'json',
+        success: function (data, textStatus, xhr) {
+            console.log(data);
+            results = data
+        }
+    })
+    return results;
+}
+
+function getSavedPosts(user_id) {
+    var output;
+    $.ajax({
+        url: baseUrl[0] + "/save/posts?user_id=" + user_id,
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        success: function (saved_posts_data, status, xhr) {
+            for (var x = 0; x < saved_posts_data.length; x++) {
+                var post_id = saved_posts_data[x].fk_post_id;
+                var saved_bookmark = $(`#post_bookmark_${post_id}`)
+                saved_bookmark.addClass('saved');
+                saved_bookmark.empty();
+                saved_bookmark.append(`
+                    <span class="material-icons md-24 ms-0">bookmark</span>
+                    <p class="mb-0 fw-bold fs-6">Unsave</p>
+                `);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("Error getting saved posts. Try refreshing the page.")
+        }
+    })
+    return output;
+
 }
