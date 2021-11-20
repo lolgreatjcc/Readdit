@@ -135,8 +135,9 @@ $(document).ready(function () {
                 if (user_id) {
                     var vote_data = getUsersVotes(subreaddit_path, user_id, post_data.post_id);
                     handleVoting(user_id);
-                    var saved_posts = getSavedPosts(user_id, post_data.post_id);
-
+                    var saved_posts = getSavedPosts(user_id, post_data.post_id, () => {
+                        $('#post_loading_div').addClass('d-none');
+                    });
                     // Handles saving of posts
                     $('.save').on('click', function (e) {
                         e.stopPropagation();
@@ -201,6 +202,10 @@ $(document).ready(function () {
 
                     })
                 }
+                else {
+                    $('#post_loading_div').addClass('d-none');
+                }
+
             }
         }
     });
@@ -301,6 +306,8 @@ $(document).ready(function () {
                     $(`#post_media`).html(`<img style="max-height: 500px; max-width: 700px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
                 }
             }
+
+
         },
         error: function (xhr, textStatus, errorThrown) {
             console.log('Error in Operation');
@@ -762,7 +769,7 @@ function handleSaving() {
     })
 }
 
-function getSavedPosts(user_id, current_post_id) {
+function getSavedPosts(user_id, current_post_id, callback) {
     var output;
     $.ajax({
         url: baseUrl[0] + "/save/posts?user_id=" + user_id,
@@ -779,8 +786,10 @@ function getSavedPosts(user_id, current_post_id) {
                     <span class="material-icons md-24 ms-0">bookmark</span>
                     <p class="mb-0 fw-bold fs-6">Unsave</p>
                 `);
+                    break;
                 }
             }
+            callback();
         },
         error: function (xhr, status, error) {
             alert("Error getting saved posts. Try refreshing the page.")
