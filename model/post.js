@@ -66,7 +66,7 @@ var post = {
                 confidence_rating = (post_votes) / Math.pow((post_hour_difference), 1.8);
                 result[i].confidence_rating = confidence_rating;
             }
-        
+
             // Note: The posts are sorted in the frontend as it didn't feel appropriate to add *design/formatting* code in the model and controller. 
 
             callback(result, null)
@@ -279,10 +279,26 @@ var post = {
                 {
                     model: Flair,
                     attributes: ['flair_name', "flair_colour"]
-                }
+                },
+                {
+                    model: Post_Vote,
+                    attributes: ['vote_type']
+                },
             ],
 
         }).then(function (result) {
+            console.log(result.dataValues.Post_Votes);
+            var popularity_rating = 0;
+            // This block of code calculates the post's popularity
+            for (var x = 0; x < result.dataValues.Post_Votes.length; x++) {
+                if (result.dataValues.Post_Votes[x].vote_type == true) {
+                    popularity_rating += 1;
+                }
+                else {
+                    popularity_rating -= 1;
+                }
+            }
+            result.dataValues.Post_Votes = popularity_rating;
             console.log(result)
             return callback(result, null)
         }).catch(function (err) {
@@ -461,7 +477,7 @@ var post = {
                 }
                 result[i].Post_Votes = popularity_rating;
             }
-            
+
             callback(result, null)
         }).catch(function (err) {
             console.log(err)
