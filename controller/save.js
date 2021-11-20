@@ -4,7 +4,7 @@ const post = require('../model/post.js')
 const verify = require('./verify')
 
 // save a post
-router.post('/post', function (req,res) {
+router.post('/post',verify.verifySameUserId, function (req,res) {
     var post_id = req.body.post_id;
     var user_id = req.body.user_id;
     post.savePost(post_id, user_id, function (result,err) {
@@ -27,7 +27,7 @@ router.get('/posts', function (req,res) {
     })
 })
 
-router.delete('/post', function (req,res) {
+router.delete('/post',verify.verifySameUserId, function (req,res) {
     var post_id = req.body.post_id;
     var user_id = req.body.user_id;
     post.unsavePost(post_id, user_id, function (result,err) {
