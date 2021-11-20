@@ -1,6 +1,8 @@
 const baseUrl = "http://localhost:3000";
 //const baseUrl = "https://readdit-backend.herokuapp.com"
 
+let notifier = new AWN({icons:{enabled:false}})
+
 $(document).ready(function () {
 
     // Retrieves subreaddits.
@@ -20,7 +22,7 @@ $(document).ready(function () {
         },
         error: function (xhr, status, err) {
             console.log(xhr)
-            alert(xhr.responseJSON.message);
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 
@@ -52,10 +54,10 @@ $(document).ready(function () {
         var token = localStorage.getItem("token")
         
         if (subreaddit_id == null) {
-            $(`#msg`).html(`<p class="text-danger"> Please select a subreaddit to post in! </p>`);
+            notifier.warning("Please select a subreaddit to post in!");
         }
         else if (title.trim() == "") {
-            $(`#msg`).html(`<p class="text-danger"> Post title cannot be blank! </p>`);
+            notifier.warning("Post title cannot be blank!");
         }
         else {
             let webFormData = new FormData();

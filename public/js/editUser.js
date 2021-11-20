@@ -1,6 +1,8 @@
 const baseUrl = "http://localhost:3000";
 //const baseUrl = "https://readdit-backend.herokuapp.com"
 
+let notifier = new AWN({icons:{enabled:false}})
+
 function loadUserInfo() {
     var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
     var token = localStorage.getItem("token")

@@ -1,6 +1,8 @@
 const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 // const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
+let notifier = new AWN({icons:{enabled:false}})
+
 function loadUserInfo(user_id, token) {
     // call the web service endpoint
     $.ajax({

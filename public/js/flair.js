@@ -1,6 +1,8 @@
 const baseUrl = "http://localhost:3000"
 //const baseUrl = "https://readdit-backend.herokuapp.com"
 
+let notifier = new AWN({icons:{enabled:false}})
+
 $(document).ready(function () {
     localStorage.removeItem("subreaddit_id");
     checkOwner();

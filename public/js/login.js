@@ -1,6 +1,8 @@
 const baseUrl = "http://localhost:3000";
 //const baseUrl = "https://readdit-backend.herokuapp.com"
 
+let notifier = new AWN({icons:{enabled:false}})
+
 $(document).ready(function () {
     $("#Login").click(function () {
         // data extraction
@@ -33,7 +35,7 @@ $(document).ready(function () {
                 console.log("textStatus: " + textStatus);
                 console.log("errorThrown: " + errorThrown);
                 console.log('Error in Operation');
-                alert(xhr.responseJSON.message);
+                notifier.alert("Failed to login!")
                 $(`#messages`).html("Login unsuccessful");
             }
         });

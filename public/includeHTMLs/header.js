@@ -2,7 +2,11 @@
 // Requires head.js and jQuery
 // Note: the href link uses a relative path.  
 
-$('head').append('<link href="/css/color_scheme.css" rel="stylesheet">');
+$('head').append(`
+    <link href="/css/color_scheme.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/notification.css"></link>
+    <script src="/js/notification.js"></script>
+`);
 $(document).ready(() => {
     $('body').prepend(`
     <script>
