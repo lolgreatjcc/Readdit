@@ -381,10 +381,12 @@ $(document).ready(function () {
 
             // Handles clicking on a post
             $('.post').on('click', function (e) {
-                var post = $(this);
-                var post_id = post.attr('id').split('_')[1];
-                var subreaddit = 0;
-                location.href = `r/${subreaddit}/${post_id}`;
+                if (!(e.target.className.includes("video") || e.target.className.includes("carousel-control-next") || e.target.className.includes("carousel-control-prev") || e.target.className.includes("carousel-control-next-icon") || e.target.className.includes("carousel-control-prev-icon"))) {
+                    var post = $(this);
+                    var post_id = post.attr('id').split('_')[1];
+                    var subreaddit = pathname;
+                    location.href = `${subreaddit}/${post_id}`;
+                }
             })
 
             // Handles clicking on pin button
