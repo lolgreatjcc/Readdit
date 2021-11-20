@@ -24,6 +24,7 @@ $(document).ready(function () {
 
                 $('#post_upvote').attr("id", `post_${post_data.post_id}_upvote`);
                 $('#post_downvote').attr("id", `post_${post_data.post_id}_downvote`);
+                $('#post_bookmark').attr("id", `post_bookmark_${post_data.post_id}`);
 
                 //checks if pinned
                 if (post_data.pinned == 1) {
@@ -125,6 +126,7 @@ $(document).ready(function () {
                         $('#community_create_year').html(date.getFullYear());
 
 
+
                     },
                     error: function (xhr, status, error) {
                         // TBD
@@ -133,6 +135,71 @@ $(document).ready(function () {
                 if (user_id) {
                     var vote_data = getUsersVotes(subreaddit_path, user_id, post_data.post_id);
                     handleVoting(user_id);
+                    var saved_posts = getSavedPosts(user_id, post_data.post_id);
+
+                    // Handles saving of posts
+                    $('.save').on('click', function (e) {
+                        e.stopPropagation();
+                        var save_button = $(this);
+                        var post_id = $(this).attr('id').split('_')[2];
+                        if (user_id == false) {
+                            window.location.href = "/login.html"
+                        }
+
+                        if (save_button.hasClass('saved')) {
+                            save_button.removeClass('saved');
+                            save_button.empty();
+                            save_button.append(`
+                                        <span class="material-icons md-24 ms-0">bookmark_border</span>
+                                        <p class="mb-0 fw-bold fs-6">Save</p>
+                                    `);
+
+
+
+                            $.ajax({
+                                url: `${baseUrl[0]}/save/post`,
+                                type: "DELETE",
+                                data: JSON.stringify({
+                                    post_id: post_id,
+                                    user_id: user_id
+                                }),
+                                contentType: "application/json",
+                                success: function (data, status, xhr) {
+                                    console.log(data);
+                                    // do modal
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log(xhr)
+                                }
+                            })
+
+                        } else {
+                            save_button.addClass('saved');
+                            save_button.empty();
+                            save_button.append(`
+                                        <span class="material-icons md-24 ms-0">bookmark</span>
+                                        <p class="mb-0 fw-bold fs-6">Unsave</p>
+                                    `);
+                            $.ajax({
+
+                                url: `${baseUrl[0]}/save/post`,
+                                method: 'POST',
+                                data: JSON.stringify({
+                                    post_id: post_id,
+                                    user_id: user_id
+                                }),
+                                contentType: "application/json",
+                                success: function (data, status, xhr) {
+                                    console.log(data)
+                                    // do modal
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log(xhr);
+                                }
+                            })
+                        }
+
+                    })
                 }
             }
         }
@@ -627,4 +694,98 @@ function getUsersVotes(subreaddit_id, user_id, post_id) {
         }
     })
     return results;
+}
+
+
+function handleSaving() {
+    // Handle Saving of Posts
+    $('.save').on('click', function (e) {
+        e.stopPropagation();
+        var save_button = $(this);
+        var post_id = $(this).attr('id').split('_')[2];
+        if (user_id == false) {
+            window.location.href = "/login.html"
+        }
+
+        if (save_button.hasClass('saved')) {
+            save_button.removeClass('saved');
+            save_button.empty();
+            save_button.append(`
+                        <span class="material-icons md-24 ms-0">bookmark_border</span>
+                        <p class="mb-0 fw-bold fs-6">Save</p>
+                    `);
+
+
+
+            $.ajax({
+                url: `${baseUrl[0]}/save/post`,
+                type: "DELETE",
+                data: JSON.stringify({
+                    post_id: post_id,
+                    user_id: user_id
+                }),
+                contentType: "application/json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    // do modal
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr)
+                }
+            })
+
+        } else {
+            save_button.addClass('saved');
+            save_button.empty();
+            save_button.append(`
+                        <span class="material-icons md-24 ms-0">bookmark</span>
+                        <p class="mb-0 fw-bold fs-6">Unsave</p>
+                    `);
+            $.ajax({
+
+                url: `${baseUrl[0]}/save/post`,
+                method: 'POST',
+                data: JSON.stringify({
+                    post_id: post_id,
+                    user_id: user_id
+                }),
+                contentType: "application/json",
+                success: function (data, status, xhr) {
+                    console.log(data)
+                    // do modal
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr);
+                }
+            })
+        }
+    })
+}
+
+function getSavedPosts(user_id, current_post_id) {
+    var output;
+    $.ajax({
+        url: baseUrl[0] + "/save/posts?user_id=" + user_id,
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        success: function (saved_posts_data, status, xhr) {
+            for (var x = 0; x < saved_posts_data.length; x++) {
+                var post_id = saved_posts_data[x].fk_post_id;
+                if (current_post_id == post_id) {
+                    var saved_bookmark = $(`#post_bookmark_${post_id}`)
+                    saved_bookmark.addClass('saved');
+                    saved_bookmark.empty();
+                    saved_bookmark.append(`
+                    <span class="material-icons md-24 ms-0">bookmark</span>
+                    <p class="mb-0 fw-bold fs-6">Unsave</p>
+                `);
+                }
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("Error getting saved posts. Try refreshing the page.")
+        }
+    })
+    return output;
+
 }

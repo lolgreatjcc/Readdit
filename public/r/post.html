@@ -20,69 +20,70 @@
     <div class="container-xxl my-md-4">
         <div class="row">
             <div class="col-lg-8">
-                <div class="post rounded mb-2">
-                    <div class="row g-0">
-                        <div class="col-1 upvote-section py-2 justify-content-center">
-                            <a class="text-center d-block py-1 post-upvote" id="post_upvote"><i
-                                    class="fas fa-arrow-up text-dark"></i></a>
-                            <p id="post_rating" class="text-center mb-0">####</p>
-                            <a class="text-center d-block py-1 post-downvote" id="post_downvote"><i
-                                    class="fas fa-arrow-down text-dark"></i></a>
-                        </div>
-                        <div class="col-11 bg-white p-2">
-                            <div class="d-flex flex-row align-items-baseline" id="post_info">
-                                <h6 class="d-inline fw-bold clickable-link">
-                                    r/<a id="post_subreaddit"></a></h6>
-                                <p class="fw-light text-secondary mx-1">•</p>
-                                <p class="d-inline text-secondary me-1">Posted by</p>
-                                <p class="d-inline text-secondary clickable-link"> u/<a id="post_username"></a></p>
-                                <p class="fw-light text-secondary mx-1">•</p>
-                                <p class="text-secondary" id="post_timeAgo"></p>
+                <div class="position-relative">
+                    <div class="post rounded mb-2">
+                        <div class="row g-0">
+                            <div class="col-1 upvote-section py-2 justify-content-center">
+                                <a class="text-center d-block py-1 post-upvote" id="post_upvote"><i
+                                        class="fas fa-arrow-up text-dark"></i></a>
+                                <p id="post_rating" class="text-center mb-0">####</p>
+                                <a class="text-center d-block py-1 post-downvote" id="post_downvote"><i
+                                        class="fas fa-arrow-down text-dark"></i></a>
                             </div>
-
-                            <h4 id="post_title" class="mb-0"></h4>
-                            <div id="flair_section" class="mb-0 mt-2"></div>
-                            <p id="post_content" class="mt-3"></p>
-                            <div id="post_media" class="d-flex flex-row justify-content-center mediaDiv">
-
-                            </div>
-                            <div class="mx-3 mt-3">
-                                <div class="toolbar d-flex flex-row align-items-center mb-2">
-                                    <div class="d-flex flex-row text-secondary me-4">
-                                        <span class="material-icons md-24 me-1">chat_bubble_outline</span>
-                                        <p class="mb-0 fw-bold me-1" id="comment_total"></p>
-                                        <p class="mb-0 fw-bold fs-6">Comments</p>
-                                    </div>
-                                    <button type="button" onclick="copy()" id="share">
-                                        <div class="d-flex flex-row text-secondary me-4">
-                                            <span class="material-icons md-24 mx-1">share</span>
-                                            <p class="mb-0 fw-bold fs-6">Share</p>
-                                        </div>
-                                    </button>
-                                    <div class="d-flex flex-row text-secondary me-4">
-                                        <span class="material-icons md-24 mx-1">bookmark_border</span>
-                                        <p class="mb-0 fw-bold fs-6">Save</p>
-                                    </div>
-                                    
+                            <div class="col-11 bg-white p-2">
+                                <div class="d-flex flex-row align-items-baseline" id="post_info">
+                                    <h6 class="d-inline fw-bold clickable-link">
+                                        r/<a id="post_subreaddit"></a></h6>
+                                    <p class="fw-light text-secondary mx-1">•</p>
+                                    <p class="d-inline text-secondary me-1">Posted by</p>
+                                    <p class="d-inline text-secondary clickable-link"> u/<a id="post_username"></a></p>
+                                    <p class="fw-light text-secondary mx-1">•</p>
+                                    <p class="text-secondary" id="post_timeAgo"></p>
                                 </div>
-                                <div class="">
-                                    <div id="comment_as">
-                                        
-                                    </div>
-                                    <form class="">
-                                        <textarea class="form-control body-borders rounded-0 rounded-top"
-                                            style="min-height: 122px; border-bottom: 0;"
-                                            placeholder="What are your thoughts?" id="comment_content"></textarea>
-                                        <div class="bg-darker body-borders rounded-bottom p-2 d-flex">
-                                            <div class="flex-grow-1"></div>
-                                            <input type="button" value="Comment" id="comment_submit"
-                                                class="invert-scheme btn">
+
+                                <h4 id="post_title" class="mb-0"></h4>
+                                <div id="flair_section" class="mb-0 mt-2"></div>
+                                <p id="post_content" class="mt-3"></p>
+                                <div id="post_media" class="d-flex flex-row justify-content-center mediaDiv">
+
+                                </div>
+                                <div class="mx-3 mt-3">
+                                    <div class="toolbar d-flex flex-row align-items-center mb-2">
+                                        <div class="d-flex flex-row text-secondary me-4">
+                                            <span class="material-icons md-24 me-1">chat_bubble_outline</span>
+                                            <p class="mb-0 fw-bold me-1" id="comment_total"></p>
+                                            <p class="mb-0 fw-bold fs-6">Comments</p>
+                                        </div>
+                                        <button type="button" onclick="copy()" id="share">
+                                            <div class="d-flex flex-row text-secondary me-4">
+                                                <span class="material-icons md-24 mx-1">share</span>
+                                                <p class="mb-0 fw-bold fs-6">Share</p>
+                                            </div>
+                                        </button>
+                                        <div class="d-flex flex-row text-secondary me-4 save" id="post_bookmark">
+                                            <span class="material-icons md-24 mx-1">bookmark_border</span>
+                                            <p class="mb-0 fw-bold fs-6">Save</p>
                                         </div>
 
-                                    </form>
-                                    <hr>
-                                    <div id="comment_div">
-                                        <!-- <div class="comment row ">
+                                    </div>
+                                    <div class="">
+                                        <div id="comment_as">
+
+                                        </div>
+                                        <form class="">
+                                            <textarea class="form-control body-borders rounded-0 rounded-top"
+                                                style="min-height: 122px; border-bottom: 0;"
+                                                placeholder="What are your thoughts?" id="comment_content"></textarea>
+                                            <div class="bg-darker body-borders rounded-bottom p-2 d-flex">
+                                                <div class="flex-grow-1"></div>
+                                                <input type="button" value="Comment" id="comment_submit"
+                                                    class="invert-scheme btn">
+                                            </div>
+
+                                        </form>
+                                        <hr>
+                                        <div id="comment_div">
+                                            <!-- <div class="comment row ">
                                             <div class="col-1 d-flex flex-column">
                                                 <p>/img/</p>
                                                 <div class="comment-line flex-grow-1 w-50"></div>
@@ -109,15 +110,15 @@
 
                                             </div>
                                         </div> -->
+                                        </div>
                                     </div>
+
                                 </div>
 
                             </div>
-
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="col-lg-4">
                 <div class="bg-white body-borders rounded shadow-sm mb-3">
@@ -129,7 +130,8 @@
 
                     </div>
                     <div class="p-2">
-                        <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100 text-light">Join Community</a>
+                        <a class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100 text-light">Join
+                            Community</a>
                     </div>
                 </div>
                 <div class="bg-white body-borders rounded shadow-sm">
@@ -150,7 +152,9 @@
                             <p class="ms-1 mb-0" id="community_create_year">YYYY</p>
                         </div>
                         <hr class="mb-2" />
-                        <a href="../createPost.html" class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100 text-light">Create Post</a>
+                        <a href="../createPost.html"
+                            class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100 text-light">Create
+                            Post</a>
                     </div>
                 </div>
             </div>
