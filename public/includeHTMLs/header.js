@@ -8,12 +8,27 @@ $('head').append(`
     <script src="/js/notification.js"></script>
 `);
 $(document).ready(() => {
-    $('body').prepend(`
+    var login;
+    try {
+        var userData = localStorage.getItem('userInfo');
+        var token = localStorage.getItem("token")
+        // userData = userData.slice(1,-1);
+
+        var userJsonData = JSON.parse(userData);
+        var role = userJsonData.fk_user_type_id;
+        console.log("Logged in")
+        login = true;
+    } catch (error) {
+        console.log("Not logged in");
+        login = false;
+    }
+
+    var prependstr = `
     <script>
         function runSearch(){
             var query = $('#Search').val();
             window.location.href = "/search.html?query=" + query;
-        }
+        }  
 
 
     </script>
@@ -31,7 +46,7 @@ $(document).ready(() => {
         <div id="readitNavbar" class="collapse navbar-collapse">
             <ul class="navbar-nav mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link active" aria-current="page" href="../home.html">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Link</a>
@@ -48,21 +63,33 @@ $(document).ready(() => {
                 </div>
 
             </form>
+        `
 
-            <ul class="navbar-nav ms-auto">
+    if (!login) {
+        prependstr += `
+                                <ul class="navbar-nav ms-auto">
 
-                <a href="/login.html" id="loginButton" class="btn me-2 px-4 rounded-pill">Login</a>
-                <a href="#" id="signUpButton" class="btn me-3 px-4">Sign Up</a>
-                <div class="nav-item flex-row d-flex">
-                    <i class="far fa-user fa-lg me-1 align-middle"></i>
-                    <i class="fas fa-chevron-down fa-sm align-middle"></i>
-                </div>
+                                    <a href="/login.html" id="loginButton" class="btn me-2 px-4 rounded-pill">Login</a>
+                                    <a href="/addUser.html" id="signUpButton" class="btn me-3 px-4">Sign Up</a>
+                                </ul>
+                        `;
+    }
+    else {
+        prependstr += `
+        <ul class="navbar-nav ms-auto">
+            <a href="/profile/profile.html" id="profileButton" class="btn me-2 px-4 rounded-pill ">Profile</a>
+            <a href="/login.html" onclick="localStorage.clear()" id="signUpButton" class="btn me-3 px-4">Log Out</a>
+        </ul>
+`;
+    }
 
-            </ul>
+    prependstr += `
+                        </div>
 
-        </div>
+                    </div>
+                </nav>
+                `
 
-    </div>
-</nav>
-`)
+
+    $('body').prepend(prependstr);
 })

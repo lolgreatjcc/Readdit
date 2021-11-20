@@ -1,4 +1,4 @@
-const baseUrl = ["http://localhost:3000","http://localhost:3001"]
+const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 //const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
 let notifier = new AWN({icons:{enabled:false}})
@@ -23,24 +23,30 @@ $(document).ready(function () {
                 $('#post_username').append(post_data.User.username);
                 $('#post_title').append(post_data.title);
                 $('#post_content').append(post_data.content);
+                $('#post_rating').attr("id", `post_${post_data.post_id}_popularity`).html(post_data.Post_Votes)
+
+                $('#post_upvote').attr("id", `post_${post_data.post_id}_upvote`);
+                $('#post_downvote').attr("id", `post_${post_data.post_id}_downvote`);
+                $('#post_bookmark').attr("id", `post_bookmark_${post_data.post_id}`);
 
                 //checks if pinned
-                if (post_data.pinned == 1){
+                if (post_data.pinned == 1) {
                     $(`#post_info`).append(`
                     <p class="fw-light text-secondary mx-1">•</p>
                     <p class="text-secondary">Pinned By Moderators</p>
                     `)
                 }
-                if(post_data.Flair != null){
+                if (post_data.Flair != null) {
                     console.log("working");
                     $("#flair_section").append(`<div class="btn rounded-pill py-0 px-2" style="background-color:${post_data.Flair.flair_colour}"><span class="fw-bold text-white">${post_data.Flair.flair_name}</sp></div>`)
                 }
 
+                var user_id = await getUserId();
                 //checks if moderator or owner
                 var moderator = await checkModerator(post_data.Subreaddit.subreaddit_name);
                 var owner = await checkOwner(post_data.Subreaddit.subreaddit_name);
                 var report_delete = "";
-                if (owner || moderator){
+                if (owner || moderator) {
                     $(`.post`).append(`
                     <div class="pin" id="${post_data.post_id}_${post_data.Subreaddit.subreaddit_id}">
                         <span class="material-icons md-24 ms-0 mx-1">push_pin</span>
@@ -54,7 +60,7 @@ $(document).ready(function () {
                         </div>
                     </button>`
                 }
-                else{
+                else {
                     report_delete = `
                     <button style="border-width : 0px; background-color:white;" type="button" onclick="report(${post_data.post_id})" id="report">
                         <div class="d-flex flex-row text-secondary me-4">
@@ -65,7 +71,7 @@ $(document).ready(function () {
                 }
 
                 $(".toolbar").append(report_delete)
-                
+
 
 
                 // Handles clicking on pin button
@@ -121,11 +127,88 @@ $(document).ready(function () {
                         $('#community_create_month').html(months[date.getMonth() - 1]);
                         $('#community_create_day').html(date.getDate());
                         $('#community_create_year').html(date.getFullYear());
+
+
+
                     },
                     error: function (xhr, status, error) {
                         // TBD
                     }
                 })
+                if (user_id) {
+                    var vote_data = getUsersVotes(subreaddit_path, user_id, post_data.post_id);
+                    handleVoting(user_id);
+                    var saved_posts = getSavedPosts(user_id, post_data.post_id, () => {
+                        $('#post_loading_div').addClass('d-none');
+                    });
+                    // Handles saving of posts
+                    $('.save').on('click', function (e) {
+                        e.stopPropagation();
+                        var save_button = $(this);
+                        var post_id = $(this).attr('id').split('_')[2];
+                        if (user_id == false) {
+                            window.location.href = "/login.html"
+                        }
+
+                        if (save_button.hasClass('saved')) {
+                            save_button.removeClass('saved');
+                            save_button.empty();
+                            save_button.append(`
+                                        <span class="material-icons md-24 ms-0">bookmark_border</span>
+                                        <p class="mb-0 fw-bold fs-6">Save</p>
+                                    `);
+
+
+
+                            $.ajax({
+                                url: `${baseUrl[0]}/save/post`,
+                                type: "DELETE",
+                                data: JSON.stringify({
+                                    post_id: post_id,
+                                    user_id: user_id
+                                }),
+                                contentType: "application/json",
+                                success: function (data, status, xhr) {
+                                    console.log(data);
+                                    // do modal
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log(xhr)
+                                }
+                            })
+
+                        } else {
+                            save_button.addClass('saved');
+                            save_button.empty();
+                            save_button.append(`
+                                        <span class="material-icons md-24 ms-0">bookmark</span>
+                                        <p class="mb-0 fw-bold fs-6">Unsave</p>
+                                    `);
+                            $.ajax({
+
+                                url: `${baseUrl[0]}/save/post`,
+                                method: 'POST',
+                                data: JSON.stringify({
+                                    post_id: post_id,
+                                    user_id: user_id
+                                }),
+                                contentType: "application/json",
+                                success: function (data, status, xhr) {
+                                    console.log(data)
+                                    // do modal
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log(xhr);
+                                }
+                            })
+                        }
+
+                    })
+                }
+                else {
+                    $('#post_loading_div').addClass('d-none');
+                }
+
             }
         },
         error: function (xhr, status, error){
@@ -148,8 +231,8 @@ $(document).ready(function () {
             console.log(media.length);
 
             if (media.length > 1) {
-                    console.log("Running carousel");
-                    var appendStringStart = `
+                console.log("Running carousel");
+                var appendStringStart = `
                     <div class="col-1">
                         <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -158,17 +241,17 @@ $(document).ready(function () {
                     </div>
                     <div id="carouselExampleIndicators" class="carousel slide inheritMaxWidth col-10" data-ride="carousel" data-interval="false">
                             <ol class="carousel-indicators">`
-                    for (var j = 0; j < media.length; j++) {
-                        if (j == 0) {
-                            appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" style="color: #00ff00"></li>`;
-                        }
-                        else {
-                            appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" class="active"></li>`;
-                        }
+                for (var j = 0; j < media.length; j++) {
+                    if (j == 0) {
+                        appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" style="color: #00ff00"></li>`;
                     }
-                    appendStringStart += `</ol> <div class="carousel-inner inheritMaxWidth">`;
+                    else {
+                        appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" class="active"></li>`;
+                    }
+                }
+                appendStringStart += `</ol> <div class="carousel-inner inheritMaxWidth">`;
 
-                    var appendStringEnd = `
+                var appendStringEnd = `
                     </div>
                     </div>
                     <div class="col-1">
@@ -178,57 +261,59 @@ $(document).ready(function () {
                           </a>
                       </div>`;
 
-                    //run multiple file display
-                    for (var count = 0; count < media.length; count++) {
-                        if (count == 0) {
-                            var item = 'carousel-item active';
-                        }
-                        else {
-                            var item = 'carousel-item';
-                        }
-                        if (media[count].fk_content_type == "1") {
-                            appendStringStart += `<div class="${item} mediaDiv">
+                //run multiple file display
+                for (var count = 0; count < media.length; count++) {
+                    if (count == 0) {
+                        var item = 'carousel-item active';
+                    }
+                    else {
+                        var item = 'carousel-item';
+                    }
+                    if (media[count].fk_content_type == "1") {
+                        appendStringStart += `<div class="${item} mediaDiv">
                                     <img class="image";" src="${media[count].media_url}" alt="Image not available"> 
                                 </div>`;
-                        }
-                        else if (media[count].fk_content_type == "2") {
-                            appendStringStart += `<div class="${item} mediaDiv"> <video class="video" controls autoplay muted loop>
+                    }
+                    else if (media[count].fk_content_type == "2") {
+                        appendStringStart += `<div class="${item} mediaDiv"> <video class="video" controls autoplay muted loop>
                                                 <source src="${media[count].media_url}" type="video/mp4">
                                                 Your browser does not support the video tag.
                                         </video> </div>`;
-                        }
-                        else {
-                            appendStringStart += `<div class="${item}">
+                    }
+                    else {
+                        appendStringStart += `<div class="${item}">
                                     <img style="height: 400px; max-width: 600px; object-fit: cover;" src="${media[count].media_url}" alt="GIF not available"> 
                                 </div>`;
-                        }
                     }
-
-                    appendString = appendStringStart + appendStringEnd;
-                    $(`#post_media`).html(appendString);
-
                 }
-                else if (media.length == 0) {
-                    console.log("Running no media");
-                    appendString = ``;
-                    $(`#post_media`).remove();
+
+                appendString = appendStringStart + appendStringEnd;
+                $(`#post_media`).html(appendString);
+
+            }
+            else if (media.length == 0) {
+                console.log("Running no media");
+                appendString = ``;
+                $(`#post_media`).remove();
+            }
+            else {
+                console.log("Running single item");
+                //run single file display
+                if (media[0].fk_content_type == "1") {
+                    $(`#post_media`).html(`<img class="image" src="${media[0].media_url}" alt="Image not available"> `)
                 }
-                else {
-                    console.log("Running single item");
-                    //run single file display
-                    if (media[0].fk_content_type == "1") {
-                        $(`#post_media`).html(`<img class="image" src="${media[0].media_url}" alt="Image not available"> `)
-                    }
-                    else if (media[0].fk_content_type == "2") {
-                        $(`#post_media`).html(`<video class="video" controls autoplay muted loop>
+                else if (media[0].fk_content_type == "2") {
+                    $(`#post_media`).html(`<video class="video" controls autoplay muted loop>
                                                 <source src="${media[0].media_url}" type="video/mp4">
                                                 Your browser does not support the video tag.
                                         </video>`)
-                    }
-                    else {
-                        $(`#post_media`).html(`<img style="max-height: 500px; max-width: 700px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
-                    }
                 }
+                else {
+                    $(`#post_media`).html(`<img style="max-height: 500px; max-width: 700px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
+                }
+            }
+
+
         },
         error: function (xhr, textStatus, errorThrown) {
             console.log(xhr)
@@ -282,7 +367,7 @@ $(document).ready(function () {
 
                 $('#comment_div').append(`
                 
-                            <div class="comment row mb-4">
+                            <div class="comment row mb-4 p-3 rounded">
                                     <div class="col-1 d-flex flex-column">
                                     <img src="${data[i].User.profile_pic}" alt="profile image" id="pfp" class="pb-2"></img>
                                         <div class="comment-line flex-grow-1 w-50"></div>
@@ -332,7 +417,7 @@ $(document).ready(function () {
             method: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
-            headers: {authorization:"Bearer " + token},
+            headers: { authorization: "Bearer " + token },
             success: function (data, status, xhr) {
                 console.log(data);
                 location.reload();
@@ -346,7 +431,7 @@ $(document).ready(function () {
 
 })
 
-function copy(){
+function copy() {
     var copiedText = baseUrl[1] + window.location.pathname
 
     /* Copy the text inside the text field */
@@ -365,7 +450,7 @@ function report() {
 }
 
 function checkOwner(subreadditName) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/r/checkOwner/` + subreadditName,
@@ -383,7 +468,7 @@ function checkOwner(subreadditName) {
 }
 
 function checkModerator(subreadditName) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
         $.ajax({
             url: `${baseUrl[0]}/moderator/checkModerator/` + subreadditName,
@@ -400,17 +485,17 @@ function checkModerator(subreadditName) {
     })
 }
 
-function pin(post_subreaddit_id){
+function pin(post_subreaddit_id) {
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
     var post_id = post_subreaddit_id_arr[0]
     var fk_subreaddit_id = post_subreaddit_id_arr[1]
-    var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
+    var data = JSON.stringify({ post_id: post_id, fk_subreaddit_id: fk_subreaddit_id });
     var token = localStorage.getItem("token");
     $.ajax({
         url: `${baseUrl[0]}/post/pin`,
         method: 'PUT',
         contentType: "application/json; charset=utf-8",
-        headers:{'authorization': "Bearer " + token},
+        headers: { 'authorization': "Bearer " + token },
         data: data,
         success: function (data, status, xhr) {
             window.location.reload();
@@ -421,17 +506,17 @@ function pin(post_subreaddit_id){
     })
 }
 
-function deletePost(post_subreaddit_id){
+function deletePost(post_subreaddit_id) {
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
     var post_id = post_subreaddit_id_arr[1]
     var fk_subreaddit_id = post_subreaddit_id_arr[2]
-    var data = JSON.stringify({post_id:post_id,fk_subreaddit_id:fk_subreaddit_id});
+    var data = JSON.stringify({ post_id: post_id, fk_subreaddit_id: fk_subreaddit_id });
     var token = localStorage.getItem("token");
     $.ajax({
         url: `${baseUrl[0]}/post`,
         method: 'DELETE',
         contentType: "application/json; charset=utf-8",
-        headers:{'authorization': "Bearer " + token},
+        headers: { 'authorization': "Bearer " + token },
         data: data,
         success: function (data, status, xhr) {
             var pathname = window.location.pathname;
@@ -442,4 +527,280 @@ function deletePost(post_subreaddit_id){
             alert(xhr.responseJSON.message);
         }
     });
+}
+
+
+function handleVoting(user_id) {
+    // Handles upvoting/downvoting a post
+    $('.post-upvote').on('click', function (e) {
+        console.log("clicked upvote")
+        e.stopPropagation();
+        if (user_id == false) {
+            window.location.href = "/login.html"
+        }
+        else {
+            console.log("user_id: ", user_id);
+            var post_id = $(this).attr('id').split('_')[1];
+            var upvote_button = $(this);
+            var downvote_button = $(`#post_${post_id}_downvote`);
+
+            var popularity = $(`#post_${post_id}_popularity`);
+            var rating = popularity.text();
+
+            var data;
+            if (upvote_button.hasClass('upvoted')) {
+                // Remove Upvote
+                data = {
+                    post_id: post_id,
+                    user_id: user_id,
+                }
+
+                popularity.text(parseInt(rating) - 1);
+                upvote_button.removeClass('upvoted');
+                $.ajax({
+                    method: "DELETE",
+                    url: `${baseUrl[0]}/vote/post_rating`,
+                    data: JSON.stringify({ data }),
+                    contentType: "application/json",
+                    success: function (data, status, xhr) {
+                        console.log(data);
+                    }
+                })
+            }
+            else {
+                rating = parseInt(rating) + 1;
+                if (downvote_button.hasClass('downvoted')) {
+                    rating = parseInt(rating) + 1;
+                    downvote_button.removeClass('downvoted');
+                }
+                popularity.text(rating);
+
+                upvote_button.addClass('upvoted');
+                // Update change in vote OR Create Vote
+                $.ajax({
+                    method: "POST",
+                    url: `${baseUrl[0]}/vote/post_rating`,
+                    data: JSON.stringify({
+                        post_id: post_id,
+                        user_id: user_id,
+                        vote_type: 1,
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data, status, xhr) {
+                        console.log(data);
+                    }
+                })
+            }
+        }
+
+
+    })
+
+    // Handles upvoting/downvoting a post
+    $('.post-downvote').on('click', function (e) {
+        e.stopPropagation();
+
+        if (user_id == false) {
+            window.location.href = "/login.html"
+        }
+        else {
+            var post_id = $(this).attr('id').split('_')[1];
+            var downvote_button = $(this);
+            var upvote_button = $(`#post_${post_id}_upvote`);
+
+            var popularity = $(`#post_${post_id}_popularity`);
+            var rating = popularity.text();
+
+            var data;
+            if (downvote_button.hasClass('downvoted')) {
+                popularity.text(parseInt(rating) + 1);
+                downvote_button.removeClass('downvoted');
+                // Remove Upvote
+
+                data = {
+                    post_id: post_id,
+                    user_id: user_id
+                }
+
+
+                $.ajax({
+                    method: "DELETE",
+                    url: `${baseUrl[0]}/vote/post_rating`,
+                    data: JSON.stringify({ data }),
+                    contentType: "application/json",
+                    success: function (data, status, xhr) {
+                        console.log(data);
+                    }
+                })
+            }
+            else {
+                rating = parseInt(rating) - 1;
+                if (upvote_button.hasClass('upvoted')) {
+                    rating = parseInt(rating) - 1;
+                    upvote_button.removeClass('upvoted');
+                }
+                popularity.text(rating);
+
+                downvote_button.addClass('downvoted');
+                // Update change in vote OR Create Vote
+                $.ajax({
+                    method: "POST",
+                    url: `${baseUrl[0]}/vote/post_rating`,
+                    data: JSON.stringify({
+                        post_id: post_id,
+                        user_id: user_id,
+                        vote_type: 0,
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data, status, xhr) {
+                        console.log(data);
+                    }
+                })
+            }
+        }
+    })
+}
+
+function getUserId() {
+    return new Promise(function (resolve, reject) {
+        var token = localStorage.getItem("token");
+        $.ajax({
+            url: `${baseUrl[0]}/getUserId`,
+            method: 'GET',
+            contentType: "application/json; charset=utf-8",
+            headers: { 'authorization': "Bearer " + token },
+            success: function (data, status, xhr) {
+                resolve(data.user_id)
+            },
+            error: function (xhr, status, error) {
+                resolve(false);
+            }
+        });
+    })
+}
+
+function getUsersVotes(subreaddit_id, user_id, post_id) {
+    var results;
+    $.ajax({
+        //headers: { 'authorization': 'Bearer ' + tmpToken },
+        method: 'GET',
+        url: `${baseUrl[0]}/vote/subreaddit?subreaddit_id=${subreaddit_id}&user_id=${user_id}`,
+        async: false,
+        dataType: 'json',
+        success: function (data, textStatus, xhr) {
+            for (var x = 0; x < data.length; x++) {
+                if (data[x].fk_post_id == post_id) {
+
+
+                    vote_type = data[x].vote_type;
+                    if (vote_type == true) {
+                        var upvote_button = $(`#post_${post_id}_upvote`);
+                        upvote_button.addClass('upvoted');
+                    }
+                    else {
+                        var downvote_button = $(`#post_${post_id}_downvote`);
+                        downvote_button.addClass('downvoted');
+                    }
+                }
+            }
+        }
+    })
+    return results;
+}
+
+
+function handleSaving() {
+    // Handle Saving of Posts
+    $('.save').on('click', function (e) {
+        e.stopPropagation();
+        var save_button = $(this);
+        var post_id = $(this).attr('id').split('_')[2];
+        if (user_id == false) {
+            window.location.href = "/login.html"
+        }
+
+        if (save_button.hasClass('saved')) {
+            save_button.removeClass('saved');
+            save_button.empty();
+            save_button.append(`
+                        <span class="material-icons md-24 ms-0">bookmark_border</span>
+                        <p class="mb-0 fw-bold fs-6">Save</p>
+                    `);
+
+
+
+            $.ajax({
+                url: `${baseUrl[0]}/save/post`,
+                type: "DELETE",
+                data: JSON.stringify({
+                    post_id: post_id,
+                    user_id: user_id
+                }),
+                contentType: "application/json",
+                success: function (data, status, xhr) {
+                    console.log(data);
+                    // do modal
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr)
+                }
+            })
+
+        } else {
+            save_button.addClass('saved');
+            save_button.empty();
+            save_button.append(`
+                        <span class="material-icons md-24 ms-0">bookmark</span>
+                        <p class="mb-0 fw-bold fs-6">Unsave</p>
+                    `);
+            $.ajax({
+
+                url: `${baseUrl[0]}/save/post`,
+                method: 'POST',
+                data: JSON.stringify({
+                    post_id: post_id,
+                    user_id: user_id
+                }),
+                contentType: "application/json",
+                success: function (data, status, xhr) {
+                    console.log(data)
+                    // do modal
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr);
+                }
+            })
+        }
+    })
+}
+
+function getSavedPosts(user_id, current_post_id, callback) {
+    var output;
+    $.ajax({
+        url: baseUrl[0] + "/save/posts?user_id=" + user_id,
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        success: function (saved_posts_data, status, xhr) {
+            for (var x = 0; x < saved_posts_data.length; x++) {
+                var post_id = saved_posts_data[x].fk_post_id;
+                if (current_post_id == post_id) {
+                    var saved_bookmark = $(`#post_bookmark_${post_id}`)
+                    saved_bookmark.addClass('saved');
+                    saved_bookmark.empty();
+                    saved_bookmark.append(`
+                    <span class="material-icons md-24 ms-0">bookmark</span>
+                    <p class="mb-0 fw-bold fs-6">Unsave</p>
+                `);
+                    break;
+                }
+            }
+            callback();
+        },
+        error: function (xhr, status, error) {
+            alert("Error getting saved posts. Try refreshing the page.")
+        }
+    })
+    return output;
+
 }
