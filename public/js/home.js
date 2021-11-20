@@ -204,6 +204,7 @@ $(document).ready(function () {
                             user_id: user_id
                         }),
                         contentType: "application/json",
+                        headers: {'authorization': "Bearer " + token},
                         success: function (data, status, xhr) {
                             console.log(data);
                             // do modal
@@ -229,9 +230,9 @@ $(document).ready(function () {
                             user_id: user_id
                         }),
                         contentType: "application/json",
+                        headers: {'authorization': "Bearer " + token},
                         success: function (data, status, xhr) {
                             console.log(data)
-                            // do modal
                         },
                         error: function (xhr, status, error) {
                             console.log(xhr);
@@ -280,6 +281,7 @@ $(document).ready(function () {
                             url: `${baseUrl[0]}/vote/post_rating`,
                             data: JSON.stringify({ data }),
                             contentType: "application/json",
+                            headers:{'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
                                 console.log(data);
                             }
@@ -304,6 +306,7 @@ $(document).ready(function () {
                                 vote_type: 1,
                             }),
                             contentType: "application/json; charset=utf-8",
+                            headers:{'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
                                 console.log(data);
                             }
@@ -343,6 +346,7 @@ $(document).ready(function () {
 
                         $.ajax({
                             method: "DELETE",
+                            headers:{'authorization': "Bearer " + token},
                             url: `${baseUrl[0]}/vote/post_rating`,
                             data: JSON.stringify({ data }),
                             contentType: "application/json",
@@ -364,11 +368,13 @@ $(document).ready(function () {
                         $.ajax({
                             method: "POST",
                             url: `${baseUrl[0]}/vote/post_rating`,
+                            headers: {'authorization': "Bearer " + token},
                             data: JSON.stringify({
                                 post_id: post_id,
                                 user_id: user_id,
                                 vote_type: 0,
                             }),
+                            
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (data, status, xhr) {

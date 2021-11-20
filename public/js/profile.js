@@ -216,10 +216,7 @@ $(document).ready(function () {
 
 function displaySavedPosts() {
 
-    // Temp user_id
-    console.log("Displaying Comments");
-    var user_id = 2;
-
+    var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
     $.ajax({
         url: baseUrl[0] + "/save/posts?user_id=" + user_id,
         type: "GET",
@@ -315,20 +312,19 @@ function displaySavedPosts() {
                 notifier.info("Removing post from saved posts...")
                 e.stopPropagation();
                 var id = $(this).attr('id');
-                var post_id = id.split('_')[2];
-
-                // Temporary user_id
+                var post_id = id.split('_')[2]; 
                 var token = localStorage.getItem("token");
-
+                var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
                 var data = {
-                    post_id: post_id
+                    post_id: post_id,
+                    user_id: user_id
                 }
                 $.ajax({
                     url: baseUrl[0] + "/save/post",
                     type: "DELETE",
                     data: JSON.stringify(data),
                     contentType: "application/json",
-                    headers:{authorization:"Bearer "+token},
+                    headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
                         notifier.success("Removed posts from saved posts.")
                         displaySavedPosts()
