@@ -237,6 +237,14 @@ $(document).ready(function () {
     $('body').on('click', '#adminButton', function () {
         window.location.assign(`/admin/admin_home.html`);
     });
+
+    $('body').on('click', '#editBtn', function () {
+        window.location.href = "/edit_account.html";
+    });
+
+    $('body').on('click', '#createBtn', function () {
+        window.location.href = "/createPost.html";
+    });
 })
 
 function displaySavedPosts() {
