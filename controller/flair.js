@@ -60,7 +60,6 @@ router.get('/:fk_subreaddit_id', printDebugInfo, (req,res) => {
     })
 })
 
-
 //Add a flair
 router.post('/', printDebugInfo, verify.verifySameUserId, checkModerator, (req,res) => {
 

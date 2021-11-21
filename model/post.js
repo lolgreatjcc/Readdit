@@ -97,6 +97,9 @@ var post = {
                     attributes: ['flair_name', 'flair_colour']
                 }
             ],
+            order: [
+                ['created_at', 'DESC'],
+            ],
         }).then(function (result) {
 
             // This block of code calculates the post's popularity
