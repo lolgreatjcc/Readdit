@@ -403,6 +403,7 @@ $(document).ready(function () {
             // Handle Saving of Posts
             $('.save').on('click', function (e) {
                 e.stopPropagation();
+                var token = localStorage.getItem("token");
                 var save_button = $(this);
                 var post_id = $(this).attr('id').split('_')[2];
                 if (user_id == false) {
@@ -429,6 +430,7 @@ $(document).ready(function () {
                             user_id: user_id
                         }),
                         contentType: "application/json",
+                        headers:{authorization:"Bearer "+token},
                         success: function (data, status, xhr) {
                             notifier.success("Removed post from saved posts.");
                             // do modal
@@ -455,6 +457,7 @@ $(document).ready(function () {
                             user_id: user_id
                         }),
                         contentType: "application/json",
+                        headers:{authorization:"Bearer "+token},
                         success: function (data, status, xhr) {
                             notifier.success("Added posts to saved posts.")
                         },
@@ -787,10 +790,12 @@ function getUserId() {
 
 function getSavedPosts(user_id) {
     var output;
+    var token = localStorage.getItem("token");
     $.ajax({
         url: baseUrl[0] + "/save/posts?user_id=" + user_id,
         type: "GET",
         contentType: "application/json; charset=utf-8",
+        headers: {authorization:"Bearer "+token},
         success: function (saved_posts_data, status, xhr) {
             for (var x = 0; x < saved_posts_data.length; x++) {
                 var post_id = saved_posts_data[x].fk_post_id;

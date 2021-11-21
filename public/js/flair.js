@@ -9,6 +9,7 @@ $(document).ready(function () {
 })
 
 function checkOwner(){
+    notifier.info("Getting flairs...");
     let params = (new URL(document.location)).searchParams;
     let subreadditName = params.get("subreaddit");
     var token = localStorage.getItem("token");
@@ -37,7 +38,7 @@ function checkModerator(subreadditName) {
             getSubreadditId();
         },
         error: function (xhr, status, error) {
-            window.location.href = "/home.html";
+            window.location.href = "/";
         }
     });
     
@@ -105,10 +106,12 @@ function getSubreadditId(){
 
 function createFlair(){
     var fk_subreaddit_id = localStorage.getItem("subreaddit_id");
+    var user_id = JSON.parse(localStorage.getItem("userInfo")).user_id;
     var token = localStorage.getItem("token");
     var flair_name = $('#flair_name').val();
     var flair_colour = $('#flair_colour').val();
-    var data = JSON.stringify({"flair_name":flair_name,"flair_colour":flair_colour,"fk_subreaddit_id":fk_subreaddit_id});
+    var data = JSON.stringify({"flair_name":flair_name,"flair_colour":flair_colour,
+                                "fk_subreaddit_id":fk_subreaddit_id,"user_id":user_id});
     console.log(data);
     notifier.info("Creating Flair...")
     $.ajax({
@@ -129,7 +132,9 @@ function createFlair(){
 }
 
 function deleteFlair(flair_id){
-    //var subreaddit_id = localStorage.getItem("subreaddit_id");
+    var fk_subreaddit_id = localStorage.getItem("subreaddit_id");
+    var user_id = JSON.parse(localStorage.getItem("userInfo")).user_id;
+    var data = JSON.stringify({"fk_subreaddit_id":fk_subreaddit_id, "user_id":user_id});
     notifier.info("Deleting Flair...")
     var token = localStorage.getItem("token");
     $.ajax({
@@ -137,6 +142,7 @@ function deleteFlair(flair_id){
         method: 'DELETE',
         contentType: "application/json; charset=utf-8",
         headers: {authorization:"Bearer " + token},
+        data: data,
         success: function (data, status, xhr) { 
             notifier.success("Flair deleted successfully.")
             getFlairs();

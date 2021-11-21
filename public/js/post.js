@@ -534,7 +534,6 @@ function deletePost(post_subreaddit_id) {
     });
 }
 
-
 function handleVoting(user_id) {
     // Handles upvoting/downvoting a post
     $('.post-upvote').on('click', function (e) {
@@ -716,10 +715,12 @@ function getUsersVotes(subreaddit_id, user_id, post_id) {
 
 function getSavedPosts(user_id, current_post_id, callback) {
     var output;
+    var token = localStorage.getItem("token");
     $.ajax({
         url: baseUrl[0] + "/save/posts?user_id=" + user_id,
         type: "GET",
         contentType: "application/json; charset=utf-8",
+        headers:{authorization:"Bearer "+token},
         success: function (saved_posts_data, status, xhr) {
             for (var x = 0; x < saved_posts_data.length; x++) {
                 var post_id = saved_posts_data[x].fk_post_id;
