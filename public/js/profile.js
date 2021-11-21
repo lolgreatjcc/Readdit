@@ -333,7 +333,7 @@ function displaySavedPosts() {
                     var post = $(this);
                     var post_id = post.attr('id').split('_')[1];
                     var subreaddit = post.attr('id').split('_')[2];
-                    location.href = `r/${subreaddit}/${post_id}`;
+                    location.href = `/r/${subreaddit}/${post_id}`;
                 })
             }
 
