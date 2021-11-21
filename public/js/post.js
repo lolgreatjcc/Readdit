@@ -216,9 +216,12 @@ $(document).ready(function () {
                         $('#post_loading_div').addClass('d-none');
                         $('.logged_in').removeClass('d-none');
                     });
+                    var username = JSON.parse(localStorage.getItem('userInfo')).username;
+                    $(`#comment_as`).append(`<p class="mb-0">Comment as u/<span class="text-secondary">${username}</span></p>`)
                 }
                 else {
                     $('.logged_out').removeClass('d-none');
+                    $('#post_loading_div').addClass('d-none');
                 }
 
             }
@@ -345,7 +348,6 @@ $(document).ready(function () {
         success: function (data, status, xhr) {
             data = data.Result;
             $('#comment_total').append(data.length);
-            var username = JSON.parse(localStorage.getItem('userInfo')).username;
             for (var i = 0; i < data.length; i++) {
 
                 // Calculates Time
@@ -405,7 +407,6 @@ $(document).ready(function () {
                                 </div>`
                 )
             }
-            $(`#comment_as`).append(`<p class="mb-0">Comment as u/<span class="text-secondary">${username}</span></p>`)
         },
         error: function (xhr, status, error){
             notifier.alert(xhr.responseJSON.message);
