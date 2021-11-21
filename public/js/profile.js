@@ -254,16 +254,22 @@ function displayComments() {
 }
 
 $(document).ready(function () {
-    var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
-    var token = localStorage.getItem("token")
-    loadUserInfo(user_id, token);
-    displayPosts();
-    responsiveDesign();
+    
+    if(localStorage.getItem("userInfo") == null) {
+        location.href = `${baseUrl[1]}`
+    }else {
+        var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
+        var token = localStorage.getItem("token")
+        loadUserInfo(user_id, token);
+        displayPosts();
+        responsiveDesign();
+    }
+
 })
 
 function displaySavedPosts() {
-
     var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
+
     $.ajax({
         url: baseUrl[0] + "/save/posts?user_id=" + user_id,
         type: "GET",
@@ -275,8 +281,6 @@ function displaySavedPosts() {
 
 
                 var post_data = data[i].Post;
-
-                console.log(post_data);
                 var date = new Date(post_data.created_at);
                 var date_now = new Date();
                 var seconds_between_dates = Math.floor((date_now - date) / 1000);
@@ -286,7 +290,6 @@ function displaySavedPosts() {
                 var weeks_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 7 * 1000))
 
                 var post_date_output;
-                console.log(minutes_between_dates)
                 if (seconds_between_dates < 60) {
                     post_date_output = `${seconds_between_dates} seconds ago`
                 } else if (minutes_between_dates < 60) {
@@ -299,7 +302,7 @@ function displaySavedPosts() {
                 } else {
                     post_date_output = `${weeks_between_dates} weeks ago`
                 }
-
+                console.log(post_data);
 
                 $('#post_div').append(`
                                 <div class="post rounded mb-2" id="post_${post_data.post_id}">
@@ -307,7 +310,7 @@ function displaySavedPosts() {
                                         <div class="col-1 upvote-section py-2 justify-content-center">
                                             <a class="text-center d-block py-1 post-upvote" id="post1-upvote"><i
                                         class="fas fa-arrow-up text-dark"></i></a>
-                                <p id="post#-val" class="text-center mb-0">6920</p>
+                                <p id="post#-val" class="text-center mb-0">${post_data.Post_Votes}</p>
                                 <a class="text-center d-block py-1 post-downvote" id="post1-downvote"><i
                                         class="fas fa-arrow-down text-dark"></i></a>
                             </div>
