@@ -12,6 +12,9 @@ router.post('', verify.extractUserId, (req, res) => {
     if (comment_content.length > 1000){
         res.status(400).send({"message":"Comment exceeds 1000 character limit."})
     }
+    else if (!(comment_content.trim().length > 0)){
+        res.status(400).send({"message":"Comment cannot be empty."})
+    }
     else {
         comment.createComment(user_id, comment_content, post_id, (err, result) => {
             if (!err) {
