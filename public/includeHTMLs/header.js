@@ -34,7 +34,7 @@ $(document).ready(() => {
     </script>
     <nav class="navbar navbar-dark navbar-expand-lg" id="header">
     <div class=" container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="/">
             <img src="/assets/reddit.png" alt="" width="30" height="30" class="d-inline-block align-text-top me-1">
             Readdit
         </a>
@@ -77,7 +77,7 @@ $(document).ready(() => {
     else {
         prependstr += `
         <ul class="navbar-nav ms-auto">
-            <a href="/profile/profile.html" id="profileButton" class="btn me-2 px-4 rounded-pill ">Profile</a>
+            <a href="/profile" id="profileButton" class="btn me-2 px-4 rounded-pill ">Profile</a>
             <a href="/login.html" onclick="localStorage.clear()" id="signUpButton" class="btn me-3 px-4">Log Out</a>
         </ul>
 `;

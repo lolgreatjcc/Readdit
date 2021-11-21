@@ -20,7 +20,9 @@ $(document).ready(function () {
 
             } else {
                 console.log(post_data);
-                $('#post_subreaddit').append(post_data.Subreaddit.subreaddit_name);
+                $('#post_subreaddit').append(`
+                    r/<a href="/r/${post_data.Subreaddit.subreaddit_name}" class="text-dark text-decoration-none">${post_data.Subreaddit.subreaddit_name}</a>
+                `);
                 $('#post_username').append(post_data.User.username);
                 $('#post_title').append(post_data.title);
                 $('#post_content').append(post_data.content);

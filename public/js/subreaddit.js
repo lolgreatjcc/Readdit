@@ -350,7 +350,7 @@ $(document).ready(function () {
                 <div class="col-11 bg-white p-2 position-relative">
                     
                     <div class="d-flex flex-row align-items-baseline">
-                        <h6 class="d-inline fw-bold clickable-link">r/<a>${data[i].Subreaddit.subreaddit_name}</a></h6>
+                        <h6 class="d-inline fw-bold clickable-link">r/<a href="/r/${data[i].Subreaddit.subreaddit_name}" class="text-dark text-decoration-none">${data[i].Subreaddit.subreaddit_name}</a></h6>
                         <p class="fw-light text-secondary mx-1">•</p>
                         <p class="d-inline text-secondary me-1">Posted by</p>
                         <p class="d-inline text-secondary clickable-link" id="post_${data[i].User.username}_user"> u/<a>${data[i].User.username}</a></p>
@@ -820,4 +820,8 @@ function getSavedPosts(user_id) {
     })
     return output;
 
+}
+
+function redirect(){
+    window.location.href = "/createPost.html"
 }
