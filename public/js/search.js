@@ -1,6 +1,8 @@
 const baseUrl = "http://localhost:3000"
 //const baseUrl = "https://readdit-backend.herokuapp.com"
 
+let notifier = new AWN({icons:{enabled:false}})
+
 function switchTab(evt, tabName) {
     var i, x, tablinks;
     x = document.getElementsByClassName("tab");
@@ -18,6 +20,7 @@ function switchTab(evt, tabName) {
 }
 
 $(document).ready(function () {
+    notifier.info("Searching for subreaddits and posts...")
     var queryParams = new URLSearchParams(window.location.search);
     console.log("---------Query Parameters---------");
     console.log("Query Param (source): " + window.location.search);
@@ -143,7 +146,7 @@ function searchSubreaddits() {
             })
         },
         error: function (xhr, status, error) {
-            console.log("Error: " + error)
+            notifier.alert(xhr.responseJSON.message)
         }
     })
 }
@@ -181,9 +184,6 @@ function searchPosts() {
                 $(`#posts_content`).append("No results found");
             }
             else {
-
-
-
                 for (var i = 0; i < posts.length; i++) {
 
                     // Calculates Time
@@ -313,13 +313,13 @@ function searchPosts() {
                     }
                 },
                 error: function (xhr, status, error) {
-                    console.log("Error: " + error)
+                    console.log(xhr.responseJSON.message)
                 }
             })
 
         },
         error: function (xhr, status, error) {
-            console.log("Error: " + error)
+            console.log(xhr.responseJSON.message)
         }
     })
 }

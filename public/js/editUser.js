@@ -1,6 +1,8 @@
 const baseUrl = "http://localhost:3000";
 //const baseUrl = "https://readdit-backend.herokuapp.com"
 
+let notifier = new AWN({icons:{enabled:false}})
+
 function loadUserInfo() {
     var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
     var token = localStorage.getItem("token")
@@ -65,16 +67,13 @@ function loadUserInfo() {
             console.log(xhr);
             console.log(textStatus);
             console.log(errorThrown);
-            $('#loadingText').html("<h6 class='text-danger'>ERROR LOADING!</h6>");
-            if (xhr.status == 403) {
-                $('#msg').html('F̵̤̈ò̵̬r̶͙̃b̴͖͛i̶̲͒d̸̞̓d̵̮́e̷̬̐n̵̻̄');
-            }
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 };
 
 function editUser() {
-    $(`#messages`).html("<p class='text-center text-primary pt-2'>Submitting...</p>");
+    notifier.info("Submitting Request...")
     var email = $('#email').val();
     var oldpwd = $('#oldpwd').val();
     var newpwd = $('#newpwd').val();
@@ -91,7 +90,7 @@ function editUser() {
         }
     }
     catch (error) {
-        console.log("Error in two_fa conversion. Error: " + error)
+        notifier.alert("Error in two_fa conversion.")
     }
 
     var { user_id } = JSON.parse(localStorage.getItem("userInfo"));
@@ -121,7 +120,7 @@ function editUser() {
             console.log("Running ajax")
             if (data != null) {
                 console.log(data)
-                $(`#messages`).html("<p class='text-center text-success pt-2'>Changes Saved.</p>");
+                notifier.success("Changes saved.")
             } else {
                 console.log("Error");
             }
@@ -131,8 +130,7 @@ function editUser() {
             console.log("textStatus: " + textStatus);
             console.log("errorThrown: " + errorThrown);
             console.log('Error in Operation');
-
-            $(`#messages`).html("<p class='text-center text-danger pt-2'>Failed To Save Changes</p>");
+            notifier.alert(xhr.responseJSON.message);
         }
     });
     return false;

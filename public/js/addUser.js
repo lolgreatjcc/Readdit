@@ -1,6 +1,8 @@
 const baseUrl = "http://localhost:3000";
 //const baseUrl = "https://readdit-backend.herokuapp.com"
 
+let notifier = new AWN({icons:{enabled:false}})
+
 function addUser(username, email, profile_pic, password, two_fa) {
     var type = "Customer";
     console.log("Username: " + username);
@@ -24,13 +26,13 @@ function addUser(username, email, profile_pic, password, two_fa) {
 
     axios.post(`${baseUrl}/users`, requestBody)
         .then(response => {
-            $('#msg').html('User added successfully!');
+            notifier.success('User added successfully!');
         })
         .catch(error => {
             if (error.response.status == 422) {
                 console.log(error.response.status);
-                $('#msg').html('Account with this email already exists');
             }
+            notifier.alert(error.response.data.message);
 
         })
     }
@@ -57,7 +59,7 @@ $(document).ready(function () {
 
         //var tmpToken = localStorage.getItem('token');
         if (username.trim() == "" || email.trim() == "" || password.trim() == "") {
-            $(`#msg`).html("Input fields cannot be blank!")
+            notifier.warning("Input fields cannot be blank!")
         }
         else {
             addUser(username, email, profile_pic, password,two_fa);

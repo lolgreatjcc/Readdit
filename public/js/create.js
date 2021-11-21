@@ -1,8 +1,12 @@
 const baseUrl = "http://localhost:3000"
 //const baseUrl = "https://readdit-backend.herokuapp.com"
 
+let notifier = new AWN({icons:{enabled:false}})
+
 $(document).ready(() => {
     $('#create_community_submit').on('click', () => {
+
+        notifier.info("Processing Request...")
         // Disables input fields
         $('#create_community_submit').prop('disabled', true);
         $('#create_community_cancel').prop('disabled', true);
@@ -30,14 +34,14 @@ $(document).ready(() => {
                 authorization : "Bearer "  + token
             },
             success: function (data, status, xhr) {
-                alert(data.Result)
+                notifier.success(data.Result)
             },
             error: function (xhr, status, err) {
                 $('#create_community_submit').prop('disabled', false);
                 $('#create_community_cancel').prop('disabled', false);
                 $('#community_name').prop('disabled', false);
                 $('#community_description').prop('disabled', false);
-                alert(xhr.responseJSON.ErrorMsg)
+                notifier.alert(xhr.responseJSON.message);
             }
 
         })

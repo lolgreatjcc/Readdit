@@ -1,6 +1,8 @@
 const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 // const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
+let notifier = new AWN({icons:{enabled:false}})
+
 function loadUserInfo(user_id, token) {
     // call the web service endpoint
     $.ajax({
@@ -57,58 +59,13 @@ function loadUserInfo(user_id, token) {
                 $('#user_img').attr("src", "https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png");
             }
         },
-
-
         error: function (xhr, textStatus, errorThrown) {
             console.log('Error in Operation');
             $('#loadingText').html("<h6 class='text-danger'>ERROR LOADING!</h6>");
-            if (xhr.status == 403) {
-
-                // this guys thinks he's cool
-                $('#msg').html('F̵̤̈ò̵̬r̶͙̃b̴͖͛i̶̲͒d̸̞̓d̵̮́e̷̬̐n̵̻̄');
-            }
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 };
-
-// function loadPosts(user_id, token) {
-//     var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
-//     var token = localStorage.getItem("token")
-//     // call the web service endpoint
-//     $.ajax({
-//         //headers: { 'authorization': 'Bearer ' + tmpToken },
-//         url: baseUrl[0] + '/post/user/' + user_id,
-//         type: 'GET',
-//         contentType: "application/json; charset=utf-8",
-//         dataType: 'json',
-//         success: function (data, textStatus, xhr) {
-//             var appendString = "";
-//             for (var i = 0; i < data.length; i++) {
-//                 var post = data[i];
-//                 appendString += `<tr>
-//                                                 <th scope="row">${i + 1}</th>
-//                                                 <td>${post.title}</td>
-//                                                 <td>${post.Subreaddit.subreaddit_name}</td>
-//                                                 <td>${post.created_at}</td>
-//                                                 <td> <button type="submit" onclick="window.location.href='${baseUrl[1] + "/r/" + post.Subreaddit.subreaddit_name + "/" + post.post_id + "'"}" class="ViewCall" style="background-color:#6a5acd; color:white; border-width: 0px;">View Post</button> </td>
-//                                             </tr>`;
-//             }
-//             $("#load").html("");
-//             $("#table_data").append(appendString);
-
-//         },
-//         error: function (xhr, textStatus, errorThrown) {
-//             console.log('Error in Operation');
-//             console.log(xhr)
-//             console.log(textStatus);
-//             console.log(errorThrown);
-//             console.log(xhr.status);
-//             //if (xhr.status == 401) {
-//             //    $('$msg').html('Unauthorised User');
-//             //}
-//         }
-//     });
-// };
 
 function displayPosts() {
     var { user_id } = JSON.parse(localStorage.getItem("userInfo"));
@@ -183,7 +140,7 @@ function displayPosts() {
                 var post = $(this);
                 var post_id = post.attr('id').split('_')[1];
                 var subreaddit = post.attr('id').split('_')[2];
-                location.href = `r/${subreaddit}/${post_id}`;
+                location.href = `${baseUrl[1]}/r/${subreaddit}/${post_id}`;
             })
 
         },
@@ -193,9 +150,7 @@ function displayPosts() {
             console.log(textStatus);
             console.log(errorThrown);
             console.log(xhr.status);
-            //if (xhr.status == 401) {
-            //    $('$msg').html('Unauthorised User');
-            //}
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 }
@@ -246,25 +201,42 @@ function displayComments() {
             console.log(textStatus);
             console.log(errorThrown);
             console.log(xhr.status);
-            //if (xhr.status == 401) {
-            //    $('$msg').html('Unauthorised User');
-            //}
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 }
 
 $(document).ready(function () {
-    
+
+
+    try {
+          
     if(localStorage.getItem("userInfo") == null) {
         location.href = `${baseUrl[1]}`
-    }else {
-        var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
-        var token = localStorage.getItem("token")
-        loadUserInfo(user_id, token);
-        displayPosts();
-        responsiveDesign();
     }
+        var userData = localStorage.getItem('userInfo');
+        // userData = userData.slice(1,-1);
+        var token = localStorage.getItem("token")
 
+        var userJsonData = JSON.parse(userData);
+        var role = userJsonData.fk_user_type_id;
+        var user_id = userJsonData.user_id;
+        if (role == 2) {
+            $(`#adminButton`).html(`<div class="btn body-borders w-100 rounded-pill invert-scheme fw-bold mb-2">
+                                            <h5 class="mb-0">Admin Console</h5>
+                                        </div>`);
+            
+        }
+    } catch (error) {
+        window.location.assign(`${baseUrl[1]}/login.html`);
+    }
+    loadUserInfo(user_id, token);
+    displayPosts();
+    responsiveDesign();
+
+    $('body').on('click', '#adminButton', function () {
+        window.location.assign(`/admin/admin_home.html`);
+    });
 })
 
 function displaySavedPosts() {
@@ -359,15 +331,15 @@ function displaySavedPosts() {
 
             // This block of code enables the toolbars.
             $('.save').on('click', function (e) {
+                notifier.info("Removing post from saved posts...")
                 e.stopPropagation();
                 var id = $(this).attr('id');
-                var post_id = id.split('_')[2];
-                
+                var post_id = id.split('_')[2]; 
                 var token = localStorage.getItem("token");
                 var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
                 var data = {
-                    user_id: user_id,
-                    post_id: post_id
+                    post_id: post_id,
+                    user_id: user_id
                 }
                 $.ajax({
                     url: baseUrl[0] + "/save/post",
@@ -376,10 +348,11 @@ function displaySavedPosts() {
                     contentType: "application/json",
                     headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
+                        notifier.success("Removed posts from saved posts.")
                         displaySavedPosts()
                     },
                     error: function (xhr, status, error) {
-
+                        notifier.alert(xhr.responseJSON.message);
                     }
                 })
             })

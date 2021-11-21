@@ -1,6 +1,8 @@
 const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 //const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
+let notifier = new AWN({icons:{enabled:false}})
+
 function displayMedia(subreaddit_id) {
     //retrives media for post
     $.ajax({
@@ -104,7 +106,7 @@ function displayMedia(subreaddit_id) {
             }
         },
         error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
+            notifier.alert(xhr.responseJSON.message);
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
@@ -126,7 +128,7 @@ async function mediaCall() {
             displayMedia(data.subreaddit_id);
         },
         error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
+            notifier.alert(xhr.responseJSON.message);
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
@@ -173,6 +175,7 @@ $(document).ready(function () {
             $('#community_create_year').html(date.getFullYear());
         },
         error: function (xhr, status, error) {
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 
@@ -183,6 +186,7 @@ $(document).ready(function () {
         orderBy = "Hot";
     }
     console.log(orderBy)
+    notifier.info("Loading posts...")
 
     $.ajax({
         url: `${baseUrl[0]}/post/get` + pathname,
@@ -414,6 +418,8 @@ $(document).ready(function () {
                         <p class="mb-0 fw-bold fs-6">Save</p>
                     `);
 
+                    notifier.info("Removing post from saved posts...");
+
 
 
                     $.ajax({
@@ -426,11 +432,11 @@ $(document).ready(function () {
                         contentType: "application/json",
                         headers: {'authorization': "Bearer " + token},
                         success: function (data, status, xhr) {
-                            console.log(data);
+                            notifier.success("Removed post from saved posts.");
                             // do modal
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr)
+                            notifier.alert(xhr.responseJSON.message);
                         }
                     })
 
@@ -441,6 +447,7 @@ $(document).ready(function () {
                         <span class="material-icons md-24 ms-0">bookmark</span>
                         <p class="mb-0 fw-bold fs-6">Unsave</p>
                     `);
+                    notifier.info("Adding post to saved posts...")
                     $.ajax({
 
                         url: `${baseUrl[0]}/save/post`,
@@ -452,11 +459,10 @@ $(document).ready(function () {
                         contentType: "application/json",
                         headers: {'authorization': "Bearer " + token},
                         success: function (data, status, xhr) {
-                            console.log(data)
-                            // do modal
+                            notifier.success("Added posts to saved posts.")
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr);
+                            notifier.alert(xhr.responseJSON.message);
                         }
                     })
                 }
@@ -468,7 +474,7 @@ $(document).ready(function () {
                 var share_id = $(this).attr('id');
                 var copiedText = baseUrl[1] + "/r/" + share_id;
                 navigator.clipboard.writeText(copiedText);
-                alert("Copied to clipboard!");
+                notifier.info("Link copied to clipboard!");
             })
 
             // Handles upvoting/downvoting a post
@@ -647,10 +653,9 @@ $(document).ready(function () {
                 var saved_posts = getSavedPosts(user_id);
             }
             mediaCall();
-            $(`#load`).html(``);
         },
         error: function (xhr, status, error) {
-            console.log(xhr);
+            notifier.alert(xhr.responseJSON.message);
         }
     })
     orderByButton();
@@ -722,15 +727,8 @@ function checkModerator(subreadditName) {
     })
 }
 
-function copy(copyStr) {
-    /* Copy the text inside the text field */
-    navigator.clipboard.writeText(copyStr);
-
-    /* Alert the copied text */
-    alert("Copied to clipboard!");
-}
-
 function pin(post_subreaddit_id) {
+    notifier.info("Pinning post...")
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
     var post_id = post_subreaddit_id_arr[1]
     var fk_subreaddit_id = post_subreaddit_id_arr[2]
@@ -746,17 +744,9 @@ function pin(post_subreaddit_id) {
             window.location.reload()
         },
         error: function (xhr, status, error) {
-            alert("Error updating pins")
+            notifier.alert(xhr.responseJSON.message);
         }
     });
-}
-
-function copy(copyStr) {
-    /* Copy the text inside the text field */
-    navigator.clipboard.writeText(copyStr);
-
-    /* Alert the copied text */
-    alert("Copied to clipboard!");
 }
 
 function report(post_id) {
@@ -764,6 +754,7 @@ function report(post_id) {
 }
 
 function deletePost(post_subreaddit_id) {
+    notifier.info("Deleting post...")
     var post_subreaddit_id_arr = post_subreaddit_id.split('_');
     var post_id = post_subreaddit_id_arr[1]
     var fk_subreaddit_id = post_subreaddit_id_arr[2]
@@ -779,7 +770,7 @@ function deletePost(post_subreaddit_id) {
             window.location.reload()
         },
         error: function (xhr, status, error) {
-            alert("Error deleting post")
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 }
@@ -821,7 +812,7 @@ function getSavedPosts(user_id) {
             }
         },
         error: function (xhr, status, error) {
-            alert("Error getting saved posts. Try refreshing the page.")
+            notifier.alert("Error getting saved posts. Try refreshing the page.")
         }
     })
     return output;

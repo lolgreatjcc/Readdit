@@ -1,6 +1,8 @@
 const baseUrl = "http://localhost:3000";
 //const baseUrl = "https://readdit-backend.herokuapp.com"
 
+let notifier = new AWN({icons:{enabled:false}})
+
 $(document).ready(function () {
 
     // Retrieves subreaddits.
@@ -20,6 +22,7 @@ $(document).ready(function () {
         },
         error: function (xhr, status, err) {
             console.log(xhr)
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 
@@ -40,9 +43,6 @@ $(document).ready(function () {
     // Submits the post
     $('#create_post_submit').on('click', () => {
 
-        // Adds the loading animation
-        $('#post_loading_div').removeClass('d-none');
-
         var subreaddit_id = $('#create_post_community').val();
         var title = $('#create_post_title').val();
         var content = $('#create_post_content').val();
@@ -51,12 +51,15 @@ $(document).ready(function () {
         var token = localStorage.getItem("token")
         
         if (subreaddit_id == null) {
-            $(`#msg`).html(`<p class="text-danger"> Please select a subreaddit to post in! </p>`);
+            notifier.warning("Please select a subreaddit to post in!");
         }
         else if (title.trim() == "") {
-            $(`#msg`).html(`<p class="text-danger"> Post title cannot be blank! </p>`);
+            notifier.warning("Post title cannot be blank!");
         }
         else {
+            // Adds the loading animation
+            $('#post_loading_div').removeClass('d-none');
+
             let webFormData = new FormData();
             webFormData.append('title', title);
             webFormData.append('content', content);
@@ -82,10 +85,11 @@ $(document).ready(function () {
                 },
                 success: function (data, status, xhr) {
                     $('#post_loading_div').addClass('d-none');
-                    alert(data.Result);
+                    notifier.success(data.Result);
                 },
                 error: function (xhr, status, err) {
-                    $(`#msg`).html(`<h5 class="text-danger"> An error has occured while creating your post. </h5>`);
+                    $('#post_loading_div').addClass('d-none');
+                    notifier.alert(xhr.responseJSON.message);
                 }
             })
         }
@@ -124,13 +128,7 @@ function showFlairs(subreaddit_id) {
 
         },
         error: function (xhr, status, error) {
-            $("#currentModerators").html(`
-                <div class="row g-0 border-top">
-                <div class="col-12 bg-white p-2 text-center d-flex justify-content-center align-items-center">
-                    <h5>Error loading moderators</h5>
-                </div>
-            </div>
-                `);
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 }
