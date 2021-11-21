@@ -121,7 +121,7 @@ function displayPosts() {
                         </div>
                         <div class="col-11 bg-white p-2">
                             <div class="d-flex flex-row align-items-baseline">
-                                <h6 class="d-inline fw-bold clickable-link">r/${post.Subreaddit.subreaddit_name}</h6>
+                                <h6 class="d-inline fw-bold clickable-link">r/<a href="/r/${post.Subreaddit.subreaddit_name}" class="text-dark text-decoration-none">${post.Subreaddit.subreaddit_name}</a></h6>
                                 <p class="fw-light text-secondary mx-1">•</p>
                                 <p class="d-inline text-secondary me-1">Posted by</p>
                                 <p class="d-inline text-secondary clickable-link" id="post#_user"> u/${post.User.username}</p>
@@ -296,7 +296,7 @@ function displaySavedPosts() {
                             </div>
                             <div class="col-11 bg-white p-2">
                                 <div class="d-flex flex-row align-items-baseline">
-                                    <h6 class="d-inline fw-bold clickable-link">r/${post_data.Subreaddit.subreaddit_name}</h6>
+                                    <h6 class="d-inline fw-bold clickable-link">r/<a href="/r/${post_data.Subreaddit.subreaddit_name}" class="text-dark text-decoration-none">${post_data.Subreaddit.subreaddit_name}</a></h6>
                                     <p class="fw-light text-secondary mx-1">•</p>
                                     <p class="d-inline text-secondary me-1">Posted by</p>
                                     <p class="d-inline text-secondary clickable-link" id="post#_user"> u/${post_data.User.username}</p>
