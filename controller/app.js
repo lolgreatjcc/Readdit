@@ -254,7 +254,7 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify.verify
 });
 
 //update user
-app.put('/user/:user_id',  printDebugInfo, function (req, res) {
+app.put('/user/:user_id', verify.checkAdmin, printDebugInfo, function (req, res) {
     var user_id = req.params.user_id;
     var profile_pic = req.body.profile_pic;
 
@@ -285,7 +285,7 @@ app.put('/user/:user_id',  printDebugInfo, function (req, res) {
 });
 
 //delete user
-app.delete('/users/:userid', printDebugInfo, function (req, res) {
+app.delete('/users/:userid', verify.checkAdmin ,printDebugInfo, function (req, res) {
     var userid = req.params.userid;
 
     user.delete(userid, function (err, result) {
