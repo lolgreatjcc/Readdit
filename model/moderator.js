@@ -69,6 +69,9 @@ var moderator = {
                 return callback(err, null);
             }
         })
+        .catch(function (err){
+            return callback(err,null);
+        })
     },
 }
 

@@ -31,6 +31,10 @@ var flair = {
                     return callback(err,null);
                 })
             }
+            else{
+                return callback({"message":"Flair already exists!"},null)
+            }
+
         })
     },
     deleteFlair: function (flair_id, callback) {
