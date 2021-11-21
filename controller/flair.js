@@ -1,11 +1,47 @@
 const express = require('express');
 const router = express.Router();
 const flair = require('../model/flair');
+const moderator = require('../model/moderator');
+const subreaddit = require("../model/subreaddit")
 const printDebugInfo = require('./printDebugInfo');
 const verify = require('./verify');
 const hexRegex = new RegExp("^#[0-9a-fA-F]{6}$");
 
 
+
+// functions
+function checkModerator(req, res, next) {
+    try{
+        var fk_subreaddit_id = req.body.fk_subreaddit_id;
+        var fk_user_id = req.body.user_id;
+        moderator.checkModerator(fk_user_id, fk_subreaddit_id, function (err, result) {
+        if (!err) {
+            next();
+        }
+        else{
+            subreaddit.getSubreadditByID(fk_subreaddit_id, function (err, result) {
+                if(!err) {
+                    var result = result.dataValues;
+                    if (result.fk_creator_user_id == fk_user_id){
+                        next();
+                    }
+                    else{
+                        res.status(403).send({"message":"Logged In user is not moderator"});
+                    }
+                }else {
+                    res.status(500).send({"message":"Error while getting subreaddit info."});
+                }
+                
+            })
+        }
+
+    })
+    }
+    catch(error){
+        res.status(500).send({'message':"Error while checking authorisation."})
+    }
+    
+}
 
 
 // Get all flairs
@@ -26,7 +62,7 @@ router.get('/:fk_subreaddit_id', printDebugInfo, (req,res) => {
 
 
 //Add a flair
-router.post('/', printDebugInfo, verify.extractUserId, (req,res) => {
+router.post('/', printDebugInfo, verify.verifySameUserId, checkModerator, (req,res) => {
 
     var {flair_name,flair_colour,fk_subreaddit_id} = req.body;
     
@@ -43,6 +79,8 @@ router.post('/', printDebugInfo, verify.extractUserId, (req,res) => {
         flair.addFlair(flair_name, flair_colour, fk_subreaddit_id, function (err, result) {
             if(!err) {
                 res.status(200).send({"Result": result});
+            }else if (err.message == "Flair already exists!"){
+                res.status(422).send(err);
             }else {
                 console.log(err);
                 res.status(500).send({"message":"Error while adding flair."});
@@ -53,7 +91,7 @@ router.post('/', printDebugInfo, verify.extractUserId, (req,res) => {
 })
 
 // Delete one flair
-router.delete('/:flair_id', printDebugInfo, verify.extractUserId, (req,res) => {
+router.delete('/:flair_id', printDebugInfo, verify.verifySameUserId, checkModerator, (req,res) => {
 
     var flair_id = req.params.flair_id;
 
