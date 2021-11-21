@@ -246,6 +246,7 @@ function displaySavedPosts() {
         url: baseUrl[0] + "/save/posts?user_id=" + user_id,
         type: "GET",
         contentType: "application/json charset=utf-8",
+        headers:{authorization:"Bearer "+ token},
         success: function (data, status, xhr) {
             $("#post_div").html("");
             console.log(data);
