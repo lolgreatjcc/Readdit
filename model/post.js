@@ -216,13 +216,34 @@ var post = {
                         {
                             model: Subreaddit,
                             attributes: ['subreaddit_name']
-                        }
+                        },
+                        {
+                            model: Post_Vote,
+                            attributes: ['vote_type']
+                        },
                     ],
                 }
             ],
         }).then(function (result) {
+            // This block of code calculates the post's popularity
+            console.log("saved_posts" + result.length)
+            for (var i = 0; i < result.length; i++) {
+                var popularity_rating = 0;
+
+
+                for (var x = 0; x < result[i].Post.dataValues.Post_Votes.length; x++) {
+                    if (result[i].Post.dataValues.Post_Votes[x].vote_type == true) {
+                        popularity_rating += 1;
+                    }
+                    else {
+                        popularity_rating -= 1;
+                    }
+                }
+                result[i].Post.dataValues.Post_Votes = popularity_rating;
+            }
             callback(result, null);
         }).catch(function (err) {
+            console.log(err);
             callback(null, err);
         })
     },
@@ -230,10 +251,8 @@ var post = {
         Saved.destroy({
             where: { fk_post_id: post_id, fk_user_id: user_id }
         }).then(function (result) {
-            console.log("deletion success")
             return callback(result, null);
         }).catch(function (err) {
-            console.log("error happened")
             return callback(null, err);
         })
     },
