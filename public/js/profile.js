@@ -183,7 +183,7 @@ function displayPosts() {
                 var post = $(this);
                 var post_id = post.attr('id').split('_')[1];
                 var subreaddit = post.attr('id').split('_')[2];
-                location.href = `r/${subreaddit}/${post_id}`;
+                location.href = `${baseUrl[1]}/r/${subreaddit}/${post_id}`;
             })
 
         },
@@ -254,11 +254,30 @@ function displayComments() {
 }
 
 $(document).ready(function () {
-    var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
-    var token = localStorage.getItem("token")
+    try {
+        var userData = localStorage.getItem('userInfo');
+        // userData = userData.slice(1,-1);
+        var token = localStorage.getItem("token")
+
+        var userJsonData = JSON.parse(userData);
+        var role = userJsonData.fk_user_type_id;
+        var user_id = userJsonData.user_id;
+        if (role == 2) {
+            $(`#adminButton`).html(`<div class="btn body-borders w-100 rounded-pill invert-scheme fw-bold mb-2">
+                                            <h5 class="mb-0">Admin Console</h5>
+                                        </div>`);
+            
+        }
+    } catch (error) {
+        window.location.assign(`${baseUrl[1]}/login.html`);
+    }
     loadUserInfo(user_id, token);
     displayPosts();
     responsiveDesign();
+
+    $('body').on('click', '#adminButton', function () {
+        window.location.assign(`/admin/admin_home.html`);
+    });
 })
 
 function displaySavedPosts() {

@@ -69,8 +69,6 @@ $(document).ready(function () {
         var userJsonData = JSON.parse(userData);
         var role = userJsonData.fk_user_type_id;
 
-        var tmpToken = localStorage.getItem('token');
-
         if (role != 2) {
             alert("Unauthorized User!");
             window.location.assign(`${baseUrl[1]}/home.html`);
@@ -87,7 +85,7 @@ $(document).ready(function () {
 
     var user_id = queryParams.get("id");
 
-    loadUserInfo(user_id, tmpToken);
+    loadUserInfo(user_id, token);
 
     $("#update").click(function () {
         $('#load').html('Submitting update...');
@@ -103,7 +101,9 @@ $(document).ready(function () {
 
         // axios.put(`https://readdit-backend.herokuapp.comr/subreaddit/` + subreaddit_id,requestBody)
 
-        axios.put(`${baseUrl[0]}/user/` + user_id, requestBody)
+        axios.put(`${baseUrl[0]}/user/` + user_id, requestBody, {headers: {
+            'Authorization': `Bearer ${token}` 
+          }})
             .then(response => {
                 $('#load').html('User updated successfully!');
             })

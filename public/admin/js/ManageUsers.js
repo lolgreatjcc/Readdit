@@ -113,7 +113,7 @@ $(document).ready(function () {
         var check = confirm("Delete " + username + "?");
         if (check) {
             $.ajax({
-                //headers: { 'authorization': 'Bearer ' + tmpToken },
+                headers: { 'authorization': 'Bearer ' + token },
                 url: `${baseUrl[0]}/users/` + user_id,
                 type: 'DELETE',
                 contentType: "application/json; charset=utf-8",
