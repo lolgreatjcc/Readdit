@@ -113,7 +113,7 @@ $(document).ready(function () {
         if (check) {
             notifier.info("Processing Request...");
             $.ajax({
-                //headers: { 'authorization': 'Bearer ' + tmpToken },
+                headers: { 'authorization': 'Bearer ' + token },
                 url: `${baseUrl[0]}/users/` + user_id,
                 type: 'DELETE',
                 contentType: "application/json; charset=utf-8",

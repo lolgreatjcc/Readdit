@@ -16,6 +16,12 @@ body {
     font-weight: 600;
 }
 
+#profileButton {
+    background-color: white;
+    color: #734f96;
+    font-weight: 600;
+}
+
 #signUpButton, #addModerator, #addFlair, #flair {
     background-color: #6a5acd;
     color: white;
