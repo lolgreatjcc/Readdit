@@ -89,7 +89,7 @@ router.get("/all", (req,res) => {
     var user_id = req.query.user_id;
     vote.getUserVotes(user_id, (result,err) => {
         if(err) {
-            res.status(500).send(err);
+            res.status(500).send({"message": "Internal Server Error"});
         }
         else {
             res.status(200).send(result);
