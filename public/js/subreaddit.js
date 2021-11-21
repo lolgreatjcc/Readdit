@@ -157,6 +157,7 @@ function getUsersVotes(subreaddit_id, user_id) {
 
 $(document).ready(function () {
     var pathname = window.location.pathname;
+    var token = localStorage.getItem("token")
     $.ajax({
         url: `${baseUrl[0]}` + pathname,
         method: 'GET',
@@ -430,7 +431,7 @@ $(document).ready(function () {
                             user_id: user_id
                         }),
                         contentType: "application/json",
-                        headers:{authorization:"Bearer "+token},
+                        headers: {'authorization': "Bearer " + token},
                         success: function (data, status, xhr) {
                             notifier.success("Removed post from saved posts.");
                             // do modal
@@ -457,7 +458,7 @@ $(document).ready(function () {
                             user_id: user_id
                         }),
                         contentType: "application/json",
-                        headers:{authorization:"Bearer "+token},
+                        headers: {'authorization': "Bearer " + token},
                         success: function (data, status, xhr) {
                             notifier.success("Added posts to saved posts.")
                         },
@@ -508,6 +509,7 @@ $(document).ready(function () {
                             url: `${baseUrl[0]}/vote/post_rating`,
                             data: JSON.stringify({ data }),
                             contentType: "application/json",
+                            headers: {'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
                                 console.log(data);
                             }
@@ -532,6 +534,7 @@ $(document).ready(function () {
                                 vote_type: 1,
                             }),
                             contentType: "application/json; charset=utf-8",
+                            headers: {'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
                                 console.log(data);
                             }
@@ -574,6 +577,7 @@ $(document).ready(function () {
                             url: `${baseUrl[0]}/vote/post_rating`,
                             data: JSON.stringify({ data }),
                             contentType: "application/json",
+                            headers: {'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
                                 console.log(data);
                             }
@@ -599,6 +603,7 @@ $(document).ready(function () {
                             }),
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
+                            headers: {'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
                                 console.log(data);
                             }
@@ -637,6 +642,7 @@ $(document).ready(function () {
             if (user_id) {
                 var data = getUsersVotes(pathname, user_id);
                 for (var i = 0; i < data.length; i++) {
+                    console.log(data);
                     var upvote_button = $(`#post_${data[i].fk_post_id}_upvote`);
                     var downvote_button = $(`#post_${data[i].fk_post_id}_downvote`);
                     if (data[i].vote_type == true) {

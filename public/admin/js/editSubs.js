@@ -29,13 +29,31 @@ function loadSubreadditInfo(subreaddit_id) {
             console.log(textStatus);
             console.log(errorThrown);
             notifier.alert(xhr.responseJSON.message);
-          
+
         }
     });
 };
 
 
 $(document).ready(function () {
+    try {
+        var userData = localStorage.getItem('userInfo');
+        var token = localStorage.getItem("token")
+        // userData = userData.slice(1,-1);
+
+        var userJsonData = JSON.parse(userData);
+        var role = userJsonData.fk_user_type_id;
+
+        var tmpToken = localStorage.getItem('token');
+
+        if (role != 2) {
+            alert("Unauthorized User!");
+            window.location.assign(`${baseUrl[1]}/home.html`);
+        }
+    } catch (error) {
+        alert("Unauthenticated User!");
+        window.location.assign(`${baseUrl[1]}/login.html`);
+    }
     var queryParams = new URLSearchParams(window.location.search);
     console.log("---------Query Parameters---------");
     console.log("Query Param (source): " + window.location.search);
@@ -47,6 +65,7 @@ $(document).ready(function () {
 
     $("#update").click(function () {
         notifier.info("Processing Request...")
+
         var name = $('#name').val();
         var description = $('#description').val();
 

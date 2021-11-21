@@ -140,7 +140,7 @@ function displayPosts() {
                 var post = $(this);
                 var post_id = post.attr('id').split('_')[1];
                 var subreaddit = post.attr('id').split('_')[2];
-                location.href = `r/${subreaddit}/${post_id}`;
+                location.href = `${baseUrl[1]}/r/${subreaddit}/${post_id}`;
             })
 
         },
@@ -207,19 +207,41 @@ function displayComments() {
 }
 
 $(document).ready(function () {
-    var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
-    var token = localStorage.getItem("token")
+
+
+    try {
+          
+    if(localStorage.getItem("userInfo") == null) {
+        location.href = `${baseUrl[1]}`
+    }
+        var userData = localStorage.getItem('userInfo');
+        // userData = userData.slice(1,-1);
+        var token = localStorage.getItem("token")
+
+        var userJsonData = JSON.parse(userData);
+        var role = userJsonData.fk_user_type_id;
+        var user_id = userJsonData.user_id;
+        if (role == 2) {
+            $(`#adminButton`).html(`<div class="btn body-borders w-100 rounded-pill invert-scheme fw-bold mb-2">
+                                            <h5 class="mb-0">Admin Console</h5>
+                                        </div>`);
+            
+        }
+    } catch (error) {
+        window.location.assign(`${baseUrl[1]}/login.html`);
+    }
     loadUserInfo(user_id, token);
     displayPosts();
     responsiveDesign();
+
+    $('body').on('click', '#adminButton', function () {
+        window.location.assign(`/admin/admin_home.html`);
+    });
 })
 
 function displaySavedPosts() {
+    var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
 
-    // Temp user_id
-    console.log("Displaying Comments");
-    var token = localStorage.getItem("token");
-    var {user_id} = JSON.parse(localStorage.getItem("userInfo"));
     $.ajax({
         url: baseUrl[0] + "/save/posts?user_id=" + user_id,
         type: "GET",
@@ -232,8 +254,6 @@ function displaySavedPosts() {
 
 
                 var post_data = data[i].Post;
-
-                console.log(post_data);
                 var date = new Date(post_data.created_at);
                 var date_now = new Date();
                 var seconds_between_dates = Math.floor((date_now - date) / 1000);
@@ -243,7 +263,6 @@ function displaySavedPosts() {
                 var weeks_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 7 * 1000))
 
                 var post_date_output;
-                console.log(minutes_between_dates)
                 if (seconds_between_dates < 60) {
                     post_date_output = `${seconds_between_dates} seconds ago`
                 } else if (minutes_between_dates < 60) {
@@ -256,7 +275,7 @@ function displaySavedPosts() {
                 } else {
                     post_date_output = `${weeks_between_dates} weeks ago`
                 }
-
+                console.log(post_data);
 
                 $('#post_div').append(`
                                 <div class="post rounded mb-2" id="post_${post_data.post_id}">
@@ -264,7 +283,7 @@ function displaySavedPosts() {
                                         <div class="col-1 upvote-section py-2 justify-content-center">
                                             <a class="text-center d-block py-1 post-upvote" id="post1-upvote"><i
                                         class="fas fa-arrow-up text-dark"></i></a>
-                                <p id="post#-val" class="text-center mb-0">6920</p>
+                                <p id="post#-val" class="text-center mb-0">${post_data.Post_Votes}</p>
                                 <a class="text-center d-block py-1 post-downvote" id="post1-downvote"><i
                                         class="fas fa-arrow-down text-dark"></i></a>
                             </div>
@@ -316,20 +335,19 @@ function displaySavedPosts() {
                 notifier.info("Removing post from saved posts...")
                 e.stopPropagation();
                 var id = $(this).attr('id');
-                var post_id = id.split('_')[2];
-
-                // Temporary user_id
+                var post_id = id.split('_')[2]; 
                 var token = localStorage.getItem("token");
-
+                var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
                 var data = {
-                    post_id: post_id
+                    post_id: post_id,
+                    user_id: user_id
                 }
                 $.ajax({
                     url: baseUrl[0] + "/save/post",
                     type: "DELETE",
                     data: JSON.stringify(data),
                     contentType: "application/json",
-                    headers:{authorization:"Bearer "+token},
+                    headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
                         notifier.success("Removed posts from saved posts.")
                         displaySavedPosts()

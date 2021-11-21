@@ -4,6 +4,7 @@ const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 let notifier = new AWN({icons:{enabled:false}})
 
 $(document).ready(function () {
+
     var pathname = window.location.pathname;
     var subreaddit_path = pathname.split('/')[2];
     var post_id = pathname.split('/')[3];
@@ -136,6 +137,7 @@ $(document).ready(function () {
                     }
                 })
                 if (user_id) {
+                    var token = localStorage.getItem("token")
                     var vote_data = getUsersVotes(subreaddit_path, user_id, post_data.post_id);
                     handleVoting(user_id);
                     var saved_posts = getSavedPosts(user_id, post_data.post_id, () => {
@@ -169,6 +171,7 @@ $(document).ready(function () {
                                     user_id: user_id
                                 }),
                                 contentType: "application/json",
+                                headers: {'authorization': "Bearer " + token},
                                 success: function (data, status, xhr) {
                                     notifier.success("Removed post from saved posts.");
                                     console.log(data);
@@ -196,6 +199,7 @@ $(document).ready(function () {
                                     user_id: user_id
                                 }),
                                 contentType: "application/json",
+                                headers: {'authorization': "Bearer " + token},
                                 success: function (data, status, xhr) {
                                     notifier.success("Added post to saved posts.");
                                     console.log(data)
@@ -536,6 +540,7 @@ function deletePost(post_subreaddit_id) {
 
 function handleVoting(user_id) {
     // Handles upvoting/downvoting a post
+    var token = localStorage.getItem("token")
     $('.post-upvote').on('click', function (e) {
         console.log("clicked upvote")
         e.stopPropagation();
@@ -566,6 +571,7 @@ function handleVoting(user_id) {
                     url: `${baseUrl[0]}/vote/post_rating`,
                     data: JSON.stringify({ data }),
                     contentType: "application/json",
+                    headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
                         console.log(data);
                     }
@@ -590,6 +596,7 @@ function handleVoting(user_id) {
                         vote_type: 1,
                     }),
                     contentType: "application/json; charset=utf-8",
+                    headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
                         console.log(data);
                     }
@@ -632,6 +639,7 @@ function handleVoting(user_id) {
                     url: `${baseUrl[0]}/vote/post_rating`,
                     data: JSON.stringify({ data }),
                     contentType: "application/json",
+                    headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
                         console.log(data);
                     }
@@ -657,6 +665,7 @@ function handleVoting(user_id) {
                     }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
+                    headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
                         console.log(data);
                     }
@@ -712,6 +721,7 @@ function getUsersVotes(subreaddit_id, user_id, post_id) {
     })
     return results;
 }
+
 
 function getSavedPosts(user_id, current_post_id, callback) {
     var output;

@@ -26,7 +26,8 @@ function loadUserInfo(user_id, token) {
             }
             $('#title').html(`Edit ${user.username}`);
             //display pfp
-            var pfp = (user.profile_pic).replace("http://res.cloudinary.com/readditmedia/image/upload/","");
+
+            var pfp = (user.profile_pic).replace("http://res.cloudinary.com/readditmedia/image/upload/", "");
             $('#profileurl').html(`<p id = "profile_pic" val="${pfp}"> ${pfp} </p>`);
             try {
                 if (user.profile_pic === "undefined" || user.profile_pic == null || user.profile_pic.trim().length == 0 || user.profile_pic == "NULL") {
@@ -38,6 +39,7 @@ function loadUserInfo(user_id, token) {
                     user.profile_pic = pfpTempString[0] + "upload" + "/ar_1.0,c_fill/r_max" + pfpTempString[1]
                     $('#pfpImg').html('<img style="width:200px;" src="' + user.profile_pic + '" alt="No pfp to show" id="pfp" class="pb-2"></img><br>')
                 }
+
             }
             catch (error) {
                 $('#pfpImg').html('<img style="width:200px;" src="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png" alt="No pfp to show" id="pfp" class="pb-2"></img><br>')
@@ -54,21 +56,29 @@ function loadUserInfo(user_id, token) {
             console.log(textStatus);
             console.log(errorThrown);
             notifier.alert("Error loading user info.")
+
         }
     });
 };
 
 
 $(document).ready(function () {
-    var userData = localStorage.getItem('userInfo');
-    var token = localStorage.getItem("token")
-    // userData = userData.slice(1,-1);
+    try {
+        var userData = localStorage.getItem('userInfo');
+        var token = localStorage.getItem("token")
+        // userData = userData.slice(1,-1);
 
-    var userJsonData = JSON.parse(userData);
-    var role = userJsonData.fk_user_type_id;
+        var userJsonData = JSON.parse(userData);
+        var role = userJsonData.fk_user_type_id;
 
-    var tmpToken = localStorage.getItem('token');
-
+        if (role != 2) {
+            alert("Unauthorized User!");
+            window.location.assign(`${baseUrl[1]}/home.html`);
+        }
+    } catch (error) {
+        alert("Unauthenticated User!");
+        window.location.assign(`${baseUrl[1]}/login.html`);
+    }
     var queryParams = new URLSearchParams(window.location.search);
     console.log("---------Query Parameters---------");
     console.log("Query Param (source): " + window.location.search);
@@ -76,7 +86,7 @@ $(document).ready(function () {
 
     var user_id = queryParams.get("id");
 
-    loadUserInfo(user_id, tmpToken);
+    loadUserInfo(user_id, token);
 
     $("#update").click(function () {
         notifier.info('Submitting update...');
@@ -92,8 +102,11 @@ $(document).ready(function () {
 
         // axios.put(`https://readdit-backend.herokuapp.comr/subreaddit/` + subreaddit_id,requestBody)
 
-        axios.put(`${baseUrl[0]}/user/` + user_id, requestBody)
+        axios.put(`${baseUrl[0]}/user/` + user_id, requestBody, {headers: {
+            'Authorization': `Bearer ${token}` 
+          }})
             .then(response => {
+
                 notifier.success('User updated successfully!');
             })
             .catch(error => {

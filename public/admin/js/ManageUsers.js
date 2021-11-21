@@ -1,12 +1,13 @@
 const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 //const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
-let notifier = new AWN({icons:{enabled:false}})
 
-function displayUsers(user_id) {
+let notifier = new AWN({icons:{enabled:false}})
+function displayUsers(user_id, token) {
+
     // call the web service endpoint
     $.ajax({
-        //headers: { 'authorization': 'Bearer ' + tmpToken },
+        headers: { 'authorization': 'Bearer ' + token },
         url: `${baseUrl[0]}/users`,
         type: 'GET',
         contentType: "application/json; charset=utf-8",
@@ -87,8 +88,6 @@ $(document).ready(function () {
         var role = userJsonData.fk_user_type_id;
         var user_id = userJsonData.user_id;
 
-        var tmpToken = localStorage.getItem('token');
-
         if (role != 2) {
             window.location.assign(`${baseUrl[1]}/home.html`);
         }
@@ -96,7 +95,7 @@ $(document).ready(function () {
         window.location.assign(`${baseUrl[1]}/login.html`);
     }
 
-    displayUsers(user_id);
+    displayUsers(user_id, token);
 
     $("#return").click(function () {
         window.location.assign(`${baseUrl[1]}/admin/admin_home.html`);
@@ -114,7 +113,7 @@ $(document).ready(function () {
         if (check) {
             notifier.info("Processing Request...");
             $.ajax({
-                //headers: { 'authorization': 'Bearer ' + tmpToken },
+                headers: { 'authorization': 'Bearer ' + token },
                 url: `${baseUrl[0]}/users/` + user_id,
                 type: 'DELETE',
                 contentType: "application/json; charset=utf-8",
