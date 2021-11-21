@@ -1,7 +1,10 @@
 const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 //const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
+
+let notifier = new AWN({icons:{enabled:false}})
 function displayUsers(user_id, token) {
+
     // call the web service endpoint
     $.ajax({
         headers: { 'authorization': 'Bearer ' + token },
@@ -63,14 +66,12 @@ function displayUsers(user_id, token) {
 
         },
         error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
+            notifier.alert(xhr.responseJSON.message);
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
             console.log(xhr.status);
-            //if (xhr.status == 401) {
-            //    $('$msg').html('Unauthorised User');
-            //}
+      
         }
     });
 
@@ -88,11 +89,9 @@ $(document).ready(function () {
         var user_id = userJsonData.user_id;
 
         if (role != 2) {
-            alert("Unauthorized User!");
             window.location.assign(`${baseUrl[1]}/home.html`);
         }
     } catch (error) {
-        alert("Unauthenticated User!");
         window.location.assign(`${baseUrl[1]}/login.html`);
     }
 
@@ -112,6 +111,7 @@ $(document).ready(function () {
         console.log(user_id);
         var check = confirm("Delete " + username + "?");
         if (check) {
+            notifier.info("Processing Request...");
             $.ajax({
                 //headers: { 'authorization': 'Bearer ' + tmpToken },
                 url: `${baseUrl[0]}/users/` + user_id,
@@ -122,8 +122,8 @@ $(document).ready(function () {
                     location.reload();
                 },
                 error: function (xhr, textStatus, errorThrown) {
-                    console.log('Error in Operation');
-                    console.log(xhr)
+                    notifier.alert(xhr.responseJSON.message);
+                    console.log(xhr);
                     console.log(textStatus);
                     console.log(errorThrown);
                     console.log(xhr.status);

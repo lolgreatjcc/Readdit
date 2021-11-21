@@ -1,6 +1,8 @@
 const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 //const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
+let notifier = new AWN({icons:{enabled:false}})
+
 $(document).ready(function () {
     var userData = localStorage.getItem('userInfo');
     var token = localStorage.getItem("token")
@@ -38,6 +40,7 @@ $(document).ready(function () {
         }
     });
 
+    notifier.info("Loading posts...")
     $.ajax({
         url: `${baseUrl[0]}/post/recent`,
         method: "GET",
@@ -113,7 +116,7 @@ $(document).ready(function () {
                     <a class="text-center d-block py-1 post-downvote" id="post_${data[i].post_id}_downvote"><i
                             class="fas fa-arrow-down text-dark"></i></a>
                 </div>
-                <div class="col-11 bg-white p-2">
+                <div class="col-11 bg-white p-2 position-relative">
                     
                     <div class="d-flex flex-row align-items-baseline">
                         <h6 class="d-inline fw-bold clickable-link">r/<a>${data[i].Subreaddit.subreaddit_name}</a></h6>
@@ -130,7 +133,7 @@ $(document).ready(function () {
                         </div>
                         </a>
                         <p class="mt-2">${data[i].content}<p>
-                        <div id="post_media_${data[i].post_id}" class="d-flex flex-row justify-content-center bg-dark" style="min-height:400px"> ${addImage(data[i].post_id)} </div>
+                        <div id="post_media_${data[i].post_id}" class="d-flex flex-row justify-content-center mediaDiv"> ${addImage(data[i].post_id)} </div>
                         <div class="toolbar d-flex flex-row align-items-center mt-2">
                                 <div class="d-flex flex-row text-secondary me-4 p-1 rounded hoverable">
                                     <span class="material-icons md-24 ms-0 me-1">chat_bubble_outline</span>
@@ -244,7 +247,7 @@ $(document).ready(function () {
                 var share_id = $(this).attr('id');
                 var copiedText = baseUrl[1] + "/r/" + share_id;
                 navigator.clipboard.writeText(copiedText);
-                alert("Copied to clipboard!");
+                notifier.info("Link copied to clipboard!");
             })
 
             // Handles upvoting/downvoting a post
@@ -384,10 +387,12 @@ $(document).ready(function () {
 
             // Handles clicking on a post
             $('.post').on('click', function (e) {
-                var post = $(this);
-                var post_id = post.attr('id').split('_')[1];
-                var subreaddit = 0;
-                location.href = `r/${subreaddit}/${post_id}`;
+                if (!(e.target.className.includes("video") || e.target.className.includes("carousel-control-next") || e.target.className.includes("carousel-control-prev") || e.target.className.includes("carousel-control-next-icon") || e.target.className.includes("carousel-control-prev-icon"))) {
+                    var post = $(this);
+                    var post_id = post.attr('id').split('_')[1];
+                    var subreaddit = pathname;
+                    location.href = `${subreaddit}/${post_id}`;
+                }
             })
 
             // Handles clicking on pin button
@@ -407,6 +412,9 @@ $(document).ready(function () {
 
 
         },
+        error: function (xhr, status, error){
+            notifier.alert(xhr.responseJSON.message);
+        }
     })
 
 });
@@ -442,29 +450,35 @@ function addImage(post_id) {
             console.log(media);
             if (media.length > 1) {
                 console.log("Running carousel");
-                var appendStringStart = `<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
+                var appendStringStart = `   
+                <div class="col-1">
+                    <a class="carousel-control-prev" href="#carouselExampleIndicators_${post_id}" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </div>
+                <div id="carouselExampleIndicators_${post_id}" class="carousel slide inheritMaxWidth col-10" data-ride="carousel" data-interval="false">
                         <ol class="carousel-indicators">`
                 for (var j = 0; j < media.length; j++) {
                     if (j == 0) {
-                        appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" style="color: #00ff00"></li>`;
+                        appendStringStart += `<li data-target="#carouselExampleIndicators_${post_id}" data-slide-to="${j}" style="color: #00ff00"></li>`;
                     }
                     else {
-                        appendStringStart += `<li data-target="#carouselExampleIndicators" data-slide-to="${j}" class="active"></li>`;
+                        appendStringStart += `<li data-target="#carouselExampleIndicators_${post_id}" data-slide-to="${j}" class="active"></li>`;
                     }
                 }
-                appendStringStart += `</ol> <div class="carousel-inner">`;
+                appendStringStart += `</ol> <div class="carousel-inner inheritMaxWidth">`;
 
                 var appendStringEnd = `
                         </div>
-                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                          <span class="sr-only">Next</span>
-                        </a>
-                      </div>`;
+                      </div>
+                      <div class="col-1">
+                            <a class="carousel-control-next" href="#carouselExampleIndicators_${post_id}" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                        `;
 
                 //run multiple file display
                 for (var count = 0; count < media.length; count++) {
@@ -475,19 +489,19 @@ function addImage(post_id) {
                         var item = 'carousel-item';
                     }
                     if (media[count].fk_content_type == "1") {
-                        appendStringStart += `<div class="${item}">
-                                <img style="height:400px; max-width: 700px; object-fit: cover;" src="${media[count].media_url}" alt="Image not available"> 
+                        appendStringStart += `<div class="${item} mediaDiv">
+                                <img class="image" src="${media[count].media_url}" alt="Image not available"> 
                             </div>`;
                     }
                     else if (media[count].fk_content_type == "2") {
-                        appendStringStart += `<div class="${item}"> <video height="400" controls autoplay muted loop>
+                        appendStringStart += `<div class="${item} mediaDiv"> <video class="video" controls autoplay muted loop>
                                             <source src="${media[count].media_url}" type="video/mp4">
                                             Your browser does not support the video tag.
                                     </video> </div>`;
                     }
                     else {
                         appendStringStart += `<div class="${item}">
-                                <img style="height: 400px; max-width: 600px; object-fit: cover;" src="${media[count].media_url}" alt="GIF not available"> 
+                                <img class="image" src="${media[count].media_url}" alt="GIF not available"> 
                             </div>`;
                     }
                 }
@@ -505,23 +519,23 @@ function addImage(post_id) {
                 console.log("Running single item");
                 //run single file display
                 if (media[0].fk_content_type == "1") {
-                    $(`#post_media_` + post_id).html(`<img style="max-height: 500px; max-width: 700px; object-fit: cover;" src="${media[0].media_url}" alt="Image not available"> `)
+                    $(`#post_media_` + post_id).html(`<img class="image" src="${media[0].media_url}" alt="Image not available"> `)
                 }
                 else if (media[0].fk_content_type == "2") {
-                    $(`#post_media_` + post_id).html(`<video height="400" controls autoplay muted loop>
+                    $(`#post_media_` + post_id).html(`<video class="video" controls autoplay muted loop>
                                             <source src="${media[0].media_url}" type="video/mp4">
                                             Your browser does not support the video tag.
                                     </video>`)
                 }
                 else {
-                    $(`#post_media_` + post_id).html(`<img style="max-height: 500px; max-width: 700px; object-fit: cover;" src="${media[0].media_url}" alt="GIF not available"> `)
+                    $(`#post_media_` + post_id).html(`<img class="image" src="${media[0].media_url}" alt="GIF not available"> `)
                 }
             }
-            $(`#load`).html(``);
+
         },
 
         error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
+            notifier.alert(xhr.responseJSON.message);
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
@@ -565,7 +579,7 @@ function getSavedPosts(user_id) {
             }
         },
         error: function (xhr, status, error) {
-            alert("Error getting saved posts. Try refreshing the page.")
+            notifier.alert("Error getting saved posts. Try refreshing the page.")
         }
     })
     return output;

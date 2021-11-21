@@ -1,6 +1,8 @@
 const baseUrl = "http://localhost:3000"
 //const baseUrl = "https://readdit-backend.herokuapp.com"
 
+let notifier = new AWN({icons:{enabled:false}})
+
 $(document).ready(function () {
     localStorage.removeItem("subreaddit_id");
     checkOwner();
@@ -41,22 +43,6 @@ function checkModerator(subreadditName) {
     
 }
 
-function checkModerator(subreadditName) {
-    var token = localStorage.getItem("token");
-    $.ajax({
-        url: `${baseUrl}/moderator/checkModerator/` + subreadditName,
-        method: 'GET',
-        contentType: "application/json; charset=utf-8",
-        headers: { authorization: "Bearer " + token },
-        success: function (data, status, xhr) {
-            getSubreadditId();
-        },
-        error: function (xhr, status, error) {
-            window.location.href = "/home.html";
-        }
-    });
-}
-
 function getFlairs(){
     var subreaddit_id = localStorage.getItem('subreaddit_id');
     $.ajax({
@@ -93,13 +79,7 @@ function getFlairs(){
             
         },
         error: function (xhr, status, error) {
-            $("#currentModerators").html(`
-                <div class="row g-0 border-top">
-                <div class="col-12 bg-white p-2 text-center d-flex justify-content-center align-items-center">
-                    <h5>Error loading moderators</h5>
-                </div>
-            </div>
-                `);
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 }
@@ -117,6 +97,7 @@ function getSubreadditId(){
             getFlairs();
         },
         error: function (xhr, status, error) {
+            notifier.alert(xhr.responseJSON.message);
         }
     });
 
@@ -129,7 +110,7 @@ function createFlair(){
     var flair_colour = $('#flair_colour').val();
     var data = JSON.stringify({"flair_name":flair_name,"flair_colour":flair_colour,"fk_subreaddit_id":fk_subreaddit_id});
     console.log(data);
-
+    notifier.info("Creating Flair...")
     $.ajax({
         url: `${baseUrl}/flair`,
         method: 'POST',
@@ -137,10 +118,11 @@ function createFlair(){
         data: data,
         headers:{authorization:"Bearer " + token},
         success: function (data, status, xhr) { 
+            notifier.success("Flair added successfully.")
             getFlairs();
         },
         error: function (xhr, status, error) {
-            alert("Error Adding Flair!");
+            notifier.alert(xhr.responseJSON.message);
             console.log(error);
         }
     })
@@ -148,6 +130,7 @@ function createFlair(){
 
 function deleteFlair(flair_id){
     //var subreaddit_id = localStorage.getItem("subreaddit_id");
+    notifier.info("Deleting Flair...")
     var token = localStorage.getItem("token");
     $.ajax({
         url: `${baseUrl}/flair/${flair_id}`,
@@ -155,10 +138,11 @@ function deleteFlair(flair_id){
         contentType: "application/json; charset=utf-8",
         headers: {authorization:"Bearer " + token},
         success: function (data, status, xhr) { 
+            notifier.success("Flair deleted successfully.")
             getFlairs();
         },
         error: function (xhr, status, error) {
-            success = false;
+            notifier.alert(xhr.responseJSON.message);
         }
     })
 }

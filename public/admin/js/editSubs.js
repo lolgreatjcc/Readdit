@@ -1,6 +1,8 @@
 const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 //const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
+let notifier = new AWN({icons:{enabled:false}})
+
 function loadSubreadditInfo(subreaddit_id) {
     $('#load').html("Loading Info...");
 
@@ -26,10 +28,8 @@ function loadSubreadditInfo(subreaddit_id) {
             console.log(xhr);
             console.log(textStatus);
             console.log(errorThrown);
-            $('#loadingText').html("<h6 class='text-danger'>ERROR LOADING!</h6>");
-            if (xhr.status == 403) {
-                $('#msg').html('F̵̤̈ò̵̬r̶͙̃b̴͖͛i̶̲͒d̸̞̓d̵̮́e̷̬̐n̵̻̄');
-            }
+            notifier.alert(xhr.responseJSON.message);
+
         }
     });
 };
@@ -54,7 +54,6 @@ $(document).ready(function () {
         alert("Unauthenticated User!");
         window.location.assign(`${baseUrl[1]}/login.html`);
     }
-    
     var queryParams = new URLSearchParams(window.location.search);
     console.log("---------Query Parameters---------");
     console.log("Query Param (source): " + window.location.search);
@@ -65,6 +64,8 @@ $(document).ready(function () {
     loadSubreadditInfo(subreaddit_id);
 
     $("#update").click(function () {
+        notifier.info("Processing Request...")
+
         var name = $('#name').val();
         var description = $('#description').val();
 
@@ -79,10 +80,10 @@ $(document).ready(function () {
 
         axios.put(`${baseUrl[0]}/r/subreaddit/` + subreaddit_id, requestBody)
             .then(response => {
-                $('#load').html('Subreaddit updated successfully!');
+                notifier.success('Subreaddit updated successfully!');
             })
             .catch(error => {
-                $('#load').html('Error updating Subreaddit');
+                notifier.alert(error.response.data.message)
             })
     });
 

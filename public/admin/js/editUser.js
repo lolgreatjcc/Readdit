@@ -1,6 +1,8 @@
 const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 //const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
+let notifier = new AWN({icons:{enabled:false}})
+
 function loadUserInfo(user_id, token) {
     $('#load').html("Loading Info...");
 
@@ -24,6 +26,7 @@ function loadUserInfo(user_id, token) {
             }
             $('#title').html(`Edit ${user.username}`);
             //display pfp
+
             var pfp = (user.profile_pic).replace("http://res.cloudinary.com/readditmedia/image/upload/", "");
             $('#profileurl').html(`<p id = "profile_pic" val="${pfp}"> ${pfp} </p>`);
             try {
@@ -36,6 +39,7 @@ function loadUserInfo(user_id, token) {
                     user.profile_pic = pfpTempString[0] + "upload" + "/ar_1.0,c_fill/r_max" + pfpTempString[1]
                     $('#pfpImg').html('<img style="width:200px;" src="' + user.profile_pic + '" alt="No pfp to show" id="pfp" class="pb-2"></img><br>')
                 }
+
             }
             catch (error) {
                 $('#pfpImg').html('<img style="width:200px;" src="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png" alt="No pfp to show" id="pfp" class="pb-2"></img><br>')
@@ -51,10 +55,8 @@ function loadUserInfo(user_id, token) {
             console.log(xhr);
             console.log(textStatus);
             console.log(errorThrown);
-            $('#loadingText').html("<h6 class='text-danger'>ERROR LOADING!</h6>");
-            if (xhr.status == 403) {
-                $('#msg').html('F̵̤̈ò̵̬r̶͙̃b̴͖͛i̶̲͒d̸̞̓d̵̮́e̷̬̐n̵̻̄');
-            }
+            notifier.alert("Error loading user info.")
+
         }
     });
 };
@@ -79,7 +81,6 @@ $(document).ready(function () {
         alert("Unauthenticated User!");
         window.location.assign(`${baseUrl[1]}/login.html`);
     }
-
     var queryParams = new URLSearchParams(window.location.search);
     console.log("---------Query Parameters---------");
     console.log("Query Param (source): " + window.location.search);
@@ -90,7 +91,7 @@ $(document).ready(function () {
     loadUserInfo(user_id, tmpToken);
 
     $("#update").click(function () {
-        $('#load').html('Submitting update...');
+        notifier.info('Submitting update...');
         var profile_pic = $('#profileurl').val();
         var fk_user_type_id = parseInt($('#role').val());
 
@@ -105,10 +106,11 @@ $(document).ready(function () {
 
         axios.put(`${baseUrl[0]}/user/` + user_id, requestBody)
             .then(response => {
-                $('#load').html('User updated successfully!');
+
+                notifier.success('User updated successfully!');
             })
             .catch(error => {
-                $('#load').html('Error updating User');
+                notifier.alert('Error updating User');
             })
     });
 
