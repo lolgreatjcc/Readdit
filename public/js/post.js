@@ -136,84 +136,91 @@ $(document).ready(function () {
                         notifier.alert(xhr.responseJSON.message);
                     }
                 })
+
+                handleVoting(user_id);
+
+                // Handles saving of posts
+                $('.save').on('click', function (e) {
+                    e.stopPropagation();
+                    var save_button = $(this);
+                    var post_id = $(this).attr('id').split('_')[2];
+                    if (user_id == false) {
+                        window.location.href = "/login.html"
+                    }
+
+                    if (save_button.hasClass('saved')) {
+                        notifier.info("Removing post from saved posts...");
+                        save_button.removeClass('saved');
+                        save_button.empty();
+                        save_button.append(`
+                                    <span class="material-icons md-24 ms-0">bookmark_border</span>
+                                    <p class="mb-0 fw-bold fs-6">Save</p>
+                                `);
+
+
+
+                        $.ajax({
+                            url: `${baseUrl[0]}/save/post`,
+                            type: "DELETE",
+                            data: JSON.stringify({
+                                post_id: post_id,
+                                user_id: user_id
+                            }),
+                            contentType: "application/json",
+                            headers: {'authorization': "Bearer " + token},
+                            success: function (data, status, xhr) {
+                                notifier.success("Removed post from saved posts.");
+                                console.log(data);
+                                // do modal
+                            },
+                            error: function (xhr, status, error) {
+                                notifier.alert(xhr.responseJSON.message);
+                            }
+                        })
+
+                    } else {
+                        save_button.addClass('saved');
+                        save_button.empty();
+                        save_button.append(`
+                                    <span class="material-icons md-24 ms-0">bookmark</span>
+                                    <p class="mb-0 fw-bold fs-6">Unsave</p>
+                                `);
+                        notifier.info("Adding post to saved posts...");
+                        $.ajax({
+
+                            url: `${baseUrl[0]}/save/post`,
+                            method: 'POST',
+                            data: JSON.stringify({
+                                post_id: post_id,
+                                user_id: user_id
+                            }),
+                            contentType: "application/json",
+                            headers: {'authorization': "Bearer " + token},
+                            success: function (data, status, xhr) {
+                                notifier.success("Added post to saved posts.");
+                                console.log(data)
+                                // do modal
+                            },
+                            error: function (xhr, status, error) {
+                                notifier.alert(xhr.responseJSON.message);
+                            }
+                        })
+                    }
+
+                })
+
                 if (user_id) {
                     var token = localStorage.getItem("token")
                     var vote_data = getUsersVotes(subreaddit_path, user_id, post_data.post_id);
-                    handleVoting(user_id);
                     var saved_posts = getSavedPosts(user_id, post_data.post_id, () => {
                         $('#post_loading_div').addClass('d-none');
+                        $('.logged_in').removeClass('d-none');
                     });
-                    // Handles saving of posts
-                    $('.save').on('click', function (e) {
-                        e.stopPropagation();
-                        var save_button = $(this);
-                        var post_id = $(this).attr('id').split('_')[2];
-                        if (user_id == false) {
-                            window.location.href = "/login.html"
-                        }
-
-                        if (save_button.hasClass('saved')) {
-                            notifier.info("Removing post from saved posts...");
-                            save_button.removeClass('saved');
-                            save_button.empty();
-                            save_button.append(`
-                                        <span class="material-icons md-24 ms-0">bookmark_border</span>
-                                        <p class="mb-0 fw-bold fs-6">Save</p>
-                                    `);
-
-
-
-                            $.ajax({
-                                url: `${baseUrl[0]}/save/post`,
-                                type: "DELETE",
-                                data: JSON.stringify({
-                                    post_id: post_id,
-                                    user_id: user_id
-                                }),
-                                contentType: "application/json",
-                                headers: {'authorization': "Bearer " + token},
-                                success: function (data, status, xhr) {
-                                    notifier.success("Removed post from saved posts.");
-                                    console.log(data);
-                                    // do modal
-                                },
-                                error: function (xhr, status, error) {
-                                    notifier.alert(xhr.responseJSON.message);
-                                }
-                            })
-
-                        } else {
-                            save_button.addClass('saved');
-                            save_button.empty();
-                            save_button.append(`
-                                        <span class="material-icons md-24 ms-0">bookmark</span>
-                                        <p class="mb-0 fw-bold fs-6">Unsave</p>
-                                    `);
-                            notifier.info("Adding post to saved posts...");
-                            $.ajax({
-
-                                url: `${baseUrl[0]}/save/post`,
-                                method: 'POST',
-                                data: JSON.stringify({
-                                    post_id: post_id,
-                                    user_id: user_id
-                                }),
-                                contentType: "application/json",
-                                headers: {'authorization': "Bearer " + token},
-                                success: function (data, status, xhr) {
-                                    notifier.success("Added post to saved posts.");
-                                    console.log(data)
-                                    // do modal
-                                },
-                                error: function (xhr, status, error) {
-                                    notifier.alert(xhr.responseJSON.message);
-                                }
-                            })
-                        }
-
-                    })
+                    var username = JSON.parse(localStorage.getItem('userInfo')).username;
+                    $(`#comment_as`).append(`<p class="mb-0">Comment as u/<span class="text-secondary">${username}</span></p>`)
                 }
                 else {
+                    $('.logged_out').removeClass('d-none');
                     $('#post_loading_div').addClass('d-none');
                 }
 
@@ -341,7 +348,6 @@ $(document).ready(function () {
         success: function (data, status, xhr) {
             data = data.Result;
             $('#comment_total').append(data.length);
-            var username = JSON.parse(localStorage.getItem('userInfo')).username;
             for (var i = 0; i < data.length; i++) {
 
                 // Calculates Time
@@ -401,8 +407,6 @@ $(document).ready(function () {
                                 </div>`
                 )
             }
-
-            $(`#comment_as`).append(`<p class="mb-0">Comment as u/<span class="text-secondary">${username}</span></p>`)
         },
         error: function (xhr, status, error){
             notifier.alert(xhr.responseJSON.message);

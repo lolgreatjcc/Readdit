@@ -237,6 +237,14 @@ $(document).ready(function () {
     $('body').on('click', '#adminButton', function () {
         window.location.assign(`/admin/admin_home.html`);
     });
+
+    $('body').on('click', '#editBtn', function () {
+        window.location.href = "/edit_account.html";
+    });
+
+    $('body').on('click', '#createBtn', function () {
+        window.location.href = "/createPost.html";
+    });
 })
 
 function displaySavedPosts() {
@@ -246,7 +254,6 @@ function displaySavedPosts() {
         url: baseUrl[0] + "/save/posts?user_id=" + user_id,
         type: "GET",
         contentType: "application/json charset=utf-8",
-        headers:{authorization:"Bearer "+ token},
         success: function (data, status, xhr) {
             $("#post_div").html("");
             console.log(data);

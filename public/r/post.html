@@ -67,21 +67,26 @@
 
                                     </div>
                                     <div class="">
-                                        <div id="comment_as">
+                                        <div class="logged_in d-none">
+                                            <div id="comment_as">
 
-                                        </div>
-                                        <form class="">
-                                            <textarea class="form-control body-borders rounded-0 rounded-top"
-                                                style="min-height: 122px; border-bottom: 0;"
-                                                placeholder="What are your thoughts?" id="comment_content"></textarea>
-                                            <div class="bg-darker body-borders rounded-bottom p-2 d-flex">
-                                                <div class="flex-grow-1"></div>
-                                                <input type="button" value="Comment" id="comment_submit"
-                                                    class="invert-scheme btn">
                                             </div>
-
-                                        </form>
-                                        <hr>
+                                            <form class="">
+                                                <textarea class="form-control body-borders rounded-0 rounded-top"
+                                                    style="min-height: 122px; border-bottom: 0;"
+                                                    placeholder="What are your thoughts?" id="comment_content"></textarea>
+                                                <div class="bg-darker body-borders rounded-bottom p-2 d-flex">
+                                                    <div class="flex-grow-1"></div>
+                                                    <input type="button" value="Comment" id="comment_submit"
+                                                        class="invert-scheme btn">
+                                                </div>
+                                            </form>
+                                            <hr>
+                                        </div>
+                                        <div class="logged_out d-none">
+                                            <p>Login or Sign Up to join the conversation!</p>
+                                        </div>
+                                        
                                         <div id="comment_div">
                                             <!-- <div class="comment row ">
                                             <div class="col-1 d-flex flex-column">
