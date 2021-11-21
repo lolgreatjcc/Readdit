@@ -6,7 +6,7 @@ const verify = require('./verify')
 // save a post
 router.post('/post',verify.verifySameUserId, function (req,res) {
     var post_id = req.body.post_id;
-    var user_id = req.body.user_id;
+    var user_id = req.body.token_user_id;
     post.savePost(post_id, user_id, function (result,err) {
         if(!err) {
             res.status(200).send(result);

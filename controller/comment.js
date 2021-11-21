@@ -8,8 +8,9 @@ router.post('', verify.extractUserId, (req, res) => {
     var comment_content = req.body.comment;
     var post_id = req.body.post_id;
 
-    if (comment_content.length > 1000) {
-        res.status(400).send({ message: "Comment exceeds 1000 character limit." })
+
+    if (comment_content.length > 1000){
+        res.status(400).send({"message":"Comment exceeds 1000 character limit."})
     }
     else {
         comment.createComment(user_id, comment_content, post_id, (err, result) => {

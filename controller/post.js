@@ -39,10 +39,10 @@ function checkModerator(req, res, next) {
                         next();
                     }
                     else{
-                        res.status(403).send({message:"Logged In user is not moderator"});
+                        res.status(403).send({"message":"Logged In user is not moderator"});
                     }
                 }else {
-                    res.status(500).send({message:"Error while getting subreaddit info."});
+                    res.status(500).send({"message":"Error while getting subreaddit info."});
                 }
                 
             })
@@ -196,11 +196,11 @@ router.post('/create', upload.array("media", 8), verify.extractUserId, async (re
                     console.log("Error: " + err);
                     if (err == "Invalid File Type" || err == "File too big!") {
                         success = false;
-                        res.status(400).send({'message':err});
+                        res.status(400).send({"message":err});
                     }
                     else {
                         success = false;
-                        res.status(500).send({'message':"Error while uploading media."});
+                        res.status(500).send({"message":"Error while uploading media."});
                     }
 
                 }
@@ -219,7 +219,7 @@ router.post('/create', upload.array("media", 8), verify.extractUserId, async (re
                     for (var j=0;j<mediaUploadLinks.length;j++){
                         media.createMedia(mediaUploadLinks[j].media_url, mediaUploadLinks[j].content_type, fk_post_id, function (err, result) {
                             if (err) {
-                                res.status(500).send({'message':"Error saving media_url to database"});
+                                res.status(500).send({"message":"Error saving media_url to database"});
                             }
                             else if (result) {
                                 if (progress == 0) {

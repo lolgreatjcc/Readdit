@@ -30,19 +30,19 @@ async function mediaUpload(file,callback){
                     let message = "File Submission Failed";
                     // Generic Error Message
                     await unlinkAsync(file.path);
-                    var data =  {success:false,message: message};
+                    var data =  {success:false,"message": message};
                     return callback(data,null)
                 }
             })
         }
         else{
             await unlinkAsync(file.path);
-            return callback({message:"File too big!"},null)
+            return callback({"message":"File too big!"},null)
         }     
     }
     else{
         await unlinkAsync(file.path);
-        return callback({message:"Invalid File Type"},null)
+        return callback({"message":"Invalid File Type"},null)
     }
    
 }

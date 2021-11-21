@@ -191,8 +191,8 @@ router.get('/checkOwner/:subreaddit', verify.extractUserId, (req, res) => {
             if (fk_creator_user_id == req.body.token_user_id) {
                 res.status(200).send({ "Result": "Is Owner" })
             }
-            else {
-                res.status(403).send({ "Error": "Logged In user is not owner" });
+            else{
+                res.status(403).send({"message":"Logged In user is not owner"});
             }
         } else {
             res.status(500).send(err);

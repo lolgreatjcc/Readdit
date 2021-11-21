@@ -110,7 +110,7 @@ app.get('/users',printDebugInfo, function (req, res) {
         if (!err) {
             res.status(200).send({"Result" : result});
         } else {
-            res.status(500).send({message:"Error getting all users."});
+            res.status(500).send({"message":"Error getting all users."});
         }
     });
 
@@ -124,7 +124,7 @@ app.get('/users/:user_id',printDebugInfo, verify.verifySameUserId, function (req
         if (!err) {
             res.status(200).send({"Result" : result});
         } else {
-            res.status(500).send({message:"Error getting user details"});
+            res.status(500).send({"message":"Error getting user details"});
         }
     });
 
@@ -143,14 +143,14 @@ app.post('/users', upload.single("image"), printDebugInfo, function (req, res) {
         user.addUser(username, password, email, profile_pic, two_fa, fk_user_type_id, function (err, result) {
             if (!err) {
                 if (result == "duplicate") {
-                    res.status(422).send({ "message:": "User already exists!" });
+                    res.status(422).send({ "message": "User already exists!" });
                 }
                 else {
                     res.status(201).send({"Result" : result})
                 }
             } 
             else {
-                res.status(500).send({"message:":"Internal Server Error"});
+                res.status(500).send({"message":"Internal Server Error"});
             }
         }); 
     }
@@ -166,10 +166,10 @@ app.post('/users', upload.single("image"), printDebugInfo, function (req, res) {
             }
             else{
                 if (err.message == "File too big!" || err.message == "Invalid File Type"){
-                    res.status(400).send({message : err.message})
+                    res.status(400).send({"message": err.message})
                 }
                 else{
-                    res.status(500).json({message: err.message});
+                    res.status(500).json({"message": err.message});
                 }
             }
         })
@@ -189,7 +189,7 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify.verify
     var two_fa = parseInt(req.body.two_fa);
 
     if (isNaN(user_id)) {
-        res.status(400).send({message:"Blank ID"});
+        res.status(400).send({"message":"Blank ID"});
         return;
     }
     else{
@@ -205,7 +205,7 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify.verify
                             submitEdit(profile_pic)
                         }
                         else{
-                            res.status(500).json({message:err.message});
+                            res.status(500).json({"message":err.message});
                         }
                     })
                 }
@@ -216,9 +216,9 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify.verify
             }
             else {
                 if (err.message == "Wrong Password!"){
-                    res.status(401).send({message:err.message});
+                    res.status(401).send({"message":err.message});
                 }
-                res.status(500).send({message:"Error checking password."});
+                res.status(500).send({"message":"Error checking password."});
             }
         });
     }
@@ -245,9 +245,9 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify.verify
             }
             else {
                 if (err.message == "Wrong Password!"){
-                    res.status(401).send({message : err.message});
+                    res.status(401).send({"message": err.message});
                 }
-                res.status(500).send({message:"Error editing user details."});
+                res.status(500).send({"message":"Error editing user details."});
             }
         });
     }    
@@ -259,7 +259,7 @@ app.put('/user/:user_id',  printDebugInfo, function (req, res) {
     var profile_pic = req.body.profile_pic;
 
     if (isNaN(user_id)) {
-        res.status(400).send({message:"Blank ID"});
+        res.status(400).send({"message":"Blank ID"});
         return;
     }
     else{
@@ -278,7 +278,7 @@ app.put('/user/:user_id',  printDebugInfo, function (req, res) {
                 res.status(200).send(output);
             }
             else {
-                res.status(500).send({message:"Error updating user info."});
+                res.status(500).send({"message":"Error updating user info."});
             }
         });
     }
@@ -292,7 +292,7 @@ app.delete('/users/:userid', printDebugInfo, function (req, res) {
         if (!err) {
             res.status(204).send({"Result" : result});
         } else {
-            res.status(500).send({message:"Error deleting user." });
+            res.status(500).send({"message":"Error deleting user." });
         }
     });
 
@@ -305,7 +305,7 @@ app.get('/usernameSearch/:username', printDebugInfo, function (req, res) {
         if (!err) {
             res.status(200).send({"Result" : result});
         } else {
-            res.status(500).send({message:"Error getting user info."});
+            res.status(500).send({"message":"Error getting user info."});
         }
     });
 
@@ -321,7 +321,7 @@ app.post('/api/login', printDebugInfo, function (req, res) {
         if (!err) {
             if (!result) {
                 // this is matched to callback(null, null, null)
-                var message = {message:"Invalid Credentials"};
+                var message = {"message":"Invalid Credentials"};
 
                 res.status(401).send(message);
             }
@@ -338,7 +338,7 @@ app.post('/api/login', printDebugInfo, function (req, res) {
 
         } else {
             // this is matched to callaback(not null, null)
-            res.status(500).send({message:"Error authenticating user."});
+            res.status(500).send({"message":"Error authenticating user."});
         }
 
     });
@@ -348,7 +348,7 @@ app.post('/api/login', printDebugInfo, function (req, res) {
 
 //get user_id from token
 app.get('/getUserId',printDebugInfo, verify.extractUserId ,function (req, res) {
-    res.status(200).send({user_id:req.body.token_user_id})
+    res.status(200).send({"user_id":req.body.token_user_id})
 });
 
 
