@@ -103,6 +103,10 @@ app.get('/', (req, res) => {
 // user endpoints
 //-----------------------------------
 
+app.get('/verify', printDebugInfo, verify.checkAdmin, function(req,res) { 
+    res.status(200).send({"Results":"Verified"}); 
+});
+
 //getallusers
 app.get('/users',printDebugInfo, function (req, res) {
 
