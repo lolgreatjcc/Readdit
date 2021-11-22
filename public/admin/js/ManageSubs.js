@@ -38,9 +38,10 @@ function displaySubs() {
             console.log(textStatus);
             console.log(errorThrown);
             console.log(xhr.status);
-            //if (xhr.status == 401) {
-            //    $('$msg').html('Unauthorised User');
-            //}
+            if (xhr.status == 403) {
+                $("#load").html("");
+                $("#subreaddits").append("Unauthorized Request!!");
+            }
         }
     });
 
@@ -53,13 +54,20 @@ $(document).ready(function () {
         // userData = userData.slice(1,-1);
 
         var userJsonData = JSON.parse(userData);
-        var role = userJsonData.fk_user_type_id;
 
-        var tmpToken = localStorage.getItem('token');
-
-        if (role != 2) {
-            window.location.assign(`${baseUrl[1]}/home.html`);
-        }
+        $.ajax({
+            headers: { 'authorization': 'Bearer ' + token },
+            url: `${baseUrl[0]}/verify`,
+            type: 'GET',
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            success: function (data, textStatus, xhr) {
+                console.log(data);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                window.location.assign(`${baseUrl[1]}/home.html`);
+            }
+        });
     } catch (error) {
         window.location.assign(`${baseUrl[1]}/login.html`);
     }
@@ -93,6 +101,10 @@ $(document).ready(function () {
                     console.log(textStatus);
                     console.log(errorThrown);
                     console.log(xhr.status);
+                    if (xhr.status == 403) {
+                        $("#load").html("");
+                        $("#subreaddits").append("Unauthorized Request!!");
+                    }
                 }
             });
         }
