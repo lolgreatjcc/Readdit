@@ -1,0 +1,1 @@
+Do not remove this txt file to ensure that the mediaUploadTemp folder gets
