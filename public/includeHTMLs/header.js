@@ -44,14 +44,6 @@ $(document).ready(() => {
             <span class="navbar-toggler-icon"></span>
         </button>
         <div id="readitNavbar" class="collapse navbar-collapse">
-            <ul class="navbar-nav mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="../home.html">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-            </ul>
             <form class="flex-grow-1 me-5 ms-5 mb-0" action="javascript:runSearch()">
                 <div class="input-group">
                     <input class="form-control bg-light h-100" type="text" placeholder="Search for Post / Subreadit"
