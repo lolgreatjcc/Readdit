@@ -138,7 +138,7 @@ function searchSubreaddits() {
                             }
                         }
                     }
-
+                    clickableSubreaddits();
                 },
                 error: function (xhr, status, error) {
                     console.log("Error: " + error)
@@ -160,6 +160,7 @@ function clickableSubreaddits() {
 
 function clickablePosts() {
     $(".post").click(function () {
+        console.log("Post is clicked");
         var post_id = $(this).attr("id").split("_")[1];
         window.location.href = `/r/0/${post_id}`;
     })
@@ -284,7 +285,7 @@ function searchPosts() {
                                 }
                                 
                                 $("#posts_similar").append(`
-                            <div class="post rounded mb-2">
+                            <div class="post rounded mb-2" id="post_${similars[i].post_id}">
                                 <div class="row g-0 rounded">
                                     <div class="col-1 upvote-section py-2 justify-content-center">
                                         <a class="text-center d-block py-1" id="post1-upvote"><i
@@ -307,10 +308,12 @@ function searchPosts() {
                                     </div>
                                 </div>
                             </div>
-                                `)
+                                `)   
                             }
+                            
                         }
                     }
+                    clickablePosts();
                 },
                 error: function (xhr, status, error) {
                     console.log(xhr.responseJSON.message)
