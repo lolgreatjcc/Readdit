@@ -1,4 +1,4 @@
-//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+// const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
 let notifier = new AWN({icons:{enabled:false}})
@@ -107,15 +107,11 @@ function displayMedia(subreaddit_id) {
         },
         error: function (xhr, textStatus, errorThrown) {
             notifier.alert(xhr.responseJSON.message);
-            console.log(xhr)
-            console.log(textStatus);
-            console.log(errorThrown);
-            console.log(xhr.status);
         }
     });
 }
 
-async function mediaCall() {
+async function mediaCall(supressError) {
     console.log("Me Second!!");
     var pathname = window.location.pathname;
     $.ajax({
@@ -128,11 +124,10 @@ async function mediaCall() {
             displayMedia(data.subreaddit_id);
         },
         error: function (xhr, textStatus, errorThrown) {
-            notifier.alert(xhr.responseJSON.message);
-            console.log(xhr)
-            console.log(textStatus);
-            console.log(errorThrown);
-            console.log(xhr.status);
+            if(supressError == false) {
+                notifier.alert(xhr.responseJSON.message);
+            }
+
         }
     });
 }
@@ -158,6 +153,7 @@ function getUsersVotes(subreaddit_id, user_id) {
 $(document).ready(function () {
     var pathname = window.location.pathname;
     var token = localStorage.getItem("token")
+    var supressError = false;
     $.ajax({
         url: `${baseUrl[0]}` + pathname,
         method: 'GET',
@@ -176,6 +172,13 @@ $(document).ready(function () {
         },
         error: function (xhr, status, error) {
             notifier.alert(xhr.responseJSON.message);
+            notifier.alert("You will now be redirected to the home page");
+            setTimeout(() => {
+
+                location.href = baseUrl[1]
+            }, 5000);
+            supressError = true;
+        
         }
     })
 
@@ -653,7 +656,7 @@ $(document).ready(function () {
                 }
                 var saved_posts = getSavedPosts(user_id);
             }
-            mediaCall();
+            mediaCall(supressError);
         },
         error: function (xhr, status, error) {
             notifier.alert(xhr.responseJSON.message);
