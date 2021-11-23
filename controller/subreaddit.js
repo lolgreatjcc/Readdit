@@ -111,29 +111,32 @@ router.post('/create', printDebugInfo, verify.extractUserId, (req, res) => {
     var creator_user_id = req.body.token_user_id;
 
 
-    subreaddit.createSubreaddit(community_name, description, creator_user_id, function (err, result) {
-        if (!err) {
-            console.log(result);
-            res.status(201).send({ "Result": "Subreaddit created successfully." })
-        } else {
-            console.log(err.name);
-            if (err.name == "SequelizeUniqueConstraintError") {
-                res.status(409).send({ 'message': "Duplicate Entry. Subreaddit already exists." })
+    if (community_name.length > 45) {
+        res.status(400).send({ 'message': "Subreaddit name too long. Max 45 characters." })
+    }
+    else if (description.length > 100) {
+        res.status(400).send({ 'message': "Description is too long. Max 100 characters." })
+    }
+    else {
+        subreaddit.createSubreaddit(community_name, description, creator_user_id, function (err, result) {
+            if (!err) {
+                console.log(result);
+                res.status(201).send({ "Result": "Subreaddit created successfully." })
+            } else {
+                console.log(err.name);
+                if (err.name == "SequelizeUniqueConstraintError") {
+                    res.status(409).send({ 'message': "Duplicate Entry. Subreaddit already exists." })
+                }
+                else if (err.name == "SequelizeValidationError") {
+                    res.status(403).send({ 'message': "Please ensure that all inputs are filled and correct." })
+                }
+                else {
+                    res.status(500).send({ 'message': "Error while creating subreaddit." })
+                }
             }
-            else if (err.name == "SequelizeValidationError") {
-                res.status(403).send({ 'message': "Please ensure that all inputs are filled and correct." })
-            }
-            else if (community_name.length > 45) {
-                res.status(400).send({ 'message': "Subreaddit name too long. Max 45 characters." })
-            }
-            else if (description.length > 100) {
-                res.status(400).send({ 'message': "Description is too long. Max 100 characters." })
-            }
-            else {
-                res.status(500).send({ 'message': "Error while creating subreaddit." })
-            }
-        }
-    })
+        })
+    }
+
 })
 
 // Get all Subreaddits
@@ -191,8 +194,8 @@ router.get('/checkOwner/:subreaddit', verify.extractUserId, (req, res) => {
             if (fk_creator_user_id == req.body.token_user_id) {
                 res.status(200).send({ "Result": "Is Owner" })
             }
-            else{
-                res.status(403).send({"message":"Logged In user is not owner"});
+            else {
+                res.status(403).send({ "message": "Logged In user is not owner" });
             }
         } else {
             res.status(500).send(err);
