@@ -101,7 +101,7 @@ $(document).ready(function () {
 
     $("#update").click(function () {
         notifier.info('Submitting update...');
-        var profile_pic = $('#profileurl').val();
+        var profile_pic = $('#pfp').attr('src');
         var fk_user_type_id = parseInt($('#role').val());
 
         const requestBody = {
@@ -133,7 +133,7 @@ $(document).ready(function () {
         var check = confirm("Delete profile picture?");
         if (check) {
             $('#pfpImg').html('<img style="width:200px;" src="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png" alt="No pfp to show" id="pfp" class="pb-2"></img><br>')
-            $('#profileurl').html(`<p id = "profile_pic" val=""></p>`);
+            $('#profileurl').html(`<p id = "profile_pic" val="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png"></p>`);
         }
     });
 })
