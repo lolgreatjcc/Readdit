@@ -40,7 +40,7 @@ function addUser(username, email, profile_pic, password, two_fa) {
 $(document).ready(function () {
     $(`#login_redirect`).html(`<p class="smaller">
     Already have an account? <a class="text-decoration-none" href="${baseUrl[1]}/login.html">Log in</a>
-</p>`);
+    </p>`);
     $("#Add").click(function () {
         // data extraction
         var username = $('#username').val();
