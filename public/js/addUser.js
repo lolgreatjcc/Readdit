@@ -1,5 +1,5 @@
-//const baseUrl = "http://localhost:3000";
-const baseUrl = "https://readdit-backend.herokuapp.com"
+//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
 let notifier = new AWN({icons:{enabled:false}})
 
@@ -24,7 +24,7 @@ function addUser(username, email, profile_pic, password, two_fa) {
   
     // axios.post(`https://readdit-backend.herokuapp.comusers`,requestBody)
 
-    axios.post(`${baseUrl}/users`, requestBody)
+    axios.post(`${baseUrl[0]}/users`, requestBody)
         .then(response => {
             notifier.success('User added successfully!');
         })
@@ -38,7 +38,9 @@ function addUser(username, email, profile_pic, password, two_fa) {
     }
 
 $(document).ready(function () {
-
+    $(`#login_redirect`).html(`<p class="smaller">
+    Already have an account? <a class="text-decoration-none" href="${baseUrl[1]}/login.html">Log in</a>
+</p>`);
     $("#Add").click(function () {
         // data extraction
         var username = $('#username').val();
@@ -72,3 +74,4 @@ $(document).ready(function () {
         //window.location.assign("https://readdit-sp.herokuapp.comlogin.html");
     });
 });  
+
