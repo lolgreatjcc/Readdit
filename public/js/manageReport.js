@@ -54,7 +54,7 @@ $(document).ready(function () {
         var role = userJsonData.fk_user_type_id;
 
     } catch (error) {
-        window.location.assign("http://localhost:3001/login.html");
+        window.location.assign(`${baseUrl[1]}/login.html`);
     }
 
     var queryParams = new URLSearchParams(window.location.search);
@@ -84,12 +84,12 @@ $(document).ready(function () {
     });
 
     $("#return").click(function () {
-        window.location.assign("http://localhost:3001/r/" + subreaddit_name);
+        window.location.assign(`${baseUrl[1]}/r/` + subreaddit_name);
     });
 
     $('body').on('click', '.EditCall', function () {
         var user_id = event.srcElement.id;
-        window.location.assign("http://localhost:3001/admin/editUser.html?id=" + user_id);
+        window.location.assign(`${baseUrl[1]}/admin/editUser.html?id=` + user_id);
     });
 });
 
