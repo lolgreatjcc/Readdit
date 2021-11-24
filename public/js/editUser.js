@@ -53,12 +53,6 @@ function loadUserInfo() {
                 $('#pfpImg').html('<img src="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png" alt="profile image" id="pfp" class="pb-2"></img><br>')
                 console.log(error)
             }
-
-            $('#loadingText').html("");
-            //     console.log(textStatus)
-            //     console.log(xhr)
-
-            // }
         },
 
 
