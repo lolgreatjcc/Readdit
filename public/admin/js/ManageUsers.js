@@ -35,7 +35,15 @@ function displayUsers(user_id, token) {
                     user.profile_pic = 'https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png';
                 }
 
-                var pfp = (user.profile_pic).replace("http://res.cloudinary.com/readditmedia/image/upload/", "");
+                var pfp = "";
+                if (user.profile_pic.slice(0, 5) == "https"){
+                    pfp = (user.profile_pic).replace("https://res.cloudinary.com/readditmedia/image/upload/", "");
+                }
+                else{
+                    pfp = (user.profile_pic).replace("http://res.cloudinary.com/readditmedia/image/upload/", "");
+                }
+                
+                
                 if (user_id == user.user_id) {
                     appendString += `<tr>
                                         <th scope="row">${i + 1}</th>
