@@ -11,7 +11,8 @@ $(document).ready(function () {
         var userJsonData = JSON.parse(userData);
         var role = userJsonData.fk_user_type_id;
     } catch (error) {
-        window.location.assign(`${baseUrl[1]}/login.html`);
+        notifier.alert("You need to be logged in to access this page!");
+        setTimeout(window.location.assign(`${baseUrl[1]}/login.html`),5000);
     }
 
     // Retrieves subreaddits.
