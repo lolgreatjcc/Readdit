@@ -6,41 +6,15 @@ let notifier = new AWN({icons:{enabled:false}})
 $(document).ready(function () {
     var userData = localStorage.getItem('userInfo');
     var token = localStorage.getItem("token")
-    // userData = userData.slice(1,-1);
 
+    //if user is logged in
     if (userJsonData) {
         var userJsonData = JSON.parse(userData);
         var userid = userJsonData.user_id;
     }
 
-    var tmpToken = localStorage.getItem('token');
-
-    $.ajax({
-        headers: { 'authorization': 'Bearer ' + tmpToken },
-        // url: 'https://readdit-backend.herokuapp.comusers/' + userid,
-        url: `${baseUrl[0]}/users/` + userid,
-        type: 'GET',
-        //contentType: "application/json; charset=utf-8",
-        dataType: 'json',
-        headers: { "authorization": `Bearer ${token}` },
-        success: function (data, textStatus, xhr) {
-
-            $(`#msg`).append(`<h1> Welcome to readdit, ${data.Result.username}! </h1>`);
-
-        },
-        error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
-            console.log(xhr)
-            console.log(textStatus);
-            console.log(errorThrown);
-            console.log(xhr.status);
-            //if (xhr.status == 401) {
-            //    $('$msg').html('Unauthorised User');
-            //}
-        }
-    });
-
     notifier.info("Loading posts...")
+    //gets all posts by recent
     $.ajax({
         url: `${baseUrl[0]}/post/recent`,
         method: "GET",
@@ -69,12 +43,8 @@ $(document).ready(function () {
 
 
             data = sorted_data;
-            console.log(data);
-            console.log(data.length)
 
             for (var i = 0; i < data.length; i++) {
-                console.log("Number of posts: " + data.length)
-                console.log(JSON.stringify(data[i]));
                 var copyStr = data[i].Subreaddit.subreaddit_name + "/" + data[i].post_id;
                 // Calculates Time
                 var date = new Date(data[i].created_at);
@@ -206,11 +176,9 @@ $(document).ready(function () {
                         contentType: "application/json",
                         headers: {'authorization': "Bearer " + token},
                         success: function (data, status, xhr) {
-                            console.log(data);
                             // do modal
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr)
                         }
                     })
 
@@ -232,10 +200,8 @@ $(document).ready(function () {
                         contentType: "application/json",
                         headers: {'authorization': "Bearer " + token},
                         success: function (data, status, xhr) {
-                            console.log(data)
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr);
                         }
                     })
                 }
@@ -252,7 +218,6 @@ $(document).ready(function () {
 
             // Handles upvoting/downvoting a post
             $('.post-upvote').on('click', function (e) {
-                console.log("clicked upvote")
                 e.stopPropagation();
 
                 if (user_id == false) {
@@ -283,7 +248,6 @@ $(document).ready(function () {
                             contentType: "application/json",
                             headers:{'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
-                                console.log(data);
                             }
                         })
                     }
@@ -308,7 +272,6 @@ $(document).ready(function () {
                             contentType: "application/json; charset=utf-8",
                             headers:{'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
-                                console.log(data);
                             }
                         })
                     }
@@ -351,7 +314,6 @@ $(document).ready(function () {
                             data: JSON.stringify({ data }),
                             contentType: "application/json",
                             success: function (data, status, xhr) {
-                                console.log(data);
                             }
                         })
                     }
@@ -378,7 +340,6 @@ $(document).ready(function () {
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             success: function (data, status, xhr) {
-                                console.log(data);
                             }
                         })
                     }
@@ -408,10 +369,6 @@ $(document).ready(function () {
                 var delete_id = $(this).attr('id');
                 deletePost(delete_id);
             })
-
-
-
-
         },
         error: function (xhr, status, error){
             notifier.alert(xhr.responseJSON.message);
@@ -420,6 +377,7 @@ $(document).ready(function () {
 
 });
 
+//extracts user id
 function getUserId() {
     return new Promise(function (resolve, reject) {
         var token = localStorage.getItem("token");
@@ -438,19 +396,17 @@ function getUserId() {
     })
 }
 
+//extracts all images for all posts
 function addImage(post_id) {
     //retrives media for post
     $.ajax({
-        //headers: { 'authorization': 'Bearer ' + tmpToken },
         url: `${baseUrl[0]}/media/media/` + post_id,
         type: 'GET',
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
         success: function (data, textStatus, xhr) {
             var media = data.Result;
-            console.log(media);
             if (media.length > 1) {
-                console.log("Running carousel");
                 var appendStringStart = `   
                 <div class="col-1">
                     <a class="carousel-control-prev" href="#carouselExampleIndicators_${post_id}" role="button" data-slide="prev">
@@ -512,12 +468,10 @@ function addImage(post_id) {
 
             }
             else if (media.length == 0) {
-                console.log("Running no media");
                 appendString = ``;
                 $(`#post_media_` + post_id).remove();
             }
             else {
-                console.log("Running single item");
                 //run single file display
                 if (media[0].fk_content_type == "1") {
                     $(`#post_media_` + post_id).html(`<img class="image" src="${media[0].media_url}" alt="Image not available"> `)
@@ -545,22 +499,22 @@ function addImage(post_id) {
     });
 }
 
+//get all votes
 function getUsersVotes(user_id) {
     var results;
     $.ajax({
-        //headers: { 'authorization': 'Bearer ' + tmpToken },
         method: 'GET',
         url: `${baseUrl[0]}/vote/all?user_id=${user_id}`,
         async: false,
         dataType: 'json',
         success: function (data, textStatus, xhr) {
-            console.log(data);
             results = data
         }
     })
     return results;
 }
 
+//get saved posts
 function getSavedPosts(user_id) {
     var output;
     $.ajax({

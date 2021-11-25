@@ -4,6 +4,17 @@ const baseUrl = "https://readdit-backend.herokuapp.com"
 let notifier = new AWN({ icons: { enabled: false } })
 
 $(document).ready(() => {
+    //check if user is logged in
+    try {
+        var userData = localStorage.getItem('userInfo');
+        var token = localStorage.getItem("token")
+        var userJsonData = JSON.parse(userData);
+        var role = userJsonData.fk_user_type_id;
+    } catch (error) {
+        window.location.assign(`${baseUrl[1]}/login.html`);
+    }
+
+    //if create community button is clicked
     $('#create_community_submit').on('click', () => {
 
         notifier.info("Processing Request...")
@@ -13,10 +24,11 @@ $(document).ready(() => {
         $('#community_name').prop('disabled', true);
         $('#community_description').prop('disabled', true);
 
-
+        //extract values
         var subreaddit_name = $('#community_name').val();
         var description = $('#community_description').val();
 
+        //check if required inputs are blank
         if (subreaddit_name == "") {
             notifier.alert("Please fill in the subreaddit name.")
             $('#create_community_submit').prop('disabled', false);
@@ -32,14 +44,13 @@ $(document).ready(() => {
             $('#community_description').prop('disabled', false);
         }
         else {
-            // Temporary value till user_ids are implemented
-            var token = localStorage.getItem("token");
 
             var data = {
                 subreaddit_name: subreaddit_name,
                 description: description,
             }
 
+            //ajax call to create subreaddit
             $.ajax({
                 url: `${baseUrl}/r/create`,
                 method: 'POST',
@@ -58,10 +69,7 @@ $(document).ready(() => {
                     $('#community_description').prop('disabled', false);
                     notifier.alert(xhr.responseJSON.message);
                 }
-
             })
         }
     })
-
-
 })

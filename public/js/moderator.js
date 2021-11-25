@@ -8,6 +8,7 @@ $(document).ready(function () {
     checkOwner();
 })
 
+//check if logged in user is the owner of the subreaddit
 function checkOwner(){
     let params = (new URL(document.location)).searchParams;
     let subreadditName = params.get("subreaddit");
@@ -26,7 +27,7 @@ function checkOwner(){
     });
 }
 
-
+//find users with same username as search
 function getLikeUsername(){
     var username = $("#usernameSearch").val();
     if (username.trim().length != 0){
@@ -57,8 +58,6 @@ function filterUsers(searchResults){
         contentType: "application/json; charset=utf-8",
         success: function (data, status, xhr) { 
             var data = data.Result;
-            console.log("Mods: " + JSON.stringify(data))
-
             $("#non-moderator-list").html("");
             var filteredLength = 0;
             for (var i=0;i<searchResults.length;i++){
@@ -93,7 +92,7 @@ function filterUsers(searchResults){
     });
 };
 
-
+//gets all moderators of the subreaddit
 function getCurrentMods(){
     var subreaddit_id = localStorage.getItem('subreaddit_id');
     $.ajax({
@@ -114,7 +113,6 @@ function getCurrentMods(){
             }
             else{
                 for (var i=0;i<data.length;i++){
-                console.log(JSON.stringify(data[i]));
                 $("#currentModerators").append(`
                 <div class="row g-0 border-top">
                 <div class="col-8 bg-white p-2 text-center d-flex justify-content-center align-items-center">
@@ -135,6 +133,7 @@ function getCurrentMods(){
     })
 }
 
+//gets the subreaddit id
 function getSubreadditId(){
     let params = (new URL(document.location)).searchParams;
     let subreadditName = params.get("subreaddit");
@@ -154,6 +153,7 @@ function getSubreadditId(){
 
 };
 
+//adds a new moderator
 function addModerator(user_id){
     var subreaddit_id = localStorage.getItem("subreaddit_id");
     var token = localStorage.getItem("token");
@@ -174,6 +174,7 @@ function addModerator(user_id){
     })
 }
 
+//delete a moderator
 function deleteModerator(moderator_id){
     var subreaddit_id = localStorage.getItem("subreaddit_id");
     var token = localStorage.getItem("token");

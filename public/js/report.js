@@ -10,20 +10,12 @@ $(document).ready(function () {
         $('#post_loading_div').removeClass('d-none');
         var report_description = $(`#report_description`).val();
         var queryParams = new URLSearchParams(window.location.search);
-        console.log("---------Query Parameters---------");
-        console.log("Query Param (source): " + window.location.search);
-        console.log("Query Param (extracted): " + queryParams);
-
         var post_id = queryParams.get("post_id");
 
         var userData = localStorage.getItem('userInfo');
         // userData = userData.slice(1,-1);
         var userJsonData = JSON.parse(userData);
         var user_id = userJsonData.user_id;
-
-        console.log("Report Description: " + report_description);
-        console.log("Report on: " + post_id);
-        console.log("Report by: " + user_id);
 
         if (report_description.trim() == "") {
             $('#post_loading_div').addClass('d-none');
@@ -47,6 +39,4 @@ $(document).ready(function () {
                 })
         }
     })
-
-    
 })

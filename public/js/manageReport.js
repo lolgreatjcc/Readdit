@@ -6,7 +6,6 @@ let notifier = new AWN({icons:{enabled:false}})
 function displayReports(subreaddit_name, subreaddit_id) {
     // call the web service endpoint
     $.ajax({
-        //headers: { 'authorization': 'Bearer ' + tmpToken },
         url: baseUrl[0] + '/report/reports/' + subreaddit_id,
         type: 'GET',
         contentType: "application/json; charset=utf-8",
@@ -31,13 +30,6 @@ function displayReports(subreaddit_name, subreaddit_id) {
         },
         error: function (xhr, textStatus, errorThrown) {
             notifier.alert(xhr.responseJSON.message);
-            console.log(xhr)
-            console.log(textStatus);
-            console.log(errorThrown);
-            console.log(xhr.status);
-            //if (xhr.status == 401) {
-            //    $('$msg').html('Unauthorised User');
-            //}
         }
     });
 
@@ -45,10 +37,10 @@ function displayReports(subreaddit_name, subreaddit_id) {
 
 $(document).ready(function () {
 
+    //check if logged in
     try {
         var userData = localStorage.getItem('userInfo');
         var token = localStorage.getItem("token")
-        // userData = userData.slice(1,-1);
 
         var userJsonData = JSON.parse(userData);
         var role = userJsonData.fk_user_type_id;
@@ -57,15 +49,11 @@ $(document).ready(function () {
         window.location.assign(`${baseUrl[1]}/login.html`);
     }
 
+    //extract URL params
     var queryParams = new URLSearchParams(window.location.search);
-    console.log("---------Query Parameters---------");
-    console.log("Query Param (source): " + window.location.search);
-    console.log("Query Param (extracted): " + queryParams);
-
     var subreaddit_name = queryParams.get("subreaddit");
 
     $.ajax({
-        //headers: { 'authorization': 'Bearer ' + tmpToken },
         url: baseUrl[0] + '/r/' + subreaddit_name,
         type: 'GET',
         contentType: "application/json; charset=utf-8",
@@ -98,7 +86,6 @@ function deleteReport(report_id) {
     if (check) {
         notifier.info("Deleting Report...")
         $.ajax({
-            //headers: { 'authorization': 'Bearer ' + tmpToken },
             url: baseUrl[0] + '/report/report/' + report_id,
             type: 'DELETE',
             contentType: "application/json; charset=utf-8",
@@ -108,10 +95,6 @@ function deleteReport(report_id) {
             },
             error: function (xhr, textStatus, errorThrown) {
                 notifier.alert(xhr.responseJSON.message);
-                console.log(xhr)
-                console.log(textStatus);
-                console.log(errorThrown);
-                console.log(xhr.status);
             }
         });
 

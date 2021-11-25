@@ -8,6 +8,7 @@ $(document).ready(function () {
     checkOwner();
 })
 
+//checks if logged in user is the owner of the subreaddit
 function checkOwner(){
     notifier.info("Getting flairs...");
     let params = (new URL(document.location)).searchParams;
@@ -27,6 +28,7 @@ function checkOwner(){
     });
 }
 
+//checks if logged in user is a moderator of the subreaddit
 function checkModerator(subreadditName) {
     var token = localStorage.getItem("token");
     $.ajax({
@@ -44,6 +46,7 @@ function checkModerator(subreadditName) {
     
 }
 
+//get all flairs that belong to that subreaddit
 function getFlairs(){
     var subreaddit_id = localStorage.getItem('subreaddit_id');
     $.ajax({
@@ -64,7 +67,6 @@ function getFlairs(){
             }
             else{
                 for (var i=0;i<data.length;i++){
-                console.log(JSON.stringify(data[i]));
                 $("#flairs").append(`
                 <div class="row g-0 border-top">
                     <div class="col-8 bg-white p-2 text-center d-flex justify-content-center align-items-center">
@@ -85,9 +87,13 @@ function getFlairs(){
     })
 }
 
+//extract subreaddit ID by subreaddit name in URL
 function getSubreadditId(){
+    //extract subreaddit name from URL params
     let params = (new URL(document.location)).searchParams;
     let subreadditName = params.get("subreaddit");
+
+    //ajax call to get subreaddit id by name
     $.ajax({
         url: `${baseUrl}/r/` + subreadditName,
         method: 'GET',
@@ -104,7 +110,9 @@ function getSubreadditId(){
 
 };
 
+//create a new flair
 function createFlair(){
+    //extract data
     var fk_subreaddit_id = localStorage.getItem("subreaddit_id");
     var user_id = JSON.parse(localStorage.getItem("userInfo")).user_id;
     var token = localStorage.getItem("token");
@@ -112,8 +120,8 @@ function createFlair(){
     var flair_colour = $('#flair_colour').val();
     var data = JSON.stringify({"flair_name":flair_name,"flair_colour":flair_colour,
                                 "fk_subreaddit_id":fk_subreaddit_id,"user_id":user_id});
-    console.log(data);
     notifier.info("Creating Flair...")
+    //ajax call to delete flair
     $.ajax({
         url: `${baseUrl}/flair`,
         method: 'POST',
@@ -126,17 +134,20 @@ function createFlair(){
         },
         error: function (xhr, status, error) {
             notifier.alert(xhr.responseJSON.message);
-            console.log(error);
         }
     })
 }
 
+//delete flair
 function deleteFlair(flair_id){
+    //extract data
     var fk_subreaddit_id = localStorage.getItem("subreaddit_id");
     var user_id = JSON.parse(localStorage.getItem("userInfo")).user_id;
     var data = JSON.stringify({"fk_subreaddit_id":fk_subreaddit_id, "user_id":user_id});
     notifier.info("Deleting Flair...")
     var token = localStorage.getItem("token");
+
+    //ajax call to delete flair
     $.ajax({
         url: `${baseUrl}/flair/${flair_id}`,
         method: 'DELETE',

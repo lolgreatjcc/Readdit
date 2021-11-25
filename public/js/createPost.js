@@ -4,6 +4,15 @@ const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.her
 let notifier = new AWN({icons:{enabled:false}})
 
 $(document).ready(function () {
+    //check if user is logged in
+    try {
+        var userData = localStorage.getItem('userInfo');
+        var token = localStorage.getItem("token")
+        var userJsonData = JSON.parse(userData);
+        var role = userJsonData.fk_user_type_id;
+    } catch (error) {
+        window.location.assign(`${baseUrl[1]}/login.html`);
+    }
 
     // Retrieves subreaddits.
     $.ajax({
@@ -13,6 +22,7 @@ $(document).ready(function () {
         success: function (data, status, xhr) {
             var data = data.Result
 
+            //lists out all subreaddits into dropdown list
             for (var i = 0; i < data.length; i++) {
                 $('#create_post_community').append(`
                     <option id='subreaddit_id_${data[i].subreaddit_id}' value='${data[i].subreaddit_id}'>${data[i].subreaddit_name}</option>
@@ -66,9 +76,7 @@ $(document).ready(function () {
             webFormData.append('subreaddit_id', subreaddit_id);
             webFormData.append('fk_flair_id', fk_flair_id);
             var media = document.getElementsByClassName('media');
-            console.log("Media length: " + media.length);
             for (var i = 0; i < media.length; i++) {
-                console.log("Append Information: " + media[i].files[0])
                 webFormData.append("media", media[i].files[0]);
             };
     
@@ -87,7 +95,7 @@ $(document).ready(function () {
                     $('#post_loading_div').addClass('d-none');
                     notifier.success(data.Result);
 
-                    setTimeout(window.location.assign(`${baseUrl[1]}/home.html`),2500);
+                    setTimeout(window.location.assign(`${baseUrl[1]}/home.html`),6000);
                 },
                 error: function (xhr, status, err) {
                     $('#post_loading_div').addClass('d-none');
@@ -100,11 +108,13 @@ $(document).ready(function () {
 
 })
 
+//extracts subreadditid of selected subreaddit
 function selectedSubreadditId() {
     var subreaddit_id = document.getElementById("create_post_community").value;
     showFlairs(subreaddit_id);
 }
 
+//display flairs that belong to the subreaddit
 function showFlairs(subreaddit_id) {
     $.ajax({
         url: `${baseUrl[0]}/flair/` + subreaddit_id,
@@ -119,7 +129,6 @@ function showFlairs(subreaddit_id) {
             }
             else {
                 for (var i = 0; i < data.length; i++) {
-                    console.log(JSON.stringify(data[i]));
                     $("#create_post_flair").append(`
                     <option id='flair_id_${data[i].flair_id}' value='${data[i].flair_id}'>${data[i].flair_name}</option>
                 `);

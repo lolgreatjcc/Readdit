@@ -17,11 +17,9 @@ function loadUserInfo(user_id, token) {
             var user = data.Result;
             // compile the data that the card needs for it's creation
             if (user.fk_user_type_id == 2) {
-                console.log("admin");
                 $("#role").val("2");
             }
             else {
-                console.log("user");
                 $("#role").val("1");
             }
             $('#title').html(`Edit ${user.username}`);
@@ -34,7 +32,6 @@ function loadUserInfo(user_id, token) {
                     $('#pfpImg').html('<img style="width:200px;" src="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png" alt="No pfp to show" id="pfp" class="pb-2"></img><br>')
                 }
                 else {
-                    console.log("Pfp: " + user.profile_pic);
                     var pfpTempString = user.profile_pic.split("upload");
                     user.profile_pic = pfpTempString[0] + "upload" + "/ar_1.0,c_fill/r_max" + pfpTempString[1]
                     $('#pfpImg').html('<img style="width:200px;" src="' + user.profile_pic + '" alt="No pfp to show" id="pfp" class="pb-2"></img><br>')
@@ -43,7 +40,6 @@ function loadUserInfo(user_id, token) {
             }
             catch (error) {
                 $('#pfpImg').html('<img style="width:200px;" src="https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png" alt="No pfp to show" id="pfp" class="pb-2"></img><br>')
-                console.log(error)
             }
 
             $('#load').html("");
@@ -80,7 +76,6 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
             success: function (data, textStatus, xhr) {
-                console.log(data);
             },
             error: function (xhr, textStatus, errorThrown) {
                 window.location.assign(`${baseUrl[1]}/home.html`);
@@ -91,10 +86,6 @@ $(document).ready(function () {
     }
 
     var queryParams = new URLSearchParams(window.location.search);
-    console.log("---------Query Parameters---------");
-    console.log("Query Param (source): " + window.location.search);
-    console.log("Query Param (extracted): " + queryParams);
-
     var user_id = queryParams.get("id");
 
     loadUserInfo(user_id, token);
@@ -108,10 +99,6 @@ $(document).ready(function () {
             profile_pic: profile_pic,
             fk_user_type_id: fk_user_type_id
         };
-
-        console.log(requestBody);
-
-        // axios.put(`https://readdit-backend.herokuapp.comr/subreaddit/` + subreaddit_id,requestBody)
 
         axios.put(`${baseUrl[0]}/user/` + user_id, requestBody, {headers: {
             'Authorization': `Bearer ${token}` 

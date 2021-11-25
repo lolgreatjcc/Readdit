@@ -53,7 +53,6 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
             success: function (data, textStatus, xhr) {
-                console.log(data);
             },
             error: function (xhr, textStatus, errorThrown) {
                 window.location.assign(`${baseUrl[1]}/home.html`);
@@ -64,9 +63,6 @@ $(document).ready(function () {
     }
 
     var queryParams = new URLSearchParams(window.location.search);
-    console.log("---------Query Parameters---------");
-    console.log("Query Param (source): " + window.location.search);
-    console.log("Query Param (extracted): " + queryParams);
 
     var subreaddit_id = queryParams.get("id");
 
@@ -82,10 +78,6 @@ $(document).ready(function () {
             subreaddit_name: name,
             subreaddit_description: description
         };
-
-        console.log(requestBody);
-
-        // axios.put(`https://readdit-backend.herokuapp.comr/subreaddit/` + subreaddit_id,requestBody)
 
         axios.put(`${baseUrl[0]}/r/subreaddit/` + subreaddit_id, requestBody)
             .then(response => {
