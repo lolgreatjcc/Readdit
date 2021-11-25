@@ -139,7 +139,6 @@ app.post('/users', upload.single("image"), printDebugInfo, function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
     var email = req.body.email;
-    var pfp = req.body.profile_pic;
     var two_fa = req.body.two_fa;
     var fk_user_type_id = req.body.fk_user_type_id;
 
@@ -180,7 +179,7 @@ app.post('/users', upload.single("image"), printDebugInfo, function (req, res) {
     }
     else{
         console.log("No Image");
-        submitEdit(pfp);
+        submitEdit(null);
     }  
 
 });
