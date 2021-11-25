@@ -1,5 +1,5 @@
-//const baseUrl = "http://localhost:3000";
-const baseUrl = "https://readdit-backend.herokuapp.com"
+//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
 let notifier = new AWN({icons:{enabled:false}})
 
@@ -7,7 +7,7 @@ $(document).ready(function () {
 
     // Retrieves subreaddits.
     $.ajax({
-        url: `${baseUrl}/r/subreaddits`,
+        url: `${baseUrl[0]}/r/subreaddits`,
         method: 'get',
         contentType: "application/json; charset=utf-8",
         success: function (data, status, xhr) {
@@ -73,7 +73,7 @@ $(document).ready(function () {
             };
     
             $.ajax({
-                url: `${baseUrl}/post/create`,
+                url: `${baseUrl[0]}/post/create`,
                 method: "POST",
                 data: webFormData,
                 processData: false,
@@ -86,6 +86,8 @@ $(document).ready(function () {
                 success: function (data, status, xhr) {
                     $('#post_loading_div').addClass('d-none');
                     notifier.success(data.Result);
+
+                    setTimeout(window.location.assign(`${baseUrl[1]}/home.html`),2500);
                 },
                 error: function (xhr, status, err) {
                     $('#post_loading_div').addClass('d-none');
@@ -105,7 +107,7 @@ function selectedSubreadditId() {
 
 function showFlairs(subreaddit_id) {
     $.ajax({
-        url: `${baseUrl}/flair/` + subreaddit_id,
+        url: `${baseUrl[0]}/flair/` + subreaddit_id,
         method: 'GET',
         contentType: "application/json; charset=utf-8",
         success: function (data, status, xhr) {

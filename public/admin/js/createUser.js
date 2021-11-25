@@ -28,6 +28,7 @@ function addUser(username, email, password, two_fa, image) {
     })
         .then(response => {
             notifier.success("User added successfully!")
+            setTimeout(window.location.assign(`${baseUrl[1]}/admin/ManageUsers.html`),2500);
         })
         .catch(error => {
             if (error.response.status == 422) {
@@ -65,6 +66,7 @@ $(document).ready(function () {
     $("#Add").click(function () {
         notifier.info("Proccessing Request...")
         // data extraction
+        var emailRegex = new RegExp('^.+@.+\\..{2,}$');
         var username = $('#username').val();
         var email = $('#email').val();
 
@@ -87,6 +89,9 @@ $(document).ready(function () {
         //var tmpToken = localStorage.getItem('token');
         if (username.trim() == "" || email.trim() == "" || password.trim() == "") {
             notifier.warning("Input fields cannot be blank!")
+        }
+        else if (!(emailRegex.test(email))) {
+            notifier.warning("Please enter a valid email!");
         }
         else {
             addUser(username, email, password, two_fa, image);

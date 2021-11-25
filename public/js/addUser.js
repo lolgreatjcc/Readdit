@@ -17,7 +17,8 @@ function addUser(webFormData) {
             console.log("Running ajax")
             if (data != null) {
                 console.log(data)
-                notifier.success("User created successfully.")
+                notifier.success("User created successfully.");
+                setTimeout(window.location.assign(`${baseUrl[1]}/login.html`),2500);
             } else {
                 console.log("Error");
             }
@@ -51,6 +52,7 @@ $(document).ready(function () {
     $("#Add").click(function () {
         // data extraction
         notifier.info("Adding new user...")
+        var emailRegex = new RegExp('^.+@.+\\..{2,}$');
         var username = $('#username').val();
         var email = $('#email').val();
         var profile_pic = $(`#img_url`).val();
@@ -73,6 +75,9 @@ $(document).ready(function () {
         //var tmpToken = localStorage.getItem('token');
         if (username.trim() == "" || email.trim() == "" || password.trim() == "") {
             notifier.warning("Input fields cannot be blank!")
+        }
+        else if (!(emailRegex.test(email))) {
+            notifier.warning("Please enter a valid email!");
         }
         else {
             addUser(webFormData);
