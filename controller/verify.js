@@ -98,9 +98,6 @@ const verify = {
       res.status(401).send({ "message": "Unauthorized access" });
     }
   },
-  
-
-
 }
 
 module.exports = verify;

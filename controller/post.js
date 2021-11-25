@@ -6,6 +6,7 @@ const post = require('../model/post.js');
 const media = require('../model/media.js');
 const moderator = require("../model/moderator.js");
 const subreaddit = require("../model/subreaddit.js");
+const user  = require("../model/user.js")
 var path = require('path');
 
 //Imports required for media upload
@@ -341,7 +342,16 @@ router.get('/user/:user_id', function (req,res) {
     post.getPostsByUser(user_id, function (result,err) {
         if(!err) {
             if(result.length == 0) {
-                res.status(400).send({'message':'Unable to find requested user.'})
+                //res.status(400).send({'message':'Unable to find requested user.'})
+                user.getUser(user_id, function (err,result) {
+                    if (result){
+                        res.status(200).send(result);
+                    }
+                    else{
+                        res.status(404).send({'message':'Unable to find requested user.'})
+                    }
+                })
+                
             }
             else {
                 res.status(200).send(result);
