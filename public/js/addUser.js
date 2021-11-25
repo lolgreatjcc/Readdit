@@ -50,6 +50,7 @@ $(document).ready(function () {
     </p>`);
     $("#Add").click(function () {
         // data extraction
+        notifier.info("Adding new user...")
         var username = $('#username').val();
         var email = $('#email').val();
         var profile_pic = $(`#img_url`).val();
