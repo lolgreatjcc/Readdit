@@ -341,21 +341,7 @@ router.get('/user/:user_id', function (req,res) {
     var user_id = req.params.user_id;
     post.getPostsByUser(user_id, function (result,err) {
         if(!err) {
-            if(result.length == 0) {
-                //res.status(400).send({'message':'Unable to find requested user.'})
-                user.getUser(user_id, function (err,result) {
-                    if (result){
-                        res.status(200).send(result);
-                    }
-                    else{
-                        res.status(404).send({'message':'Unable to find requested user.'})
-                    }
-                })
-                
-            }
-            else {
-                res.status(200).send(result);
-            }
+                res.status(200).send(result);        
         } else {
             res.status(500).send({'message': "Internal Server Error"});
         }
