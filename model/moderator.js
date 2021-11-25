@@ -35,7 +35,6 @@ var moderator = {
                     fk_subreaddit_id: subreaddit_id,
                     fk_user_id: user_id,
                 }).then(function (result) {
-                    console.log("Result: " + JSON.stringify(result));
                     return callback(null, result);
                 })
             }

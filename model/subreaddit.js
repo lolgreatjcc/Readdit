@@ -20,14 +20,6 @@ var subreaddit = {
             return callback(err, null);
         })
     },
-
-    // getAll: function (callback) {
-    //     // find multiple entries
-    //     Subreaddit.findAll({ raw: true, attributes: ['subreaddit_id', 'subreaddit_name', 'subreaddit_description', 'fk_creator_user_id', 'created_at']}).then(function (result) {
-    //         return callback(null, result);
-    //     })
-    // },
-
     // Get all subreaddits
     getAll: function (callback) {
         // find multiple entries
@@ -74,13 +66,7 @@ var subreaddit = {
             return callback(err, null);
         })
     },
-    //     getAllSubreaddits: function (callback) {
-    //         Subreaddit.findAll().then(function (result) { 
-    //             return callback(null,result);
-    //         }).catch(function (err) {
-    //             return callback(err,null)
-    //         })
-    //     }
+
     delete: function (subreaddit_id, callback) {
         Subreaddit.destroy({
             where: { subreaddit_id: subreaddit_id }
@@ -119,13 +105,7 @@ var subreaddit = {
         })
 
     },
-//     getAllSubreaddits: function (callback) {
-//         Subreaddit.findAll().then(function (result) { 
-//             return callback(null,result);
-//         }).catch(function (err) {
-//             return callback(err,null)
-//         })
-//     }
+
     getModerators: function (subreaddit_name, callback) {
         Subreaddit.findAll({
             where: {subreaddit_name: subreaddit_name}

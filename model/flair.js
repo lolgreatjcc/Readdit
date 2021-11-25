@@ -24,7 +24,6 @@ var flair = {
                     flair_colour: flair_colour,
                     fk_subreaddit_id: fk_subreaddit_id
                 }).then(function (result) {
-                    console.log(result)
                     return callback(null,result);
                 }).catch(function (err) {
                     console.log(err)
