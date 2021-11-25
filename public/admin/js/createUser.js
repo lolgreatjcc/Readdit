@@ -3,10 +3,9 @@ const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.her
 
 let notifier = new AWN({icons:{enabled:false}})
 
-function addUser(username, email, profile_pic, password, two_fa, image) {
+function addUser(username, email, password, two_fa, image) {
     console.log("Username: " + username);
     console.log("Email: " + email);
-    console.log("URL: " + profile_pic);
     console.log("Password: " + password);
     console.log("Two FA: " + two_fa)
     console.log("Image:" + image);
@@ -14,7 +13,6 @@ function addUser(username, email, profile_pic, password, two_fa, image) {
     webFormData.append('email', email);
     webFormData.append('password', password);
     webFormData.append('username', username);
-    webFormData.append('profile_pic', profile_pic);
     webFormData.append('two_fa', two_fa);
     webFormData.append('fk_user_type_id', 1);
 
@@ -33,10 +31,9 @@ function addUser(username, email, profile_pic, password, two_fa, image) {
         })
         .catch(error => {
             if (error.response.status == 422) {
-                console.log(error.response.status);
-                notifier.alert(error.response.data.message)
+                console.log(error.response.status);  
             }
-            
+            notifier.alert(error.response.data.message)
         })
 }
 
@@ -71,9 +68,6 @@ $(document).ready(function () {
         var username = $('#username').val();
         var email = $('#email').val();
 
-        var profile_pic = $(`#img_url`).val();
-        profile_pic = profile_pic.replace("C:\\fakepath\\", "");
-
         var password = $(`#password`).val();
         var two_fa = $('#two_fa').is(":checked");
         try {
@@ -95,7 +89,7 @@ $(document).ready(function () {
             notifier.warning("Input fields cannot be blank!")
         }
         else {
-            addUser(username, email, profile_pic, password, two_fa, image);
+            addUser(username, email, password, two_fa, image);
         }
 
     });
