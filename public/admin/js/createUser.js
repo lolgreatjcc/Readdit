@@ -20,7 +20,9 @@ function addUser(username, email, password, two_fa, image) {
     })
         .then(response => {
             notifier.success("User added successfully!")
-            setTimeout(window.location.assign(`${baseUrl[1]}/admin/ManageUsers.html`),2500);
+            setTimeout(function() {
+                window.location.assign(`${baseUrl[1]}/admin/ManageUsers.html`);
+            }, 2000);
         })
         .catch(error => {
             if (error.response.status == 422) {

@@ -15,7 +15,9 @@ function addUser(webFormData) {
         success: function (data, textStatus, xhr) {
             if (data != null) {
                 notifier.success("User created successfully.");
-                setTimeout(window.location.assign(`${baseUrl[1]}/login.html`),2500);
+                setTimeout(function() {
+                    window.location.assign(`${baseUrl[1]}/login.html`);
+                }, 2000);
             } else {
                 console.log("Error");
             }

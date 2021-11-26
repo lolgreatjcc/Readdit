@@ -12,7 +12,9 @@ $(document).ready(function () {
         var role = userJsonData.fk_user_type_id;
     } catch (error) {
         notifier.alert("You need to be logged in to access this page!");
-        setTimeout(window.location.assign(`${baseUrl[1]}/login.html`),5000);
+        setTimeout(function() {
+            window.location.assign(`${baseUrl[1]}/login.html`);
+        }, 2000);
     }
 
     // Retrieves subreaddits.
@@ -55,6 +57,7 @@ $(document).ready(function () {
     $('#create_post_submit').on('click', () => {
 
         var subreaddit_id = $('#create_post_community').val();
+        var subreaddit_name = $(`#subreaddit_id_${subreaddit_id}`).text();
         var title = $('#create_post_title').val();
         var content = $('#create_post_content').val();
         var fk_flair_id = document.getElementById("create_post_flair").value;
@@ -93,10 +96,13 @@ $(document).ready(function () {
                     authorization: "Bearer " + token
                 },
                 success: function (data, status, xhr) {
+                    var post_id = data.Result.post_id || data.Result.fk_post_id
                     $('#post_loading_div').addClass('d-none');
-                    notifier.success(data.Result);
+                    notifier.success("Post created successfully!");
 
-                    setTimeout(window.location.assign(`${baseUrl[1]}/home.html`),6000);
+                    setTimeout(function() {
+                        window.location.assign(`${baseUrl[1]}/r/${subreaddit_name}/${post_id}.html`);
+                    }, 2000);
                 },
                 error: function (xhr, status, err) {
                     $('#post_loading_div').addClass('d-none');
