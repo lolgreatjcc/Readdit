@@ -14,11 +14,7 @@ const verify = {
       // JWT using the split function
 
       let token = req.headers.authorization.split(" ")[1];
-      //console.log('Check for received token from frontend : \n');
-      //console.log(token);
-
       jwt.verify(token, config, (err, data) => {
-        console.log("data extracted from token \n", data);
         if (err) {
           console.log(err);
           return res.status(403).send({ "message": "Unauthorized access", errCode: 1 });
@@ -29,8 +25,6 @@ const verify = {
               }
               else {
                 if (data.user_id != user_id){
-                  console.log("token user_id: " + data.user_id);
-                  console.log("form user_id: " + user_id);
                     return res.status(403).send({ "message": "Unauthorized access", errCode: 2 });
                 }
                 else{
@@ -51,11 +45,7 @@ const verify = {
       // JWT using the split function
 
       let token = req.headers.authorization.split(" ")[1];
-      //console.log('Check for received token from frontend : \n');
-      //console.log(token);
-
       jwt.verify(token, config, (err, data) => {
-        console.log("data extracted from token \n", data);
         if (err) {
           console.log(err);
           return res.status(403).send({ "message": "Unauthorized access", errCode: 1 });
@@ -75,17 +65,12 @@ const verify = {
       // JWT using the split function
 
       let token = req.headers.authorization.split(" ")[1];
-      //console.log('Check for received token from frontend : \n');
-      //console.log(token);
-
       jwt.verify(token, config, (err, data) => {
-        console.log("data extracted from token \n", data);
         if (err) {
           console.log(err);
           return res.status(403).send({ "message": "Unauthorized access", errCode: 1 });
         } else {
           if (data.type != 2){
-            console.log("Not an admin!");
             return res.status(403).send({ "message": "Unauthorized access", errCode: 2 });
           }
           else{

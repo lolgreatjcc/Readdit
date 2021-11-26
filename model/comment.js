@@ -15,7 +15,6 @@ var comment = {
         });
     },
     getCommentsOfPost: function (post_id, callback) {
-        console.log(post_id)
         Comment.findAll({
             attributes: ['comment', 'fk_post_id', 'created_at'],
             where: {
@@ -52,7 +51,6 @@ var comment = {
                 },
             ],
         }).then(function (result) {
-            console.log(result)
             callback(result, null)
         }).catch(function (err) {
             console.log(err)

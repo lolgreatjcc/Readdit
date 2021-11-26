@@ -55,7 +55,6 @@ router.post('/post_rating',verifySameUserId, (req,res) => {
                             res.status(500).send({"message": "Internal Server Error"});
                         }
                         else {
-                            console.log(result);
                             res.status(200).send({"message": "Vote Updated"});
                         }
                     })

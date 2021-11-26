@@ -226,7 +226,6 @@ var post = {
             ],
         }).then(function (result) {
             // This block of code calculates the post's popularity
-            console.log("saved_posts" + result.length)
             for (var i = 0; i < result.length; i++) {
                 var popularity_rating = 0;
 
@@ -306,7 +305,6 @@ var post = {
             ],
 
         }).then(function (result) {
-            console.log(result.dataValues.Post_Votes);
             var popularity_rating = 0;
             // This block of code calculates the post's popularity
             for (var x = 0; x < result.dataValues.Post_Votes.length; x++) {

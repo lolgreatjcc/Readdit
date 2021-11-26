@@ -16,14 +16,10 @@ async function mediaUpload(file,callback){
     if(validFileType){
         if(fileSizePass){
             cloudinary.uploadFile(file, async function (error,result){
-                try{
-                    console.log('check error variable in fileDataManager.upload code block\n', error);
-                    console.log('check result variable in fileDataManager.upload code block\n', result);                        
+                try{                        
                     var media_url = await result.imageURL;
-                    console.log("Media Url: " + media_url);
                     await unlinkAsync(file.path);
                     var data =  {success: true, media_url: media_url, content_type: content_type};
-                    console.log("returning callback");
                     return callback(null, data);
                 }
                 catch(error){
@@ -49,10 +45,8 @@ async function mediaUpload(file,callback){
 
 //check content type
 function typeOfContent(fileName){
-    console.log("Filename: " + fileName);
     var fileExtension = fileName.split(".");
     fileExtension = fileExtension[fileExtension.length - 1];
-    console.log("FileExt: " + fileExtension);
     var validFileType = false;
     var content_type;
     switch (fileExtension.toLowerCase()) {
@@ -93,7 +87,6 @@ function fileSizeChecker(filePath,content_type){
   var stats = fs.statSync(filePath);
   var fileSizeInBytes = stats.size;
   var fileSizeMB = fileSizeInBytes / 1000000;
-  console.log("File Size: " + fileSizeMB + "MB");
   if (content_type == 1 || content_type == 3){
       if (fileSizeMB < 10){
           return true;

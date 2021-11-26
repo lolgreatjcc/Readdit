@@ -44,11 +44,9 @@ function checkModerator(req, res, next) {
                     }
                 }else {
                     res.status(500).send({"message":"Error while getting subreaddit info."});
-                }
-                
+                } 
             })
         }
-
     })
 }
 
@@ -182,7 +180,6 @@ router.post('/create', upload.array("media", 8), verify.extractUserId, async (re
                         //saving record to media table 
                         var { media_url, content_type } = await result;
                         progress--
-                        console.log("Media Url: " + media_url);
                         mediaUploadLinks.push({"media_url":media_url,"content_type":content_type})
                         if (progress == 0){
                             createPost();

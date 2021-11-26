@@ -120,10 +120,8 @@ router.post('/create', printDebugInfo, verify.extractUserId, (req, res) => {
     else {
         subreaddit.createSubreaddit(community_name, description, creator_user_id, function (err, result) {
             if (!err) {
-                console.log(result);
                 res.status(201).send({ "Result": "Subreaddit created successfully." })
             } else {
-                console.log(err.name);
                 if (err.name == "SequelizeUniqueConstraintError") {
                     res.status(409).send({ 'message': "Duplicate Entry. Subreaddit already exists." })
                 }
@@ -293,7 +291,6 @@ router.put('/subreaddit/:subreadditid', printDebugInfo, function (req, res) {
 //smart search subreaddits
 router.get('/SimilarSearch/:word', function (req, res) {
     var word = req.params.word;
-    console.log(word);
 
     subreaddit.getAll(function (err, result) {
         if (!err) {

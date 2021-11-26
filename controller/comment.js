@@ -30,7 +30,6 @@ router.post('', verify.extractUserId, (req, res) => {
 
 router.get('/:post_id', (req, res) => {
     var post_id = req.params.post_id;
-    console.log('post_id: ' + post_id);
     comment.getCommentsOfPost(post_id, (err, result) => {
         if (!err) {
             if (result.length == 0) {

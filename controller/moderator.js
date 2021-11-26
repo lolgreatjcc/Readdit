@@ -7,8 +7,6 @@ const verify = require('./verify');
 
 function checkOwner(req, res, next){
      var subreaddit_id = req.params.subreaddit_id 
-    
-    console.log("Subreaddit_id: " + subreaddit_id);
     subreaddit.getSubreadditByID(subreaddit_id, function (err, result) {
         if(!err) {
             var {fk_creator_user_id} = result;
@@ -25,8 +23,6 @@ function checkOwner(req, res, next){
         
     })
 }
-
-
 
 // Get all moderators
 router.get('/:subreaddit_id', printDebugInfo, (req,res) => {

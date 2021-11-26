@@ -38,43 +38,16 @@ const moderator = require('./moderator.js')
 const save = require('./save.js')
 const vote = require('./vote.js');
 const flair = require('./flair.js');
-
 const media = require('./media.js');
 const report = require('./report.js');
 
 //-----------------------------------
 // Middleware functions
 //-----------------------------------
-function printDebugInfo(req, res, next) {
-    try{
-    console.log();
-    console.log("----------------[ Debug Info ]-----------------");
-    //console.log(`Servicing ${urlPattern}..`);
-    console.log("Servicing " + req.url + " ..");
-
-    console.log("> req params:" + JSON.stringify(req.params));
-    console.log("> req.body:" + JSON.stringify(req.body));
-    console.log("> req.headers:" + JSON.stringify(req.headers));
-    console.log(" req body (without JSON Parse): " + req.body)
-    // console.log("> req.myOwnDebugInfo:" + JSON.stringify(req.myOwnDebugInfo));
-
-    console.log("----------------[ Debug Info ]-----------------");
-    console.log();
-
-
-    next();
-    }
-    catch(error){
-        console.log("Error in printDebugInfo. Error: " + error);
-        next();
-    }
-}
-
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
+const printDebugInfo = require('./printDebugInfo');
 var jsonParser = bodyParser.json();
 var cors = require('cors');
-
-
 
 //-----------------------------------
 // MF configurations
@@ -160,8 +133,6 @@ app.post('/users', upload.single("image"), printDebugInfo, function (req, res) {
 
     var file = req.file;
     if (file != null){
-        console.log("Image Uploading...")
-
         mediaUpload(file, function (err,result){
             if (result){
                 var profile_pic = result.media_url;
@@ -178,7 +149,6 @@ app.post('/users', upload.single("image"), printDebugInfo, function (req, res) {
         })
     }
     else{
-        console.log("No Image");
         submitEdit(null);
     }  
 
@@ -200,7 +170,6 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify.verify
             if (!err) {
                 var file = req.file;
                 if (file != null){
-                    console.log("Image Uploading...")
     
                     mediaUpload(file, function (err,result){
                         if (result){
@@ -213,7 +182,6 @@ app.put('/users/:user_id', upload.single("image"), printDebugInfo, verify.verify
                     })
                 }
                 else{
-                    console.log("No Image");
                     submitEdit(pfp);
                 }   
             }
@@ -329,9 +297,7 @@ app.post('/api/login', printDebugInfo, function (req, res) {
                 res.status(401).send(message);
             }
             else {
-                // this is matched to callback(null, not null)
-                console.log("token: " + token);
-                
+                // this is matched to callback(null, not null)  
                 var message = {
                     "UserData": JSON.stringify(result),
                     "token": token
