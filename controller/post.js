@@ -221,7 +221,7 @@ router.post('/create', upload.array("media", 8), verify.extractUserId, async (re
                             }
                             else if (result) {
                                 if (progress == 0) {
-                                    res.status(201).send({ "Result": "Post created successfully." });
+                                    res.status(201).send({ "Result": result });
                                 }
                             }
                         });
@@ -229,7 +229,7 @@ router.post('/create', upload.array("media", 8), verify.extractUserId, async (re
                     }
                 }
                 else{
-                    res.status(201).send({ "Result": "Post created successfully." });    
+                    res.status(201).send({ "Result": result });    
                 }
             }
             else{   
