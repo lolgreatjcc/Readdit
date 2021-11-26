@@ -3,10 +3,10 @@ const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.her
 
 let notifier = new AWN({icons:{enabled:false}})
 
+//extracts all media for all the posts
 function displayMedia(subreaddit_id) {
     //retrives media for post
     $.ajax({
-        //headers: { 'authorization': 'Bearer ' + tmpToken },
         url: `${baseUrl[0]}/media/subreaddit/` + subreaddit_id,
         type: 'GET',
         contentType: "application/json; charset=utf-8",
@@ -19,7 +19,6 @@ function displayMedia(subreaddit_id) {
                 var media = data.Media;
 
                 if (media.length > 1) {
-                    console.log("Running carousel");
                     var appendStringStart = `   
                     <div class="col-1">
                         <a class="carousel-control-prev" href="#carouselExampleIndicators_${post_id}" role="button" data-slide="prev">
@@ -81,12 +80,10 @@ function displayMedia(subreaddit_id) {
 
                 }
                 else if (media.length == 0) {
-                    console.log("Running no media");
                     appendString = ``;
                     $(`#post_media_` + post_id).remove();
                 }
                 else {
-                    console.log("Running single item");
                     //run single file display
                     if (media[0].fk_content_type == "1") {
                         $(`#post_media_` + post_id).html(`<img class="image" src="${media[0].media_url}" alt="Image not available"> `)
@@ -111,11 +108,10 @@ function displayMedia(subreaddit_id) {
     });
 }
 
+//async media call so that other info loads first
 async function mediaCall(supressError) {
-    console.log("Me Second!!");
     var pathname = window.location.pathname;
     $.ajax({
-        //headers: { 'authorization': 'Bearer ' + tmpToken },
         url: `${baseUrl[0]}` + pathname,
         type: 'GET',
         contentType: "application/json; charset=utf-8",
@@ -132,16 +128,15 @@ async function mediaCall(supressError) {
     });
 }
 
+//get user votes
 function getUsersVotes(subreaddit_id, user_id) {
     var results;
     $.ajax({
-        //headers: { 'authorization': 'Bearer ' + tmpToken },
         method: 'GET',
         url: `${baseUrl[0]}/vote/subreaddit?subreaddit_id=${subreaddit_id}&user_id=${user_id}`,
         async: false,
         dataType: 'json',
         success: function (data, textStatus, xhr) {
-            console.log(data);
             results = data
         }
     })
@@ -184,19 +179,17 @@ $(document).ready(function () {
 
     var searchParams = new URLSearchParams(window.location.search)
     var orderBy = searchParams.get('orderBy');
-    console.log(orderBy);
     if (orderBy == null) {
         orderBy = "Hot";
     }
-    console.log(orderBy)
     notifier.info("Loading posts...")
 
+    //gets all posts
     $.ajax({
         url: `${baseUrl[0]}/post/get` + pathname,
         method: 'GET',
         contentType: "application/json; charset=utf-8",
         success: async function (data, status, xhr) {
-            console.log(data);
             var current_subreaddit_name = window.location.pathname.split('/')[2];
             var moderator = await checkModerator(current_subreaddit_name);
             var owner = await checkOwner(current_subreaddit_name);
@@ -214,7 +207,7 @@ $(document).ready(function () {
                 }
             }
 
-            console.log(orderBy);
+            //checks for order
             if (orderBy == "Popular") {
                 $("#Popular").addClass("invert-scheme");
 
@@ -243,10 +236,7 @@ $(document).ready(function () {
 
                     var date1 = new Date(otherData[i].created_at);
                     var date2 = new Date(otherData[i + 1].created_at);
-                    console.log(date1.getTime());
-                    console.log(date2.getTime());
                     if (date2.getTime() > date1.getTime()) {
-                        console.log("swapping")
                         var tmp = otherData[i];
                         otherData[i] = otherData[i + 1];
                         otherData[i + 1] = tmp;
@@ -273,15 +263,11 @@ $(document).ready(function () {
                 }
             }
 
-
             sortedData = pinnedData.concat(otherData);
             data = sortedData;
-            console.log(data.length)
             var subreaddit_id;
             for (var i = 0; i < data.length; i++) {
                 subreaddit_id = data[i].Subreaddit.subreaddit_id;
-                console.log("Number of posts: " + data.length)
-                console.log(JSON.stringify(data[i]));
                 var copyStr = data[i].Subreaddit.subreaddit_name + "/" + data[i].post_id;
                 // Calculates Time
                 var date = new Date(data[i].created_at);
@@ -483,7 +469,6 @@ $(document).ready(function () {
 
             // Handles upvoting/downvoting a post
             $('.post-upvote').on('click', function (e) {
-                console.log("clicked upvote")
                 e.stopPropagation();
 
                 if (user_id == false) {
@@ -514,7 +499,6 @@ $(document).ready(function () {
                             contentType: "application/json",
                             headers: {'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
-                                console.log(data);
                             }
                         })
                     }
@@ -539,7 +523,6 @@ $(document).ready(function () {
                             contentType: "application/json; charset=utf-8",
                             headers: {'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
-                                console.log(data);
                             }
                         })
                     }
@@ -582,7 +565,6 @@ $(document).ready(function () {
                             contentType: "application/json",
                             headers: {'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
-                                console.log(data);
                             }
                         })
                     }
@@ -608,7 +590,6 @@ $(document).ready(function () {
                             dataType: "json",
                             headers: {'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
-                                console.log(data);
                             }
                         })
                     }
@@ -645,7 +626,6 @@ $(document).ready(function () {
             if (user_id) {
                 var data = getUsersVotes(pathname, user_id);
                 for (var i = 0; i < data.length; i++) {
-                    console.log(data);
                     var upvote_button = $(`#post_${data[i].fk_post_id}_upvote`);
                     var downvote_button = $(`#post_${data[i].fk_post_id}_downvote`);
                     if (data[i].vote_type == true) {
@@ -667,7 +647,6 @@ $(document).ready(function () {
 
 function orderByButton() {
     $('.orderby').on('click', function (e) {
-        console.log("clicked orderby")
         var orderby = $(this).attr('id');
         location.href = `?orderBy=${orderby}`;
     })
@@ -822,7 +801,6 @@ function getSavedPosts(user_id) {
         }
     })
     return output;
-
 }
 
 function redirect(){

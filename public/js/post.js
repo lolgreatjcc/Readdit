@@ -19,7 +19,6 @@ $(document).ready(function () {
                 window.location.href = `/r/${post_data.Subreaddit.subreaddit_name}/${post_id}`;
 
             } else {
-                console.log(post_data);
                 $('#post_subreaddit').append(`
                     r/<a href="/r/${post_data.Subreaddit.subreaddit_name}" class="text-dark text-decoration-none">${post_data.Subreaddit.subreaddit_name}</a>
                 `);
@@ -40,7 +39,6 @@ $(document).ready(function () {
                     `)
                 }
                 if (post_data.Flair != null) {
-                    console.log("working");
                     $("#flair_section").append(`<div class="btn rounded-pill py-0 px-2" style="background-color:${post_data.Flair.flair_colour}"><span class="fw-bold text-white">${post_data.Flair.flair_name}</sp></div>`)
                 }
 
@@ -130,9 +128,6 @@ $(document).ready(function () {
                         $('#community_create_month').html(months[date.getMonth() - 1]);
                         $('#community_create_day').html(date.getDate());
                         $('#community_create_year').html(date.getFullYear());
-
-
-
                     },
                     error: function (xhr, status, error) {
                         notifier.alert(xhr.responseJSON.message);
@@ -149,7 +144,6 @@ $(document).ready(function () {
                     if (user_id == false) {
                         window.location.href = "/login.html"
                     }
-
                     if (save_button.hasClass('saved')) {
                         notifier.info("Removing post from saved posts...");
                         save_button.removeClass('saved');
@@ -158,9 +152,6 @@ $(document).ready(function () {
                                     <span class="material-icons md-24 ms-0">bookmark_border</span>
                                     <p class="mb-0 fw-bold fs-6">Save</p>
                                 `);
-
-
-
                         $.ajax({
                             url: `${baseUrl[0]}/save/post`,
                             type: "DELETE",
@@ -172,7 +163,6 @@ $(document).ready(function () {
                             headers: {'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
                                 notifier.success("Removed post from saved posts.");
-                                console.log(data);
                                 // do modal
                             },
                             error: function (xhr, status, error) {
@@ -188,6 +178,8 @@ $(document).ready(function () {
                                     <p class="mb-0 fw-bold fs-6">Unsave</p>
                                 `);
                         notifier.info("Adding post to saved posts...");
+
+                        //ajax to save post
                         $.ajax({
 
                             url: `${baseUrl[0]}/save/post`,
@@ -200,7 +192,6 @@ $(document).ready(function () {
                             headers: {'authorization': "Bearer " + token},
                             success: function (data, status, xhr) {
                                 notifier.success("Added post to saved posts.");
-                                console.log(data)
                                 // do modal
                             },
                             error: function (xhr, status, error) {
@@ -208,9 +199,7 @@ $(document).ready(function () {
                             }
                         })
                     }
-
                 })
-
                 if (user_id) {
                     var token = localStorage.getItem("token")
                     var vote_data = getUsersVotes(subreaddit_path, user_id, post_data.post_id);
@@ -233,22 +222,15 @@ $(document).ready(function () {
         }
     });
 
-    // Displays flair is post has an associated flair.
-
-
     //retrives media for post
     $.ajax({
-        //headers: { 'authorization': 'Bearer ' + tmpToken },
         url: `${baseUrl[0]}/media/media/` + post_id,
         type: 'GET',
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
         success: function (data, textStatus, xhr) {
             var media = data.Result;
-            console.log(media.length);
-
             if (media.length > 1) {
-                console.log("Running carousel");
                 var appendStringStart = `
                     <div class="col-1">
                         <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -309,12 +291,10 @@ $(document).ready(function () {
 
             }
             else if (media.length == 0) {
-                console.log("Running no media");
                 appendString = ``;
                 $(`#post_media`).remove();
             }
             else {
-                console.log("Running single item");
                 //run single file display
                 if (media[0].fk_content_type == "1") {
                     $(`#post_media`).html(`<img class="image" src="${media[0].media_url}" alt="Image not available"> `)
@@ -341,7 +321,6 @@ $(document).ready(function () {
         }
     });
 
-
     // Retrieve Comment Data
     $.ajax({
         url: `${baseUrl[0]}/comment/` + post_id,
@@ -362,7 +341,6 @@ $(document).ready(function () {
                 var weeks_between_dates = Math.floor((date_now - date) / (60 * 60 * 24 * 7 * 1000))
 
                 var post_date_output;
-                console.log(minutes_between_dates)
                 if (seconds_between_dates < 60) {
                     post_date_output = `${seconds_between_dates} seconds ago`
                 } else if (minutes_between_dates < 60) {
@@ -434,7 +412,6 @@ $(document).ready(function () {
             data: JSON.stringify(data),
             headers: { authorization: "Bearer " + token },
             success: function (data, status, xhr) {
-                console.log(data);
                 location.reload();
             },
             error: function (xhr, status, error) {
@@ -443,7 +420,9 @@ $(document).ready(function () {
         })
     })
 
-
+    $(`#create_post_button`).html(`<a href="${baseUrl[1]}/createPost.html"
+    class="btn btn-dark body-borders rounded-pill invert-scheme fw-bold w-100 text-light">Create
+    Post</a>`)
 })
 
 function copy() {
@@ -548,13 +527,11 @@ function handleVoting(user_id) {
     // Handles upvoting/downvoting a post
     var token = localStorage.getItem("token")
     $('.post-upvote').on('click', function (e) {
-        console.log("clicked upvote")
         e.stopPropagation();
         if (user_id == false) {
             window.location.href = "/login.html"
         }
         else {
-            console.log("user_id: ", user_id);
             var post_id = $(this).attr('id').split('_')[1];
             var upvote_button = $(this);
             var downvote_button = $(`#post_${post_id}_downvote`);
@@ -579,7 +556,6 @@ function handleVoting(user_id) {
                     contentType: "application/json",
                     headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
-                        console.log(data);
                     }
                 })
             }
@@ -604,7 +580,6 @@ function handleVoting(user_id) {
                     contentType: "application/json; charset=utf-8",
                     headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
-                        console.log(data);
                     }
                 })
             }
@@ -647,7 +622,6 @@ function handleVoting(user_id) {
                     contentType: "application/json",
                     headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
-                        console.log(data);
                     }
                 })
             }
@@ -673,7 +647,6 @@ function handleVoting(user_id) {
                     dataType: "json",
                     headers: {'authorization': "Bearer " + token},
                     success: function (data, status, xhr) {
-                        console.log(data);
                     }
                 })
             }

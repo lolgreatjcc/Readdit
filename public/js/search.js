@@ -10,9 +10,7 @@ function switchTab(evt, tabName) {
         x[i].style.display = "none";
     }
     var tablinks = $('.tablink');
-    // tablinks = document.getElementsByClassName("tablink");
     for (i = 0; i < tablinks.length; i++) {
-        console.log("removing active")
         tablinks[i].className = tablinks[i].className.replace("active", "");
     }
     document.getElementById(tabName).style.display = "block";
@@ -22,9 +20,6 @@ function switchTab(evt, tabName) {
 $(document).ready(function () {
     notifier.info("Searching for subreaddits and posts...")
     var queryParams = new URLSearchParams(window.location.search);
-    console.log("---------Query Parameters---------");
-    console.log("Query Param (source): " + window.location.search);
-    console.log("Query Param (extracted): " + queryParams);
 
     var input = queryParams.get("query");
 
@@ -33,6 +28,7 @@ $(document).ready(function () {
     searchPosts();
 })
 
+//arrange all similar results by similarity descending
 function arrangeSimilars(arr) {
     for (var i = 0; i < arr.length; i++) {
         if (i == arr.length - 1) {
@@ -45,22 +41,15 @@ function arrangeSimilars(arr) {
 
             i = -1;
         }
-
-
     }
-
-    console.log(arr);
     return arr;
 }
 
+//search for subreaddits
 function searchSubreaddits() {
     var queryParams = new URLSearchParams(window.location.search);
-    console.log("---------Query Parameters---------");
-    console.log("Query Param (source): " + window.location.search);
-    console.log("Query Param (extracted): " + queryParams);
-
     var input = queryParams.get("query");
-
+    //basic subreaddit search
     $.ajax({
         url: `${baseUrl}/r/search/query` + window.location.search,
         method: 'GET',
@@ -72,7 +61,6 @@ function searchSubreaddits() {
             }
             else {
                 for (var i = 0; i < subreaddits.length; i++) {
-                    console.log(subreaddits[i]);
                     var round = ""
                     if (i == 0) {
                         round = "rounded-top"
@@ -96,7 +84,7 @@ function searchSubreaddits() {
                 }
             }
             clickableSubreaddits();
-
+            //similar subreaddit search
             $.ajax({
                 url: `${baseUrl}/r/SimilarSearch/` + input,
                 method: 'GET',
@@ -107,6 +95,7 @@ function searchSubreaddits() {
                         $(`#subreaddit_similar`).append("No similar results available");
                     }
                     else {
+                        //removes duplicate values
                         for (var i = 0; i < similars.length; i++) {
                             var duplicate = false;
                             for (var count = 0; count < subreaddits.length; count++) {
@@ -151,6 +140,7 @@ function searchSubreaddits() {
     })
 }
 
+//makes subreaddit search results clickable
 function clickableSubreaddits() {
     $(".subreaddit").click(function () {
         var subreaddit_id = $(this).attr("id").split("_")[1];
@@ -158,29 +148,25 @@ function clickableSubreaddits() {
     })
 }
 
+//makes post search results clickable
 function clickablePosts() {
     $(".post").click(function () {
-        console.log("Post is clicked");
         var post_id = $(this).attr("id").split("_")[1];
         window.location.href = `/r/0/${post_id}`;
     })
 }
 
+//search for posts
 function searchPosts() {
     var queryParams = new URLSearchParams(window.location.search);
-    console.log("---------Query Parameters---------");
-    console.log("Query Param (source): " + window.location.search);
-    console.log("Query Param (extracted): " + queryParams);
-
     var input = queryParams.get("query");
-
+    //basic post search 
     $.ajax({
         url: `${baseUrl}/post/search` + window.location.search,
         method: 'GET',
         contentType: "application/json; charset=utf-8",
         success: function (data, status, xhr) {
             var posts = data.Result;
-            console.log(posts);
             if (posts.length == 0) {
                 $(`#posts_content`).append("No results found");
             }
@@ -241,6 +227,7 @@ function searchPosts() {
                 }
             }
 
+            //similar post search
             $.ajax({
                 url: `${baseUrl}/post/SimilarSearch/` + input,
                 method: 'GET',
@@ -251,6 +238,7 @@ function searchPosts() {
                         $(`#posts_similar`).append("No similar results available");
                     }
                     else {
+                        //removes duplicate values
                         for (var i = 0; i < similars.length; i++) {
                             var duplicate = false;
                             for (var count = 0; count < posts.length; count++) {

@@ -5,7 +5,6 @@ let notifier = new AWN({icons:{enabled:false}})
 
 function addUser(webFormData) {
     $.ajax({
-        // url: 'https://readdit-backend.herokuapp.comusers/' + user_id,
         url: `${baseUrl[0]}/users`,
         method: 'POST',
         data: webFormData,
@@ -14,9 +13,7 @@ function addUser(webFormData) {
         cache: false,
         enctype: 'multipart/form-data',
         success: function (data, textStatus, xhr) {
-            console.log("Running ajax")
             if (data != null) {
-                console.log(data)
                 notifier.success("User created successfully.");
                 setTimeout(window.location.assign(`${baseUrl[1]}/login.html`),2500);
             } else {
@@ -31,24 +28,15 @@ function addUser(webFormData) {
             notifier.alert(xhr.responseJSON.message);
         }
     });
-
-    // axios.post(`${baseUrl[0]}/users`, requestBody)
-    //     .then(response => {
-    //         notifier.success('User added successfully!');
-    //     })
-    //     .catch(error => {
-    //         if (error.response.status == 422) {
-    //             console.log(error.response.status);
-    //         }
-    //         notifier.alert(error.response.data.message);
-
-    //     })
 }
 
 $(document).ready(function () {
+    //inputs login button
     $(`#login_redirect`).html(`<p class="smaller">
     Already have an account? <a class="text-decoration-none" href="${baseUrl[1]}/login.html">Log in</a>
     </p>`);
+
+    //if add button is clicked
     $("#Add").click(function () {
         // data extraction
         notifier.info("Adding new user...")
@@ -58,6 +46,8 @@ $(document).ready(function () {
         var profile_pic = $(`#img_url`).val();
         var password = $(`#password`).val();
         var two_fa = $('.2fa').val();
+
+        //checking and assigning two_fa value
         if (two_fa == "1") {
             two_fa = 1;
         }
@@ -65,6 +55,7 @@ $(document).ready(function () {
             two_fa = 0;
         }
         
+        //create webformdata
         const webFormData = new FormData();
         webFormData.append('email', email);
         webFormData.append('password', password);
@@ -72,22 +63,25 @@ $(document).ready(function () {
         webFormData.append('two_fa', two_fa);
         webFormData.append('fk_user_type_id', 1);
         webFormData.append("image", document.getElementById('image').files[0]);
-        //var tmpToken = localStorage.getItem('token');
+        
+        //check if required fields are blank
         if (username.trim() == "" || email.trim() == "" || password.trim() == "") {
             notifier.warning("Input fields cannot be blank!")
         }
+        //check if email format is wrong
         else if (!(emailRegex.test(email))) {
             notifier.warning("Please enter a valid email!");
         }
+        //call adduser function
         else {
             addUser(webFormData);
         }
 
     });
 
+    //if return button is clicked
     $("#Return").click(function () {
         window.location.href = "/login.html";
-        //window.location.assign("https://readdit-sp.herokuapp.comlogin.html");
     });
 });  
 

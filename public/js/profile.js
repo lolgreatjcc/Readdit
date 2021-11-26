@@ -1,8 +1,9 @@
 //const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
 const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
-let notifier = new AWN({icons:{enabled:false}})
+let notifier = new AWN({ icons: { enabled: false } })
 
+//loads user's info
 function loadUserInfo(user_id, token) {
     // call the web service endpoint
     $.ajax({
@@ -17,12 +18,7 @@ function loadUserInfo(user_id, token) {
         },
         success: function (data, textStatus, xhr) {
             $('#users').html("");
-            // if (data != null && data.success) {
-            //     //$('#msg').html('Record updated successfully!');
-            // } else {
-            //     console.log("Error");
             data = data.Result;
-            console.log("data: " + data.profile_pic)
             var user = data;
             // compile the data that the card needs for it's creation
 
@@ -47,7 +43,6 @@ function loadUserInfo(user_id, token) {
                     $('#user_img').attr("src", "https://res.cloudinary.com/readditmedia/image/upload/v1635600054/media/reddit_jjs25s.png");
                 }
                 else {
-                    console.log("Pfp: " + user.profile_pic);
                     var pfpTempString = user.profile_pic.split("upload");
                     user.profile_pic = pfpTempString[0] + "upload" + "/ar_1.0,c_fill/r_max" + pfpTempString[1]
                     $('#pfpImg').html('<img src="' + user.profile_pic + '" alt="profile image" id="pfp" class="pb-2"></img><br>')
@@ -67,6 +62,7 @@ function loadUserInfo(user_id, token) {
     });
 };
 
+//display all of the user's post
 function displayPosts() {
     var { user_id } = JSON.parse(localStorage.getItem("userInfo"));
     var token = localStorage.getItem("token");
@@ -145,7 +141,6 @@ function displayPosts() {
 
         },
         error: function (xhr, textStatus, errorThrown) {
-            console.log('Error in Operation');
             console.log(xhr)
             console.log(textStatus);
             console.log(errorThrown);
@@ -155,11 +150,11 @@ function displayPosts() {
     });
 }
 
+//displays all of the user's comments
 function displayComments() {
     var { user_id } = JSON.parse(localStorage.getItem("userInfo"));
     var token = localStorage.getItem("token");
 
-    console.log("Displaying Comments");
     // call the web service endpoint
     $.ajax({
         //headers: { 'authorization': 'Bearer ' + tmpToken },
@@ -207,26 +202,33 @@ function displayComments() {
 }
 
 $(document).ready(function () {
-
-
     try {
-          
-    if(localStorage.getItem("userInfo") == null) {
-        location.href = `${baseUrl[1]}`
-    }
+        if (localStorage.getItem("userInfo") == null) {
+            location.href = `${baseUrl[1]}`
+        }
         var userData = localStorage.getItem('userInfo');
         // userData = userData.slice(1,-1);
         var token = localStorage.getItem("token")
 
         var userJsonData = JSON.parse(userData);
-        var role = userJsonData.fk_user_type_id;
         var user_id = userJsonData.user_id;
-        if (role == 2) {
-            $(`#adminButton`).html(`<div class="btn body-borders w-100 rounded-pill invert-scheme fw-bold mb-2">
-                                            <h5 class="mb-0">Admin Console</h5>
-                                        </div>`);
-            
-        }
+
+        //ajax to check if user is an admin
+        $.ajax({
+            headers: { 'authorization': 'Bearer ' + token },
+            url: `${baseUrl[0]}/verify`,
+            type: 'GET',
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            success: function (data, textStatus, xhr) {
+                $(`#adminButton`).html(`<div class="btn body-borders w-100 rounded-pill invert-scheme fw-bold mb-2">
+                        <h5 class="mb-0">Admin Console</h5>
+                    </div>`);
+            },
+            error: function (xhr, textStatus, errorThrown) {
+            }
+        });
+
     } catch (error) {
         window.location.assign(`${baseUrl[1]}/login.html`);
     }
@@ -256,7 +258,6 @@ function displaySavedPosts() {
         contentType: "application/json charset=utf-8",
         success: function (data, status, xhr) {
             $("#post_div").html("");
-            console.log(data);
             for (var i = 0; i < data.length; i++) {
 
 
@@ -282,7 +283,6 @@ function displaySavedPosts() {
                 } else {
                     post_date_output = `${weeks_between_dates} weeks ago`
                 }
-                console.log(post_data);
 
                 $('#post_div').append(`
                                 <div class="post rounded mb-2" id="post_${post_data.post_id}">
@@ -342,7 +342,7 @@ function displaySavedPosts() {
                 notifier.info("Removing post from saved posts...")
                 e.stopPropagation();
                 var id = $(this).attr('id');
-                var post_id = id.split('_')[2]; 
+                var post_id = id.split('_')[2];
                 var token = localStorage.getItem("token");
                 var { user_id } = JSON.parse(localStorage.getItem("userInfo"))
                 var data = {
@@ -354,7 +354,7 @@ function displaySavedPosts() {
                     type: "DELETE",
                     data: JSON.stringify(data),
                     contentType: "application/json",
-                    headers: {'authorization': "Bearer " + token},
+                    headers: { 'authorization': "Bearer " + token },
                     success: function (data, status, xhr) {
                         notifier.success("Removed posts from saved posts.")
                         displaySavedPosts()
@@ -367,10 +367,7 @@ function displaySavedPosts() {
         }
     },
     )
-
-
 }
-
 function responsiveDesign() {
     var saved_view = $('#saved_view');
     var comment_view = $('#comment_view');

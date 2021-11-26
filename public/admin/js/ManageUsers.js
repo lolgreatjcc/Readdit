@@ -16,7 +16,6 @@ function displayUsers(user_id, token) {
             var appendString = "";
             for (var i = 0; i < data.Result.length; i++) {
                 var user = data.Result[i];
-                console.log(user);
                 if (user.two_fa == 1) {
                     var twofa = "On"
                 }
@@ -105,7 +104,6 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
             success: function (data, textStatus, xhr) {
-                console.log(data);
             },
             error: function (xhr, textStatus, errorThrown) {
                 window.location.assign(`${baseUrl[1]}/home.html`);
@@ -128,7 +126,6 @@ $(document).ready(function () {
     $('body').on('click', '.DeleteCall', function () {
         var user_id = event.srcElement.id;
         var username = event.srcElement.name;
-        console.log(user_id);
         var check = confirm("Delete " + username + "?");
         if (check) {
             notifier.info("Processing Request...");

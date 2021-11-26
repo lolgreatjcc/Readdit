@@ -5,8 +5,6 @@ $(document).ready(function () {
     try {
         var userData = localStorage.getItem('userInfo');
         var token = localStorage.getItem("token")
-        // userData = userData.slice(1,-1);
-
         var userJsonData = JSON.parse(userData);
 
         $.ajax({
@@ -16,7 +14,6 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
             success: function (data, textStatus, xhr) {
-                console.log(data);
             },
             error: function (xhr, textStatus, errorThrown) {
                 window.location.assign(`${baseUrl[1]}/home.html`);

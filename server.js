@@ -7,10 +7,6 @@ var app=express();
 const profile = require('./routes/profile');
 
 app.use(function(req,res,next){
-    console.log(req.url);
-    console.log(req.method);
-    console.log(req.path);
-    console.log(req.query.id);
 
     if(req.method!="GET"){
         res.type('.html');

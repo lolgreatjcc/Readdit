@@ -4,11 +4,6 @@ const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.her
 let notifier = new AWN({icons:{enabled:false}})
 
 function addUser(username, email, password, two_fa, image) {
-    console.log("Username: " + username);
-    console.log("Email: " + email);
-    console.log("Password: " + password);
-    console.log("Two FA: " + two_fa)
-    console.log("Image:" + image);
     const webFormData = new FormData();
     webFormData.append('email', email);
     webFormData.append('password', password);
@@ -18,9 +13,6 @@ function addUser(username, email, password, two_fa, image) {
 
     // HTML file input, chosen by user
     webFormData.append("image", image);
-
-    // axios.post(`https://readdit-backend.herokuapp.comusers`,requestBody)
-
     axios.post(`${baseUrl[0]}/users`, webFormData, {
         headers: {
             'Content-Type': 'multipart/form-data'
@@ -53,7 +45,6 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
             success: function (data, textStatus, xhr) {
-                console.log(data);
             },
             error: function (xhr, textStatus, errorThrown) {
                 window.location.assign(`${baseUrl[1]}/home.html`);

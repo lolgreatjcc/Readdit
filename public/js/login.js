@@ -4,6 +4,7 @@ const baseUrl = "https://readdit-backend.herokuapp.com"
 let notifier = new AWN({icons:{enabled:false}})
 
 $(document).ready(function () {
+    //login button clicked
     $("#Login").click(function () {
         notifier.info("Logging you in...")
         // data extraction
@@ -21,11 +22,9 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data, textStatus, xhr) {
-                console.log("Running ajax")
                 if (data != null) {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('userInfo', data.UserData);
-                    // window.location.assign("https://readdit-sp.herokuapp.comhome.html");
                     window.location.href = `/home.html`;
                 } else {
                     notifier.alert("Unknown error occured!")

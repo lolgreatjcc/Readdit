@@ -7,7 +7,6 @@ let notifier = new AWN({icons:{enabled:false}})
 function displaySubs() {
     // call the web service endpoint
     $.ajax({
-        //headers: { 'authorization': 'Bearer ' + tmpToken },
         url: `${baseUrl[0]}/r/subreaddits`,
         type: 'GET',
         contentType: "application/json; charset=utf-8",
@@ -62,7 +61,6 @@ $(document).ready(function () {
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
             success: function (data, textStatus, xhr) {
-                console.log(data);
             },
             error: function (xhr, textStatus, errorThrown) {
                 window.location.assign(`${baseUrl[1]}/home.html`);
@@ -81,7 +79,6 @@ $(document).ready(function () {
     $('body').on('click', '.DeleteCall', function () {
         var subreaddit_id = event.srcElement.id;
         var subreaddit_name = event.srcElement.name;
-        console.log(subreaddit_id);
         var check = confirm("Delete " + subreaddit_name + "?");
         if (check) {
             notifier.info("Processing Request...");
