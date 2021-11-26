@@ -1,5 +1,5 @@
-//const baseUrl = "http://localhost:3000"
-const baseUrl = "https://readdit-backend.herokuapp.com"
+const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+//const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
 let notifier = new AWN({ icons: { enabled: false } })
 
@@ -11,7 +11,10 @@ $(document).ready(() => {
         var userJsonData = JSON.parse(userData);
         var role = userJsonData.fk_user_type_id;
     } catch (error) {
-        window.location.assign(`${baseUrl[1]}/login.html`);
+        notifier.alert("You need to be logged in to access this page!");
+        setTimeout(function() {
+            window.location.assign(`${baseUrl[1]}/login.html`);
+        }, 2000);
     }
 
     //if create community button is clicked
@@ -52,7 +55,7 @@ $(document).ready(() => {
 
             //ajax call to create subreaddit
             $.ajax({
-                url: `${baseUrl}/r/create`,
+                url: `${baseUrl[0]}/r/create`,
                 method: 'POST',
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(data),
@@ -60,7 +63,10 @@ $(document).ready(() => {
                     authorization: "Bearer " + token
                 },
                 success: function (data, status, xhr) {
-                    notifier.success(data.Result)
+                    notifier.success(data.Result);
+                    setTimeout(function() {
+                        window.location.assign(`${baseUrl[1]}/r/${subreaddit_name}`);
+                    }, 2000);
                 },
                 error: function (xhr, status, err) {
                     $('#create_community_submit').prop('disabled', false);

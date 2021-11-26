@@ -1,5 +1,5 @@
-//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
+const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+//const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
 let notifier = new AWN({icons:{enabled:false}})
 
@@ -15,7 +15,9 @@ function addUser(webFormData) {
         success: function (data, textStatus, xhr) {
             if (data != null) {
                 notifier.success("User created successfully.");
-                setTimeout(window.location.assign(`${baseUrl[1]}/login.html`),2500);
+                setTimeout(function() {
+                    window.location.assign(`${baseUrl[1]}/login.html`);
+                }, 2000);
             } else {
                 console.log("Error");
             }

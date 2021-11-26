@@ -1,5 +1,5 @@
-//const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
-const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
+const baseUrl = ["http://localhost:3000", "http://localhost:3001"]
+//const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"]
 
 let notifier = new AWN({icons:{enabled:false}})
 
@@ -154,10 +154,11 @@ $(document).ready(function () {
         method: 'GET',
         contentType: "application/json; charset=utf-8",
         success: function (data, status, xhr) {
-
             var data = JSON.parse(data);
             $("#community_name").html(data.subreaddit_name);
             $("#subreaddit_name").html(data.subreaddit_name);
+            $(`#welcome_subreaddit`).html("r/" + data.subreaddit_name);
+            $(`#welcome_post`).html("Welcome to r/" + data.subreaddit_name + "!");
             $('#community_desc').html(data.subreaddit_description)
             var date = new Date(data.created_at);
             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
