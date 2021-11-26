@@ -23,7 +23,6 @@ var subreaddit = {
     // Get all subreaddits
     getAll: function (callback) {
         // find multiple entries
-        Subreaddit.belongsTo(User, { foreignKey: 'fk_creator_user_id' });
 
         Subreaddit.findAll({
             raw: true, include: [{

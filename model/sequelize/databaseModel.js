@@ -111,6 +111,8 @@ const Subreaddit = sequelize.define('Subreaddit', {
     }
 })
 
+Subreaddit.belongsTo(User, { foreignKey: 'fk_creator_user_id' });
+
 const Post = sequelize.define('Post', {
     post_id: {
         type: DataTypes.INTEGER,
