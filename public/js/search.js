@@ -278,7 +278,7 @@ function searchPosts() {
                                     <div class="col-1 upvote-section py-2 justify-content-center">
                                         <a class="text-center d-block py-1" id="post1-upvote"><i
                                                 class="fas fa-arrow-up text-dark"></i></a>
-                                        <p id="post#-val" class="text-center mb-0">6920</p>
+                                        <p id="post#-val" class="text-center mb-0">${similars[i].Post_Votes}</p>
                                         <a class="text-center d-block py-1" id="post1-downvote"><i
                                                 class="fas fa-arrow-down text-dark"></i></a>
                                     </div>
