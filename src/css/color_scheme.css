@@ -1,0 +1,263 @@
+
+
+/* Header Colors */
+#header {
+    background-color: #734f96;
+    color: white;
+}
+
+body {
+    background-color: #f6f8fa;
+}
+
+#loginButton {
+    background-color: white;
+    color: #734f96;
+    font-weight: 600;
+}
+
+#profileButton {
+    background-color: white;
+    color: #734f96;
+    font-weight: 600;
+}
+
+#signUpButton, #addModerator, #addFlair, #flair {
+    background-color: #6a5acd;
+    color: white;
+    font-weight: 700;
+}
+
+#flair{
+    cursor:default
+}
+
+.tabColour {
+    background-color: #6a5acd!important;
+}
+
+#removeModerator, #removeFlair {
+    background-color: #eb4040;
+    color: white;
+    font-weight: 700;
+}
+
+#headerSearchBtn {
+    background-color: #6a5acd !important;
+}
+
+.fa-user {
+    line-height: inherit;
+}
+
+.fa-file-image {
+    line-height: inherit;
+    font-size: 1.4em;
+}
+
+.fa-paperclip {
+    font-size: 1.4em;
+}
+.lh-inherit {
+    line-height: inherit;
+}
+
+.body-borders {
+    border: 1px solid #6a5acd35;
+}
+
+.icon-hover:hover {
+    background-color: #6a5acd35;
+}
+
+.post {
+    border: 1px solid #6a5acd35;
+    /*padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;*/
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+    background-color: #f8f9fa;
+}
+
+.post:hover{
+    border: 1px solid #6a5acd;
+}
+
+.comment {
+    border: 1px solid #6a5acd35;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+    background-color: #f8f9fa;
+}
+
+.post-upvote:hover {
+    background-color: #6a5acd35;
+}
+
+.post-downvote:hover {
+    background-color: #6a5acd35;
+}
+
+.upvoted {
+    background-color: #734f96;
+}
+
+.upvoted i {
+    color: white!important;
+}
+
+.upvoted:hover {
+    background-color: #6a5acd35;
+    color: black!important;
+}
+
+.upvoted:hover i {
+    color: black!important;
+}
+
+.downvoted {
+    background-color: #734f96!important;
+}
+
+.downvoted i {
+    color: white!important;
+}
+
+.downvoted:hover {
+    background-color: #6a5acd35!important;
+    color: black!important;
+}
+
+.downvoted:hover i {
+    color: black!important;
+}
+
+.hoverable:hover {
+    background-color: #6a5acd35;
+}
+
+.clickable-link:hover {
+    text-decoration: underline;
+}
+
+#nsfw_tag {
+    background-color: #ff585b;
+    padding: 0.15em;
+    font-weight: bold;
+    color: white;
+    border-radius: 0.25em;
+}
+
+#create_community_footer {
+    background-color: #f6f7f8;
+}
+
+#create_community_cancel {
+    border-color: #734f96;
+    font-weight: bold;
+    color: #734f96;
+}
+
+#create_community_submit {
+    background-color: #734f96;
+    font-weight: bold;
+    border: 0;
+}
+
+#about_community_header {
+    background-color: #734f96;
+}
+
+.fa-xl {
+    font-size: 1.5em;
+}
+
+.text-scheme {
+    color: #734f96;
+}
+
+.invert-scheme {
+    color: white;
+    background-color: #734f96;
+}
+
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+.bg-darker {
+    background-color: #f8f9fa
+}
+
+.comment-line {
+    border-right: 2px solid #734f96;
+}
+
+.smaller {
+    font-size: 0.8em;
+}
+
+#home_div {
+    background-image: url("../assets/home.png");
+    background-size: contain;
+}
+
+#trending_community_div {
+    background-image: url("../assets/trending.png");
+}
+
+#profile_background {
+    background-color: #33a8ff;
+}
+
+#user_img {
+    background-size: contain;
+    width: 5rem;
+    height: 5rem;
+    border: white solid 5px;
+}
+
+.inline-icon {
+    vertical-align: bottom;
+}
+
+.anim {
+    border-radius: 3px;
+    background-image: linear-gradient(90deg, #e2e2e299 0px, #efefef99 100px, #e2e2e299 150px);
+    animation: refresh 1.2s infinite ease-out;
+    z-index: -10;
+}
+  
+/* Animation */
+@keyframes refresh {
+    0% {
+      background-position: -50rem;
+    }
+    60%, 100%{
+      background-position: 10%;
+    }
+    /* 100% {
+        background-position: calc(100%);
+    } */
+}
+
+#report_loading_div {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+
+#post_loading_div {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
