@@ -1,1 +1,0 @@
-const baseUrl = ["https://readdit-backend.herokuapp.com","https://readdit-sp.herokuapp.com"];
