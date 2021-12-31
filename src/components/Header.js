@@ -27,10 +27,10 @@ const Header = () => {
     if (!login) { //If not logged in, return login and sign up button
       return (
         <ul className="navbar-nav ms-auto">
-          <a href="/login.html" id="loginButton" className="btn me-2 px-4 rounded-pill"> 
+          <a href="/login" id="loginButton" className="btn me-2 px-4 rounded-pill"> 
             Login
           </a>
-          <a href="/addUser.html" id="signUpButton" className="btn me-3 px-4">
+          <a href="/addUser" id="signUpButton" className="btn me-3 px-4">
             Sign Up
           </a>
         </ul>
@@ -41,7 +41,7 @@ const Header = () => {
           <a href="/profile" id="profileButton" className="btn me-2 px-4 rounded-pill ">
             Profile
           </a>
-          <a href="/login.html" onClick={() => localStorage.clear()} id="signUpButton" className="btn me-3 px-4">
+          <a href="/login" onClick={() => localStorage.clear()} id="signUpButton" className="btn me-3 px-4">
             Log Out
           </a>
         </ul>
